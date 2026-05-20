@@ -131,9 +131,9 @@
     "data": {
       "eyebrow": "Public Records",
       "title": "公開資料",
-      "desc": "學生會會議紀錄、決預算及其他公開文件。",
+      "desc": "學生會會議紀錄、預決算及其他公開文件。",
       "tabMinutes": "會議紀錄",
-      "tabBudget": "決預算",
+      "tabBudget": "預決算",
       "tabOther": "其他文件",
       "minutesTitle": "會議紀錄",
       "minutesDesc1": "此區塊將嵌入 Google Docs 或 Google Sheets，",
