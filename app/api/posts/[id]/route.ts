@@ -81,11 +81,14 @@ export async function PATCH(
 
     const isAuthor = post.authorEmail === userEmail;
     const isDeptMember = post.department === userDepartment;
+    // 編輯/刪除權限：admin 或公關部全體成員
     const isReviewer = userRole === "admin" || userDepartment === "公關部";
+    // 審核權限：僅 admin 與 pr-dept 的 OWNER/MANAGER (role=reviewer)
+    const canAudit = userRole === "admin" || userRole === "reviewer";
 
     // 1. 審核邏輯 (變更狀態)
     if (status && !title) {
-      if (!isReviewer) {
+      if (!canAudit) {
         return NextResponse.json({ errorCode: "FORBIDDEN_REVIEW" }, { status: 403 });
       }
 

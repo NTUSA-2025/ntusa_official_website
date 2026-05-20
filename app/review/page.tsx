@@ -31,7 +31,8 @@ export default async function ReviewDashboard() {
   const userRole = session.user.role;
   const userDepartment = session.user.department;
   const userEmail = session.user.email || "";
-  const isPR = userRole === "admin" || userDepartment === "公關部";
+  // Only admins and PR-dept OWNER/MANAGER (role=reviewer) can audit articles.
+  const isPR = userRole === "admin" || userRole === "reviewer";
 
   const t = await getTranslations("review");
   const statusLabels: StatusLabels = {

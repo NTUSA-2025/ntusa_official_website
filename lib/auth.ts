@@ -1,6 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { getUserGroups } from "./google-admin";
+import { getUserGroups, getMemberRoleInGroup } from "./google-admin";
+
+const PR_DEPT_GROUP_EMAIL = "pr-dept@ntusa.ntu.edu.tw";
+const INFOR_GROUP_EMAIL = "infor@ntusa.ntu.edu.tw";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -32,22 +35,33 @@ export const authOptions: NextAuthOptions = {
           const groups = await getUserGroups(user.email);
           let role: "admin" | "reviewer" | "editor" = "editor";
           let department: string = "一般部門";
+          let isInPrDept = false;
 
           for (const group of groups) {
             const groupEmail = group.email?.toLowerCase();
-            if (groupEmail === "infor@ntusa.ntu.edu.tw") {
+            if (groupEmail === INFOR_GROUP_EMAIL) {
               role = "admin";
               department = "資訊部";
               break;
-            } else if (groupEmail === "pr-dept@ntusa.ntu.edu.tw") {
-              role = "reviewer";
+            } else if (groupEmail === PR_DEPT_GROUP_EMAIL) {
+              // Tentatively assign PR department; reviewer privilege is
+              // gated on OWNER/MANAGER status, checked below.
               department = "公關部";
+              isInPrDept = true;
               break;
             } else if (groupEmail?.endsWith("@ntusa.ntu.edu.tw")) {
               role = "editor";
               department = group.name || groupEmail.split("@")[0];
             }
           }
+
+          // Only OWNER/MANAGER of pr-dept can review (approve/reject) articles.
+          // Regular pr-dept members remain editors within 公關部.
+          if (isInPrDept && role !== "admin") {
+            const groupRole = await getMemberRoleInGroup(PR_DEPT_GROUP_EMAIL, user.email);
+            role = groupRole === "OWNER" || groupRole === "MANAGER" ? "reviewer" : "editor";
+          }
+
           token.role = role;
           token.department = department;
         } catch (error) {
