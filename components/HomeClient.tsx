@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { tabFromHashFragment } from "@/lib/home-active-tab";
 import AlternatingPostList from "./AlternatingPostList";
 import HomeHero from "./HomeHero";
@@ -29,6 +29,7 @@ type PostType = {
 export default function HomeClient({ posts }: { posts: PostType[] }) {
   const [activeTab, setActiveTab] = useState("home");
   const [dataTab, setDataTab] = useState("minutes");
+  const locale = useLocale();
   const tNews = useTranslations("home.news");
   const tAbout = useTranslations("home.about");
   const tDepts = useTranslations("home.depts");
@@ -36,7 +37,8 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
   const tForms = useTranslations("home.forms");
   const tData = useTranslations("home.data");
 
-  const historyParagraphs = tAbout.raw("history") as string[];
+  const rawHistory = tAbout.raw("history");
+  const historyParagraphs = Array.isArray(rawHistory) ? (rawHistory as string[]) : [];
   const deptsData = DEPT_KEYS.map((key) => ({
     key,
     name: tDepts(`${key}.name`),
@@ -61,7 +63,7 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
   }, [applyHashToTab]);
 
   useEffect(() => {
-    const observerOptions = { threshold: 0.12, rootMargin: "0px 0px -40px 0px" };
+    const observerOptions = { threshold: 0.01, rootMargin: "0px 0px -20px 0px" };
     const fadeObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -72,13 +74,14 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
     }, observerOptions);
 
     document.querySelectorAll(".fade-up-target").forEach((el, i) => {
+      if (el.classList.contains("is-visible")) return;
       (el as HTMLElement).style.setProperty("--delay", `${(i % 5) * 60}ms`);
       el.classList.add("fade-up");
       fadeObserver.observe(el);
     });
 
     return () => fadeObserver.disconnect(); 
-  }, [activeTab]);
+  }, [activeTab, locale]);
 
   const navigateTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -147,9 +150,9 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
             <div className="section-tag">{tAbout("historyTag")}</div>
             <h2 className="section-title">{tAbout("historyTitle")}</h2>
           </div>
-          <div className="about-body fade-up-target">
+          <div className="about-body">
             {historyParagraphs.map((para, i) => (
-              <p key={i}>{para}</p>
+              <p key={i} className="fade-up-target">{para}</p>
             ))}
           </div>
         </div>

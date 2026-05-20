@@ -12,6 +12,12 @@ describe("tabFromHashFragment", () => {
     expect(tabFromHashFragment("rights")).toBe("rights");
   });
 
+  it("is case-insensitive and handles trailing slashes", () => {
+    expect(tabFromHashFragment("#About")).toBe("about");
+    expect(tabFromHashFragment("#about/")).toBe("about");
+    expect(tabFromHashFragment("Rights/")).toBe("rights");
+  });
+
   it("maps known sections", () => {
     expect(tabFromHashFragment("#data")).toBe("data");
     expect(tabFromHashFragment("forms")).toBe("forms");

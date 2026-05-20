@@ -7,7 +7,8 @@ export type HomeSectionId = (typeof HOME_SECTION_IDS)[number];
  * Unknown fragments fall back to "home".
  */
 export function tabFromHashFragment(fragment: string): HomeSectionId {
-  const id = fragment.replace(/^#/, "").trim() || "home";
+  // Normalize: remove hash, remove trailing slash, trim, and lowercase
+  const id = fragment.replace(/^#/, "").replace(/\/$/, "").trim().toLowerCase() || "home";
   return (HOME_SECTION_IDS as readonly string[]).includes(id)
     ? (id as HomeSectionId)
     : "home";
