@@ -1,6 +1,6 @@
 # NTUSA Website
 
-這個專案是 NTUSA 官網的 Next.js 應用程式，除了首頁內容展示，也包含文章投稿、審核流程、Google Workspace 權限判斷、郵件通知與校園工具頁。
+這個專案是 NTUSA 官網的 Next.js 應用程式，除了首頁內容展示，也包含文章投稿、審核流程、Google Workspace 權限判斷與郵件通知。
 
 ## 功能概覽
 
@@ -10,7 +10,6 @@
 - 提供文章編輯器、送審、退回、核准、重新送審流程
 - 上傳文章封面圖片到 Cloudflare R2
 - 使用 Resend 寄送送審與審核結果通知信
-- 提供 `/campus-tools` 校園工具頁
 
 ## 技術棧
 
@@ -40,7 +39,6 @@
 - `/editor`：新增文章
 - `/editor/[id]`：編輯既有文章
 - `/review`：審核後台
-- `/campus-tools`：校園工具頁
 
 ## 開發前準備
 
