@@ -38,9 +38,12 @@ export default function Footer() {
           <div>
             <div className="footer-name">{t("orgName")}</div>
             <div className="footer-name-en">{t("orgNameEn")}</div>
-            <a href="mailto:infor@ntusa.ntu.edu.tw" className="footer-contact">
+            <a href="mailto:ntusamailbox@gmail.com" className="footer-contact">
+              ntusamailbox@gmail.com
+            </a>
+            <a href="mailto:infor@ntusa.ntu.edu.tw" className="footer-bug-report">
               infor@ntusa.ntu.edu.tw
-              <span className="ml-1 opacity-80 text-xs font-normal">{t("bugReportLabel")}</span>
+              <span>{t("bugReportLabel")}</span>
             </a>
           </div>
         </div>

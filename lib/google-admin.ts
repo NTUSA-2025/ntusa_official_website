@@ -7,10 +7,6 @@ const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY
 
 const GOOGLE_WORKSPACE_ADMIN_EMAIL = process.env.GOOGLE_WORKSPACE_ADMIN_EMAIL;
 
-if (GOOGLE_PRIVATE_KEY && !GOOGLE_PRIVATE_KEY.includes('-----BEGIN PRIVATE KEY-----')) {
-  console.error('GOOGLE_PRIVATE_KEY does not appear to be a valid PEM key. It should start with "-----BEGIN PRIVATE KEY-----"');
-}
-
 const auth = new google.auth.JWT({
   email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
   key: GOOGLE_PRIVATE_KEY,
@@ -35,7 +31,6 @@ export type GroupMemberRole = 'OWNER' | 'MANAGER' | 'MEMBER';
  * Requires Domain-Wide Delegation and the Admin SDK Directory API enabled.
  */
 export async function getUserGroups(userKey: string): Promise<GoogleGroup[]> {
-  console.log(`[GoogleAdmin] Fetching groups for: ${userKey}`);
   if (!GOOGLE_SERVICE_ACCOUNT_EMAIL || !GOOGLE_PRIVATE_KEY || !GOOGLE_WORKSPACE_ADMIN_EMAIL) {
     console.warn('[GoogleAdmin] Credentials not fully configured. Skipping group fetch.');
     return [];
@@ -43,10 +38,10 @@ export async function getUserGroups(userKey: string): Promise<GoogleGroup[]> {
 
   try {
     const response = await admin.groups.list({ userKey });
-    console.log(`[GoogleAdmin] Groups found for ${userKey}:`, response.data.groups?.map(g => g.email) || []);
     return response.data.groups || [];
-  } catch (error) {
-    console.error(`[GoogleAdmin] Error fetching groups for ${userKey}:`, error);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[GoogleAdmin] Error fetching groups for ${userKey}:`, message);
     return [];
   }
 }
@@ -68,7 +63,6 @@ export async function getMemberRoleInGroup(
   try {
     const response = await admin.members.get({ groupKey, memberKey });
     const role = response.data.role as GroupMemberRole | undefined;
-    console.log(`[GoogleAdmin] Role of ${memberKey} in ${groupKey}: ${role ?? 'none'}`);
     return role ?? null;
   } catch (error: unknown) {
     const status = (error as { code?: number })?.code;

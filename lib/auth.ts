@@ -4,6 +4,7 @@ import { getUserGroups, getMemberRoleInGroup } from "./google-admin";
 
 const PR_DEPT_GROUP_EMAIL = "pr-dept@ntusa.ntu.edu.tw";
 const INFOR_GROUP_EMAIL = "infor@ntusa.ntu.edu.tw";
+type UserRole = "admin" | "reviewer" | "editor";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -33,7 +34,7 @@ export const authOptions: NextAuthOptions = {
       if (account && user && user.email) {
         try {
           const groups = await getUserGroups(user.email);
-          let role: "admin" | "reviewer" | "editor" = "editor";
+          let role: UserRole = "editor";
           let department: string = "一般部門";
           let isInPrDept = false;
 
@@ -74,8 +75,8 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = (token.role as any) || "editor";
-        session.user.department = (token.department as any) || "一般部門";
+        session.user.role = token.role || "editor";
+        session.user.department = token.department || "一般部門";
       }
       return session;
     },

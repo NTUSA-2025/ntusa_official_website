@@ -24,7 +24,11 @@ export default function LocaleSwitcher({
   const switchTo = (next: Locale) => {
     if (next === locale) return;
     const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? "; secure" : "";
-    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; samesite=lax${secure}`;
+    Reflect.set(
+      window.document,
+      "cookie",
+      `${LOCALE_COOKIE}=${next}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; samesite=lax${secure}`,
+    );
     onSwitch?.();
     startTransition(() => {
       router.refresh();

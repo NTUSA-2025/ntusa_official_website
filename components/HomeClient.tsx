@@ -27,7 +27,9 @@ type PostType = {
 };
 
 export default function HomeClient({ posts }: { posts: PostType[] }) {
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTab] = useState(() => (
+    typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
+  ));
   const [dataTab, setDataTab] = useState("minutes");
   const locale = useLocale();
   const tNews = useTranslations("home.news");
@@ -53,7 +55,8 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
 
   // Apply hash before paint so navigations from other routes (e.g. /campus-tools) do not flash the home hero.
   useLayoutEffect(() => {
-    applyHashToTab("auto");
+    const frame = window.requestAnimationFrame(() => applyHashToTab("auto"));
+    return () => window.cancelAnimationFrame(frame);
   }, [applyHashToTab]);
 
   useEffect(() => {

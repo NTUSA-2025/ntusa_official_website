@@ -21,7 +21,9 @@ export default function Navbar() {
   const tFooter = useTranslations("footer");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeHash, setActiveHash] = useState("home");
+  const [activeHash, setActiveHash] = useState(() => (
+    typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
+  ));
 
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -51,7 +53,10 @@ export default function Navbar() {
 
   // Client navigations (e.g. router.push("/#about") from /campus-tools) often skip the native hashchange event.
   useEffect(() => {
-    setActiveHash(tabFromHashFragment(window.location.hash));
+    const frame = window.requestAnimationFrame(() => {
+      setActiveHash(tabFromHashFragment(window.location.hash));
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [pathname]);
 
   useEffect(() => {

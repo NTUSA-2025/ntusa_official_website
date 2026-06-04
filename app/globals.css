@@ -838,6 +838,17 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   transition: color var(--transition);
 }
 .footer-contact:hover { color: var(--color-text-invert); }
+.footer-bug-report {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  color: rgba(255,255,255,.38);
+  transition: color var(--transition);
+}
+.footer-bug-report span {
+  margin-left: 4px;
+}
+.footer-bug-report:hover { color: rgba(255,255,255,.65); }
 .footer-links {
   display: flex; gap: 4px; flex-wrap: wrap;
 }
