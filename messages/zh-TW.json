@@ -136,9 +136,12 @@
       "tabBudget": "預決算",
       "tabOther": "其他文件",
       "minutesTitle": "會議紀錄",
-      "minutesDesc1": "此區塊將嵌入 Google Docs 或 Google Sheets，",
-      "minutesDesc2": "屆時會議紀錄將公開於此。",
-      "minutesBadge": "Google Docs / Sheets 嵌入區",
+      "minutesDesc": "學生會各次會議之公開紀錄，點擊即可檢視或下載 PDF。",
+      "minutesTag": "公告版",
+      "minutesViewPdf": "查看 PDF →",
+      "types": {
+        "admin": "行政部門會議"
+      },
       "budgetTitle": "歷年預決算",
       "budgetDesc": "學生會歷年預算與決算資料，公開於 Google Drive。",
       "budgetOpenDrive": "在 Google Drive 中開啟 →",

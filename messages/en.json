@@ -136,9 +136,12 @@
       "tabBudget": "Budgets",
       "tabOther": "Other",
       "minutesTitle": "Meeting Minutes",
-      "minutesDesc1": "This area will embed Google Docs or Google Sheets,",
-      "minutesDesc2": "where meeting minutes will be published.",
-      "minutesBadge": "Google Docs / Sheets embed",
+      "minutesDesc": "Public minutes from Student Association meetings. Click to view or download the PDF.",
+      "minutesTag": "Public Release",
+      "minutesViewPdf": "View PDF →",
+      "types": {
+        "admin": "Administrative Dept. Meeting"
+      },
       "budgetTitle": "Historical Budgets and Final Accounts",
       "budgetDesc": "Past budgets and final accounts of the Student Association, published on Google Drive.",
       "budgetOpenDrive": "Open in Google Drive →",

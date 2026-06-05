@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { tabFromHashFragment } from "@/lib/home-active-tab";
 import AlternatingPostList from "./AlternatingPostList";
 import HomeHero from "./HomeHero";
+import { meetingMinutes } from "@/data/meetingMinutes";
 
 const DEPT_KEYS = [
   "hq",
@@ -266,12 +267,36 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
           </div>
 
           <div className={`data-panel ${dataTab === "minutes" ? "active" : ""}`}>
-            <div className="rights-placeholder-box fade-up-target">
-              <div className="placeholder-icon">📄</div>
-              <h3>{tData("minutesTitle")}</h3>
-              <p>{tData("minutesDesc1")}<br/>{tData("minutesDesc2")}</p>
-              <div className="placeholder-badge">{tData("minutesBadge")}</div>
-            </div>
+            <p className="minutes-intro fade-up-target">{tData("minutesDesc")}</p>
+            <ul className="minutes-list">
+              {meetingMinutes.map((m) => {
+                const meetingDate = new Date(`${m.date}T00:00:00`);
+                const dateLabel = meetingDate.toLocaleDateString(locale, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+                const title = tData(`types.${m.type}`);
+                return (
+                  <li key={m.id} className="minute-card fade-up-target">
+                    <time className="minute-date" dateTime={m.date}>{dateLabel}</time>
+                    <div className="minute-body">
+                      <h3 className="minute-title">{title}</h3>
+                      <span className="minute-tag">{tData("minutesTag")}</span>
+                    </div>
+                    <a
+                      className="minute-link"
+                      href={m.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${dateLabel} ${title} — ${tData("minutesViewPdf")}`}
+                    >
+                      {tData("minutesViewPdf")}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           <div className={`data-panel ${dataTab === "budget" ? "active" : ""}`}>
             <div className="rights-placeholder-box fade-up-target">

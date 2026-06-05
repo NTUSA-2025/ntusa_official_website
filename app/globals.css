@@ -794,6 +794,86 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 .data-panel { display: none; }
 .data-panel.active { display: block; animation: pageFadeIn .3s ease; }
 
+/* Meeting minutes list */
+.minutes-intro {
+  max-width: 760px;
+  margin: 0 auto 28px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+.minutes-list {
+  list-style: none;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.minute-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 24px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-brand);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.minute-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.minute-date {
+  flex-shrink: 0;
+  min-width: 132px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+.minute-body {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.minute-title { font-size: 16px; font-weight: 700; color: var(--color-secondary); }
+.minute-tag {
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .06em;
+  background: var(--color-brand-light);
+  color: var(--color-brand-dark);
+}
+.minute-link {
+  flex-shrink: 0;
+  font-size: 14px; font-weight: 700;
+  color: var(--color-brand-dark);
+  white-space: nowrap;
+  transition: opacity var(--transition);
+}
+.minute-link:hover { opacity: .7; }
+.minute-link:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 600px) {
+  .minute-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .minute-date { min-width: 0; }
+  .minute-link { align-self: flex-end; }
+}
+
 /* =====================================================
    FOOTER
    ===================================================== */
