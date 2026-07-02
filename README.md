@@ -27,10 +27,10 @@
   - 目前由 `infor@ntusa.ntu.edu.tw` 群組成員取得
   - 可審核文章，也可管理其他文章
 - `reviewer`
-  - 為 `pr-dept@ntusa.ntu.edu.tw` 群組中的 `OWNER` 或 `MANAGER`
+  - 為 `pr-dept@ntusa.ntu.edu.tw` 群組成員
   - 可在 `/review` 審核文章
 - `editor`
-  - 一般部門成員，或非主管權限的公關部成員
+  - 一般部門成員
   - 可撰寫、編輯、重新送審自己的文章
 
 ## 主要頁面
@@ -120,7 +120,7 @@ npm run dev
 1. 使用者在 `/editor` 建立文章
 2. 新文章預設寫入 `PENDING`
 3. 系統寄送待審核通知給 `REVIEWER_EMAILS`
-4. 公關部主管或資訊部管理員可在 `/review` 核准或退回
+4. 公關部成員或資訊部管理員可在 `/review` 核准或退回
 5. 文章核准後才會出現在首頁
 6. 已有文章被修改後，狀態會重設為 `PENDING` 並重新送審
 
@@ -128,7 +128,7 @@ npm run dev
 
 - 使用者登入後，系統會從 Google Workspace 群組判斷部門
 - `infor@ntusa.ntu.edu.tw` 成員會被視為 `admin`
-- `pr-dept@ntusa.ntu.edu.tw` 的 `OWNER` 或 `MANAGER` 會被視為 `reviewer`
+- `pr-dept@ntusa.ntu.edu.tw` 成員會被視為 `reviewer`
 - 其他 `@ntusa.ntu.edu.tw` 群組成員預設為 `editor`
 
 ## 常用指令

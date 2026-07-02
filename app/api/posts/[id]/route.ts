@@ -83,7 +83,7 @@ export async function PATCH(
     const isDeptMember = post.department === userDepartment;
     // 編輯/刪除權限：admin 或公關部全體成員
     const isReviewer = userRole === "admin" || userDepartment === "公關部";
-    // 審核權限：僅 admin 與 pr-dept 的 OWNER/MANAGER (role=reviewer)
+    // 審核權限：admin 與公關部成員 (role=reviewer)
     const canAudit = userRole === "admin" || userRole === "reviewer";
 
     // 1. 審核邏輯 (變更狀態)

@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { getUserGroups, getMemberRoleInGroup } from "./google-admin";
+import { getUserGroups } from "./google-admin";
 
 const PR_DEPT_GROUP_EMAIL = "pr-dept@ntusa.ntu.edu.tw";
 const INFOR_GROUP_EMAIL = "infor@ntusa.ntu.edu.tw";
@@ -151,11 +151,9 @@ export const authOptions: NextAuthOptions = {
             }
           }
 
-          // Only OWNER/MANAGER of pr-dept can review (approve/reject) articles.
-          // Regular pr-dept members remain editors within 公關部.
+          // PR department members can review (approve/reject) articles.
           if (isInPrDept && role !== "admin") {
-            const groupRole = await getMemberRoleInGroup(PR_DEPT_GROUP_EMAIL, user.email);
-            role = groupRole === "OWNER" || groupRole === "MANAGER" ? "reviewer" : "editor";
+            role = "reviewer";
           }
 
           if (role !== "admin" && matchedDepartment) {
