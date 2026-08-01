@@ -3,9 +3,8 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { locales, LOCALE_COOKIE, type Locale } from "@/i18n/config";
-
-const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
+import { locales, type Locale } from "@/i18n/config";
+import { serializeLocaleCookie } from "@/lib/locale-cookie";
 
 type Variant = "desktop" | "drawer";
 
@@ -23,11 +22,11 @@ export default function LocaleSwitcher({
 
   const switchTo = (next: Locale) => {
     if (next === locale) return;
-    const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? "; secure" : "";
+    const secure = typeof window !== "undefined" && window.location.protocol === "https:";
     Reflect.set(
       window.document,
       "cookie",
-      `${LOCALE_COOKIE}=${next}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; SameSite=Strict${secure}`,
+      serializeLocaleCookie(next, secure),
     );
     onSwitch?.();
     startTransition(() => {
