@@ -84,6 +84,7 @@ test.describe("LocaleSwitcher E2E", () => {
     const localeCookie = cookies.find((c) => c.name === "NEXT_LOCALE");
     expect(localeCookie, "NEXT_LOCALE cookie exists").toBeDefined();
     expect(localeCookie?.value, "NEXT_LOCALE cookie value").toBe("en");
+    expect(localeCookie?.sameSite, "NEXT_LOCALE SameSite").toBe("Strict");
   });
 
   test("3. Click 中 — switches back to Chinese", async ({ page }) => {
@@ -120,6 +121,7 @@ test.describe("LocaleSwitcher E2E", () => {
     const cookies = await page.context().cookies();
     const localeCookie = cookies.find((c) => c.name === "NEXT_LOCALE");
     expect(localeCookie?.value, "NEXT_LOCALE cookie value").toBe("zh-TW");
+    expect(localeCookie?.sameSite, "NEXT_LOCALE SameSite").toBe("Strict");
   });
 
   test("4. Reload persists EN locale", async ({ page, context }) => {

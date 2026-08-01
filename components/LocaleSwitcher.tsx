@@ -27,7 +27,7 @@ export default function LocaleSwitcher({
     Reflect.set(
       window.document,
       "cookie",
-      `${LOCALE_COOKIE}=${next}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; samesite=lax${secure}`,
+      `${LOCALE_COOKIE}=${next}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; SameSite=Strict${secure}`,
     );
     onSwitch?.();
     startTransition(() => {
