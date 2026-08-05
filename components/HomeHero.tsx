@@ -318,6 +318,7 @@ export default function HomeHero() {
     <>
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+        crossOrigin="anonymous"
         strategy="afterInteractive"
       />
       <div className="hero">

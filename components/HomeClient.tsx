@@ -112,8 +112,15 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
             ) : (
               posts.map((post) => (
                 <article key={post.id} className="news-card fade-up-target" role="article">
-                  <div className="news-card-img" style={post.coverImage ? { backgroundImage: `url(${post.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
-                    {!post.coverImage && "📄"}
+                  <div className="news-card-img">
+                    {post.coverImage ? (
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        crossOrigin="anonymous"
+                        className="news-card-cover"
+                      />
+                    ) : "📄"}
                   </div>
                   <div className="news-card-body">
                     <div className="news-card-meta">

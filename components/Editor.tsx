@@ -162,7 +162,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">{t("coverLabel")}</label>
         {coverImage && (
-          <img src={coverImage} alt="Cover Preview" className="mb-2 max-w-xs rounded-md shadow-sm object-cover" />
+          <img src={coverImage} alt="Cover Preview" crossOrigin="anonymous" className="mb-2 max-w-xs rounded-md shadow-sm object-cover" />
         )}
         <input 
           type="file" 

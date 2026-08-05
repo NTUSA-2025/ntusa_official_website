@@ -77,6 +77,7 @@ export default async function PostPage({
         <img 
           src={post.coverImage} 
           alt={post.title} 
+          crossOrigin="anonymous"
           className="w-full h-64 md:h-96 object-cover rounded-xl mb-8 shadow-sm"
         />
       )}

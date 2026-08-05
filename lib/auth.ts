@@ -178,16 +178,49 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  // 讓 NextAuth 知道它是在反向代理之後運作，強制使用安全 Cookie (僅限 production)
-  cookies: {
-    pkceCodeVerifier: {
-      name: 'next-auth.pkce.code_verifier',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === "production" || process.env.NEXTAUTH_URL?.startsWith("https://")
-      }
-    }
-  }
+  // 讓 NextAuth 知道它是在反向代理（Caddy）之後運作，
+  // 強制所有 Cookie 加上 Secure / SameSite 屬性，以修正弱掃「加密的階段作業 (SSL) Cookie 中遺漏安全屬性」問題。
+  cookies: (() => {
+    const useSecure = process.env.NODE_ENV === "production" || process.env.NEXTAUTH_URL?.startsWith("https://");
+    const prefix = useSecure ? "__Secure-" : "";
+    return {
+      sessionToken: {
+        name: `${prefix}next-auth.session-token`,
+        options: {
+          httpOnly: true,
+          sameSite: 'lax' as const,
+          path: '/',
+          secure: useSecure,
+        },
+      },
+      csrfToken: {
+        // csrfToken 在 secure 模式下使用 __Host- 前綴（要求 path=/ 且不得指定 domain）
+        name: useSecure ? '__Host-next-auth.csrf-token' : 'next-auth.csrf-token',
+        options: {
+          httpOnly: true,
+          sameSite: 'lax' as const,
+          path: '/',
+          secure: useSecure,
+        },
+      },
+      callbackUrl: {
+        name: `${prefix}next-auth.callback-url`,
+        options: {
+          httpOnly: true,
+          sameSite: 'lax' as const,
+          path: '/',
+          secure: useSecure,
+        },
+      },
+      pkceCodeVerifier: {
+        name: 'next-auth.pkce.code_verifier',
+        options: {
+          httpOnly: true,
+          sameSite: 'lax' as const,
+          path: '/',
+          secure: useSecure,
+        },
+      },
+    };
+  })()
 };

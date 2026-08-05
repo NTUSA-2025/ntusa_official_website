@@ -39,6 +39,7 @@ export default function AlternatingPostList({ posts }: { posts: Post[] }) {
                   <img
                     src={post.coverImage}
                     alt={post.title}
+                    crossOrigin="anonymous"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (

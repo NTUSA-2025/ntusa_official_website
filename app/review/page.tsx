@@ -131,6 +131,7 @@ export default async function ReviewDashboard() {
                       <img
                         src={post.coverImage}
                         alt={t("coverPreviewAlt")}
+                        crossOrigin="anonymous"
                         className="max-w-md w-full h-auto object-cover rounded-md shadow-sm"
                       />
                     </div>
