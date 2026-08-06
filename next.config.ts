@@ -45,10 +45,13 @@ const nextConfig: NextConfig = {
   // 將 /r2/* 代理到 R2 公開 URL，使圖片走 same-origin，
   // 避免 r2.dev 不回傳 CORS header 導致 COEP require-corp 擋圖片。
   async rewrites() {
+    const r2Url = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
+    if (!r2Url) return [];
+    
     return [
       {
         source: "/r2/:path*",
-        destination: `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/:path*`,
+        destination: `${r2Url}/:path*`,
       },
     ];
   },
