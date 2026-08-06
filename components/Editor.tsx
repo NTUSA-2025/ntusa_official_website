@@ -7,6 +7,7 @@ import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder"; // 引入 Placeholder
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { proxyR2Url } from "@/lib/r2-proxy";
 import { uploadImage } from "../lib/upload";
 
 interface EditorProps {
@@ -162,7 +163,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">{t("coverLabel")}</label>
         {coverImage && (
-          <img src={coverImage} alt="Cover Preview" crossOrigin="anonymous" className="mb-2 max-w-xs rounded-md shadow-sm object-cover" />
+          <img src={proxyR2Url(coverImage)!} alt="Cover Preview" className="mb-2 max-w-xs rounded-md shadow-sm object-cover" />
         )}
         <input 
           type="file" 

@@ -4,6 +4,7 @@ import { authOptions } from "../../../lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { proxyR2Url, proxyR2Html } from "@/lib/r2-proxy";
 import DeleteButton from "../../../components/DeleteButton"; // 引入刪除按鈕元件
 
 export default async function PostPage({ 
@@ -75,9 +76,8 @@ export default async function PostPage({
       {/* 封面圖片 */}
       {post.coverImage && (
         <img 
-          src={post.coverImage} 
+          src={proxyR2Url(post.coverImage)!} 
           alt={post.title} 
-          crossOrigin="anonymous"
           className="w-full h-64 md:h-96 object-cover rounded-xl mb-8 shadow-sm"
         />
       )}
@@ -99,7 +99,7 @@ export default async function PostPage({
       {/* 文章內容 (HTML 渲染) */}
       <div 
         className="tiptap prose prose-lg max-w-none prose-blue"
-        dangerouslySetInnerHTML={{ __html: post.content }} 
+        dangerouslySetInnerHTML={{ __html: proxyR2Html(post.content) }} 
       />
 
       {/* 底部操作區塊：包含「返回首頁」、「修改文章」與「刪除文章」 */}

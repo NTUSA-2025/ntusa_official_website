@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
+import { proxyR2Url } from "@/lib/r2-proxy";
 import { tabFromHashFragment } from "@/lib/home-active-tab";
 import AlternatingPostList from "./AlternatingPostList";
 import HomeHero from "./HomeHero";
@@ -115,9 +116,8 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
                   <div className="news-card-img">
                     {post.coverImage ? (
                       <img
-                        src={post.coverImage}
+                        src={proxyR2Url(post.coverImage)!}
                         alt={post.title}
-                        crossOrigin="anonymous"
                         className="news-card-cover"
                       />
                     ) : "📄"}

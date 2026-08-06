@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
+import { proxyR2Url } from "@/lib/r2-proxy";
 
 type Post = {
   id: string;
@@ -37,9 +38,8 @@ export default function AlternatingPostList({ posts }: { posts: Post[] }) {
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                 {post.coverImage ? (
                   <img
-                    src={post.coverImage}
+                    src={proxyR2Url(post.coverImage)!}
                     alt={post.title}
-                    crossOrigin="anonymous"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (

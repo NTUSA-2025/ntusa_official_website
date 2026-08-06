@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../lib/auth";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { proxyR2Url, proxyR2Html } from "@/lib/r2-proxy";
 import ReviewButtons from "../../components/ReviewButtons";
 import Link from "next/link";
 
@@ -129,9 +130,8 @@ export default async function ReviewDashboard() {
                     <div className="mb-6">
                       <span className="text-sm text-gray-500 font-medium block mb-2">{t("coverPreviewLabel")}</span>
                       <img
-                        src={post.coverImage}
+                        src={proxyR2Url(post.coverImage)!}
                         alt={t("coverPreviewAlt")}
-                        crossOrigin="anonymous"
                         className="max-w-md w-full h-auto object-cover rounded-md shadow-sm"
                       />
                     </div>
@@ -140,7 +140,7 @@ export default async function ReviewDashboard() {
                   <span className="text-sm text-gray-500 font-medium block mb-2">{t("contentLabel")}</span>
                   <div
                     className="tiptap prose max-w-none bg-white p-4 border rounded-md"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
+                    dangerouslySetInnerHTML={{ __html: proxyR2Html(post.content) }}
                   />
 
                   <div className="mt-4 text-right">
