@@ -73,7 +73,7 @@ export default async function ReviewDashboard() {
         </div>
       ) : (
         <div className="grid gap-6">
-          {targetPosts.map((post) => (
+          {targetPosts.map((post: any) => (
             <div
               key={post.id}
               className="border border-gray-200 p-6 rounded-lg shadow-sm bg-white flex flex-col"
