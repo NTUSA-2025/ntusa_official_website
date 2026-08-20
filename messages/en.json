@@ -175,6 +175,7 @@
       "DRAFT": "Draft"
     },
     "authorLabel": "Author:",
+    "defaultDepartment": "NTUSA",
     "publishedLabel": "Published:",
     "backToHome": "Back to home",
     "dateLocale": "en-US",

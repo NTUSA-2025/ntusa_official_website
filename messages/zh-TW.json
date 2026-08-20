@@ -175,6 +175,7 @@
       "DRAFT": "草稿"
     },
     "authorLabel": "作者：",
+    "defaultDepartment": "臺大學生會",
     "publishedLabel": "發布時間：",
     "backToHome": "返回首頁",
     "dateLocale": "zh-TW",

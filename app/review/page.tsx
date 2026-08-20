@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { proxyR2Url, proxyR2Html } from "@/lib/r2-proxy";
 import ReviewButtons from "../../components/ReviewButtons";
 import Link from "next/link";
+import type { Post } from "@prisma/client";
 
 type StatusLabels = { approved: string; rejected: string; pending: string };
 
@@ -73,7 +74,7 @@ export default async function ReviewDashboard() {
         </div>
       ) : (
         <div className="grid gap-6">
-          {targetPosts.map((post: any) => (
+          {targetPosts.map((post: Post) => (
             <div
               key={post.id}
               className="border border-gray-200 p-6 rounded-lg shadow-sm bg-white flex flex-col"

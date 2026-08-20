@@ -88,8 +88,7 @@ export default async function PostPage({
       {/* 文章資訊 */}
       <div className="flex items-center text-gray-500 text-sm mb-8 border-b pb-8">
         <span className="mr-4">
-          {t("authorLabel")}{post.authorName || post.authorEmail}
-          {post.department && `（${post.department}）`}
+          {post.department || t("defaultDepartment")}
         </span>
         <span>
           {t("publishedLabel")}{new Date(post.createdAt).toLocaleDateString(t("dateLocale"), { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Taipei' })}
