@@ -55,7 +55,7 @@ export default function Footer() {
           <Link href="/#about" onClick={(e) => handleHashNavigation(e, "about")}>
             {tNav("about")}
           </Link>
-          <Link href="/#rights" onClick={(e) => handleHashNavigation(e, "rights")}>
+          <Link href="/#announcements" onClick={(e) => handleHashNavigation(e, "announcements")}>
             {tNav("rights")}
           </Link>
          <Link href="/#forms" onClick={(e) => handleHashNavigation(e, "forms")}>

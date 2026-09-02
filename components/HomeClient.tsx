@@ -139,7 +139,7 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
           </div>
 
           <div className="section-footer fade-up-target">
-            <Link href="/#rights" onClick={(e) => navigateTo(e, "rights")} className="btn btn-outline">
+            <Link href="/#announcements" onClick={(e) => navigateTo(e, "announcements")} className="btn btn-outline">
               {tNews("viewAll")}
             </Link>
           </div>
@@ -187,7 +187,7 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
       </section>
 
       {/* ── PAGE: 學權公告 ── */}
-      <section className={`page ${activeTab === "rights" ? "active" : ""}`} id="rights">
+      <section className={`page ${activeTab === "announcements" ? "active" : ""}`} id="announcements">
         <div className="page-hero-mini">
           <div className="page-hero-mini-content">
             <div className="section-tag">{tRights("eyebrow")}</div>

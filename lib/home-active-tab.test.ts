@@ -9,13 +9,13 @@ describe("tabFromHashFragment", () => {
 
   it("strips leading hash", () => {
     expect(tabFromHashFragment("#about")).toBe("about");
-    expect(tabFromHashFragment("rights")).toBe("rights");
+    expect(tabFromHashFragment("announcements")).toBe("announcements");
   });
 
   it("is case-insensitive and handles trailing slashes", () => {
     expect(tabFromHashFragment("#About")).toBe("about");
     expect(tabFromHashFragment("#about/")).toBe("about");
-    expect(tabFromHashFragment("Rights/")).toBe("rights");
+    expect(tabFromHashFragment("Announcements/")).toBe("announcements");
   });
 
   it("maps known sections", () => {
