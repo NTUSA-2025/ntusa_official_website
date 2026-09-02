@@ -13,7 +13,7 @@
   "nav": {
     "home": "首頁",
     "about": "關於我們",
-    "rights": "學權公告",
+    "rights": "公告",
     "forms": "相關連結",
     "data": "公開資料",
     "newPost": "新增公告",
@@ -39,7 +39,7 @@
     },
     "news": {
       "sectionTag": "最新消息",
-      "sectionTitle": "學權公告動態",
+      "sectionTitle": "公告動態",
       "sectionSub": "即時掌握學生會最新公告與活動資訊",
       "emptyState": "目前尚無公告文章",
       "cardTag": "公告",
@@ -108,7 +108,7 @@
     },
     "rights": {
       "eyebrow": "Student Rights",
-      "title": "學權公告",
+      "title": "公告",
       "desc": "學生會關於學生權益之最新公告、聲明與說明。",
       "alternatingEmpty": "目前尚無公告",
       "alternatingNoImage": "尚無圖片"
