@@ -22,7 +22,11 @@ export default function LocaleSwitcher({
 
   const switchTo = (next: Locale) => {
     if (next === locale) return;
-    const secure = typeof window !== "undefined" && window.location.protocol === "https:";
+    const isDevelopmentHttp =
+      typeof window !== "undefined" &&
+      window.location.protocol === "http:" &&
+      (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+    const secure = !isDevelopmentHttp;
     Reflect.set(
       window.document,
       "cookie",
