@@ -33,12 +33,15 @@ function account(): Account {
   };
 }
 
-async function buildTokenForGroups(groups: Array<{ email?: string | null; name?: string | null }>): Promise<JWT> {
+async function buildTokenForGroups(
+  groups: Array<{ email?: string | null; name?: string | null }>,
+  userEmail = "member@ntusa.ntu.edu.tw",
+): Promise<JWT> {
   mockedGetUserGroups.mockResolvedValueOnce(groups);
 
   return jwtCallback({
     token: {},
-    user: user("member@ntusa.ntu.edu.tw"),
+    user: user(userEmail),
     account: account(),
   } as Parameters<typeof jwtCallback>[0]);
 }
@@ -84,6 +87,23 @@ describe("auth group mapping", () => {
 
     expect(token.role).toBe("admin");
     expect(token.department).toBe("資訊部");
+  });
+
+  it("maps the president sun.thuan.tiat@ntusa.ntu.edu.tw to reviewer role", async () => {
+    const token = await buildTokenForGroups([], "sun.thuan.tiat@ntusa.ntu.edu.tw");
+
+    expect(token.role).toBe("reviewer");
+    expect(token.department).toBe("會本部");
+  });
+
+  it("maps the president with president-office group to reviewer role", async () => {
+    const token = await buildTokenForGroups(
+      [{ email: "president@ntusa.ntu.edu.tw" }],
+      "sun.thuan.tiat@ntusa.ntu.edu.tw",
+    );
+
+    expect(token.role).toBe("reviewer");
+    expect(token.department).toBe("會本部");
   });
 
   it("copies mapped role and department into the session", async () => {

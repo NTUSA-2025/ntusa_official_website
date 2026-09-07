@@ -6,6 +6,20 @@ const PR_DEPT_GROUP_EMAIL = "pr-dept@ntusa.ntu.edu.tw";
 const INFOR_GROUP_EMAIL = "infor@ntusa.ntu.edu.tw";
 type UserRole = "admin" | "reviewer" | "editor";
 
+export const ADDITIONAL_REVIEWER_EMAILS = [
+  "sun.thuan.tiat@ntusa.ntu.edu.tw",
+];
+
+export const isReviewerUser = (email?: string | null): boolean => {
+  if (!email) return false;
+  const normalized = email.toLowerCase().trim();
+  const envReviewers = (process.env.REVIEWER_EMAILS || "")
+    .split(",")
+    .map((e) => e.toLowerCase().trim())
+    .filter(Boolean);
+  return ADDITIONAL_REVIEWER_EMAILS.includes(normalized) || envReviewers.includes(normalized);
+};
+
 type DepartmentGroupConfig = {
   departmentId: string;
   departmentName: string;
@@ -120,8 +134,9 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, account }) {
       if (account && user && user.email) {
+        const userEmail = user.email.toLowerCase().trim();
         try {
-          const groups = await getUserGroups(user.email);
+          const groups = await getUserGroups(userEmail);
           let role: UserRole = "editor";
           let department: string = "一般部門";
           let isInPrDept = false;
@@ -151,21 +166,27 @@ export const authOptions: NextAuthOptions = {
             }
           }
 
-          // PR department members can review (approve/reject) articles.
-          if (isInPrDept && role !== "admin") {
+          const isDesignatedReviewer = isReviewerUser(userEmail);
+
+          // PR department members and designated reviewers can review (approve/reject) articles.
+          if ((isInPrDept || isDesignatedReviewer) && role !== "admin") {
             role = "reviewer";
           }
 
-          if (role !== "admin" && matchedDepartment) {
-            department = matchedDepartment.departmentName;
+          if (role !== "admin") {
+            if (matchedDepartment) {
+              department = matchedDepartment.departmentName;
+            } else if (userEmail === "sun.thuan.tiat@ntusa.ntu.edu.tw") {
+              department = "會本部";
+            }
           }
 
           token.role = role;
           token.department = department;
         } catch (error) {
           console.error("[NextAuth] Error fetching user groups:", error);
-          token.role = "editor";
-          token.department = "一般部門";
+          token.role = isReviewerUser(userEmail) ? "reviewer" : "editor";
+          token.department = userEmail === "sun.thuan.tiat@ntusa.ntu.edu.tw" ? "會本部" : "一般部門";
         }
       }
       return token;

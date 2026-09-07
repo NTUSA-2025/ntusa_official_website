@@ -108,11 +108,11 @@ export default async function PostPage({
         </Link>
 
         <div className="flex items-center gap-4">
-          {/* 權限驗證：只有「原作者本人」、「同部門成員」或「具備管理權限 (admin/公關部)」可以修改文章 */}
+          {/* 權限驗證：只有「原作者本人」、「同部門成員」或「具備管理權限 (admin/公關部/reviewer)」可以修改文章 */}
           {session?.user && (
             (session.user.email === post.authorEmail) || 
             (session.user.department === post.department) || 
-            (session.user.role === "admin" || session.user.department === "公關部")
+            (session.user.role === "admin" || session.user.role === "reviewer" || session.user.department === "公關部")
           ) && (
             <Link 
               href={`/editor/${post.id}`}
@@ -122,10 +122,10 @@ export default async function PostPage({
             </Link>
           )}
 
-          {/* 刪除權限：只有「原作者本人」或「具備管理權限 (admin/公關部)」可以刪除文章 */}
+          {/* 刪除權限：只有「原作者本人」或「具備管理權限 (admin/公關部/reviewer)」可以刪除文章 */}
           {session?.user && (
             (session.user.email?.toLowerCase() === post.authorEmail?.toLowerCase()) || 
-            (session.user.role === "admin" || session.user.department === "公關部")
+            (session.user.role === "admin" || session.user.role === "reviewer" || session.user.department === "公關部")
           ) && (
             <DeleteButton postId={post.id} />
           )}

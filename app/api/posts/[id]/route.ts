@@ -39,7 +39,7 @@ export async function DELETE(
     const userDepartment = session.user.department;
 
     const isAuthor = post.authorEmail?.toLowerCase() === userEmail?.toLowerCase();
-    const isReviewer = userRole === "admin" || userDepartment === "公關部";
+    const isReviewer = userRole === "admin" || userRole === "reviewer" || userDepartment === "公關部";
 
     if (!isAuthor && !isReviewer) {
       return NextResponse.json({ errorCode: "FORBIDDEN_DELETE" }, { status: 403 });
@@ -81,8 +81,8 @@ export async function PATCH(
 
     const isAuthor = post.authorEmail === userEmail;
     const isDeptMember = post.department === userDepartment;
-    // 編輯/刪除權限：admin 或公關部全體成員
-    const isReviewer = userRole === "admin" || userDepartment === "公關部";
+    // 編輯/刪除權限：admin、reviewer 或公關部全體成員
+    const isReviewer = userRole === "admin" || userRole === "reviewer" || userDepartment === "公關部";
     // 審核權限：admin 與公關部成員 (role=reviewer)
     const canAudit = userRole === "admin" || userRole === "reviewer";
 

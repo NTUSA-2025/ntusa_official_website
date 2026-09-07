@@ -33,7 +33,7 @@ export default async function EditPage({
 
   const isAuthor = post.authorEmail === userEmail;
   const isDeptMember = post.department === userDepartment;
-  const isReviewer = userRole === "admin" || userDepartment === "公關部";
+  const isReviewer = userRole === "admin" || userRole === "reviewer" || userDepartment === "公關部";
 
   if (!isAuthor && !isDeptMember && !isReviewer) {
     redirect("/review"); // 權限不足則跳回儀表板
