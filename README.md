@@ -85,7 +85,7 @@ npm run dev
 ### 必填
 
 - `DATABASE_URL`
-  - PostgreSQL 連線字串
+  - PostgreSQL 連線字串(目前db架在vm中)
 - `NEXTAUTH_SECRET`
   - NextAuth session secret
 - `NEXTAUTH_URL`
