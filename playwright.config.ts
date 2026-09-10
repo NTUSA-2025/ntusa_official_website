@@ -9,13 +9,18 @@ export default defineConfig({
     baseURL: "http://localhost:3000",
     trace: "off",
     screenshot: "only-on-failure",
+    locale: "zh-TW",
   },
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], channel: "chrome" },
     },
   ],
-  // Do NOT auto-start dev server — caller manages it
-  webServer: undefined,
+  webServer: {
+    command: "npm run start",
+    url: "http://localhost:3000",
+    reuseExistingServer: true,
+    timeout: 60_000,
+  },
 });
