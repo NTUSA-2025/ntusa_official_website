@@ -1,7 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { POST as createMinute, GET as listMinutes } from "../app/api/minutes/route";
+import { POST as createMinute } from "../app/api/minutes/route";
 import { DELETE as deleteMinute } from "../app/api/minutes/[id]/route";
 import { getServerSession } from "next-auth/next";
+import type { Session } from "next-auth";
 import prisma from "./prisma";
 
 vi.mock("next-auth/next", () => ({
@@ -21,11 +22,24 @@ vi.mock("./prisma", () => ({
 
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
-  unstable_cache: (fn: Function) => fn,
+  unstable_cache: (fn: (...args: unknown[]) => unknown) => fn,
 }));
 
 const mockedGetServerSession = vi.mocked(getServerSession);
 const mockedPrisma = vi.mocked(prisma);
+
+function createMockSession(overrides?: Partial<Session["user"]>): Session {
+  return {
+    user: {
+      email: "member@ntusa.ntu.edu.tw",
+      name: "Test Member",
+      role: "editor",
+      department: "一般部門",
+      ...overrides,
+    },
+    expires: "2099-01-01",
+  };
+}
 
 describe("Meeting Minutes API", () => {
   beforeEach(() => {
@@ -48,10 +62,7 @@ describe("Meeting Minutes API", () => {
     });
 
     it("returns 403 if user email is not @ntusa.ntu.edu.tw", async () => {
-      mockedGetServerSession.mockResolvedValueOnce({
-        user: { email: "external@gmail.com", name: "External" },
-        expires: "",
-      } as any);
+      mockedGetServerSession.mockResolvedValueOnce(createMockSession({ email: "external@gmail.com" }));
 
       const request = new Request("http://localhost/api/minutes", {
         method: "POST",
@@ -65,10 +76,7 @@ describe("Meeting Minutes API", () => {
     });
 
     it("returns 400 if title or date or url is missing or invalid", async () => {
-      mockedGetServerSession.mockResolvedValue({
-        user: { email: "member@ntusa.ntu.edu.tw", name: "Member" },
-        expires: "",
-      } as any);
+      mockedGetServerSession.mockResolvedValue(createMockSession());
 
       // missing title
       let req = new Request("http://localhost/api/minutes", {
@@ -96,10 +104,9 @@ describe("Meeting Minutes API", () => {
     });
 
     it("creates a meeting minute successfully for authorized user", async () => {
-      mockedGetServerSession.mockResolvedValueOnce({
-        user: { email: "officer@ntusa.ntu.edu.tw", name: "Officer", department: "會本部" },
-        expires: "",
-      } as any);
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "officer@ntusa.ntu.edu.tw", name: "Officer", department: "會本部" })
+      );
 
       const createdObj = {
         id: "m-123",
@@ -113,7 +120,7 @@ describe("Meeting Minutes API", () => {
         updatedAt: new Date(),
       };
 
-      (mockedPrisma.meetingMinute.create as any).mockResolvedValueOnce(createdObj);
+      vi.mocked(mockedPrisma.meetingMinute.create).mockResolvedValueOnce(createdObj);
 
       const req = new Request("http://localhost/api/minutes", {
         method: "POST",
@@ -144,14 +151,20 @@ describe("Meeting Minutes API", () => {
 
   describe("DELETE /api/minutes/[id]", () => {
     it("allows author to delete their minute", async () => {
-      mockedGetServerSession.mockResolvedValueOnce({
-        user: { email: "author@ntusa.ntu.edu.tw" },
-        expires: "",
-      } as any);
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "author@ntusa.ntu.edu.tw" })
+      );
 
-      (mockedPrisma.meetingMinute.findUnique as any).mockResolvedValueOnce({
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce({
         id: "m-1",
+        title: "Minute 1",
+        date: "2026-09-10",
+        url: "https://drive.google.com/test",
         authorEmail: "author@ntusa.ntu.edu.tw",
+        authorName: "Author",
+        department: "公關部",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
       const req = new Request("http://localhost/api/minutes/m-1", { method: "DELETE" });
@@ -162,14 +175,20 @@ describe("Meeting Minutes API", () => {
     });
 
     it("rejects non-author without admin/reviewer role", async () => {
-      mockedGetServerSession.mockResolvedValueOnce({
-        user: { email: "other@ntusa.ntu.edu.tw", role: "editor", department: "學術部" },
-        expires: "",
-      } as any);
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "other@ntusa.ntu.edu.tw", role: "editor", department: "學術部" })
+      );
 
-      (mockedPrisma.meetingMinute.findUnique as any).mockResolvedValueOnce({
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce({
         id: "m-1",
+        title: "Minute 1",
+        date: "2026-09-10",
+        url: "https://drive.google.com/test",
         authorEmail: "author@ntusa.ntu.edu.tw",
+        authorName: "Author",
+        department: "公關部",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
       const req = new Request("http://localhost/api/minutes/m-1", { method: "DELETE" });
@@ -179,14 +198,20 @@ describe("Meeting Minutes API", () => {
     });
 
     it("allows admin or reviewer to delete any minute", async () => {
-      mockedGetServerSession.mockResolvedValueOnce({
-        user: { email: "admin@ntusa.ntu.edu.tw", role: "admin" },
-        expires: "",
-      } as any);
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "admin@ntusa.ntu.edu.tw", role: "admin" })
+      );
 
-      (mockedPrisma.meetingMinute.findUnique as any).mockResolvedValueOnce({
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce({
         id: "m-1",
+        title: "Minute 1",
+        date: "2026-09-10",
+        url: "https://drive.google.com/test",
         authorEmail: "author@ntusa.ntu.edu.tw",
+        authorName: "Author",
+        department: "公關部",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
       const req = new Request("http://localhost/api/minutes/m-1", { method: "DELETE" });
