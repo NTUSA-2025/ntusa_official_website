@@ -75,8 +75,12 @@
       "deptsSub": "Multiple departments work together to defend student rights"
     },
     "depts": {
-      "hq": {
-        "name": "Headquarters",
+      "presidency": {
+        "name": "President and Vice President",
+        "desc": "Department description coming soon."
+      },
+      "secretary": {
+        "name": "Presidential Secretary",
         "desc": "Department description coming soon."
       },
       "secretariat": {

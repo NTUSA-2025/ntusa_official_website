@@ -11,7 +11,8 @@ import HomeHero from "./HomeHero";
 import { meetingMinutes } from "@/data/meetingMinutes";
 
 const DEPT_KEYS = [
-  "hq",
+  "presidency",
+  "secretary",
   "secretariat",
   "academic",
   "pr",

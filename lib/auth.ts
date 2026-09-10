@@ -120,6 +120,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.NEXTAUTH_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET as string,
+      style: {
+        logo: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTUuMjcgOS43NkE3LjA4IDcuMDggMCAwIDEgMTYuNDIgNi41TDE5LjkgM0ExMS45NyAxMS45NyAwIDAgMCAxLjI0IDYuNjVsNC4wMyAzLjExWiIvPjxwYXRoIGZpbGw9IiMzNEE4NTMiIGQ9Ik0xNi4wNCAxOC4wMUE3LjQgNy40IDAgMCAxIDEyIDE5LjFhNy4wOCA3LjA4IDAgMCAxLTYuNzItNC44MmwtNC4wNCAzLjA2QTExLjk2IDExLjk2IDAgMCAwIDEyIDI0YTExLjQgMTEuNCAwIDAgMCA3LjgzLTNsLTMuNzktMi45OVoiLz48cGF0aCBmaWxsPSIjNEE5MEUyIiBkPSJNMTkuODMgMjFjMi4yLTIuMDUgMy42Mi01LjEgMy42Mi05IDAtLjctLjEtMS40Ny0uMjctMi4xOEgxMnY0LjYzaDYuNDRhNS40IDUuNCAwIDAgMS0yLjQgMy41NmwzLjggMi45OVoiLz48cGF0aCBmaWxsPSIjRkJCQzA1IiBkPSJNNS4yOCAxNC4yN2E3LjEyIDcuMTIgMCAwIDEtLjAxLTQuNUwxLjI0IDYuNjRBMTEuOTMgMTEuOTMgMCAwIDAgMCAxMmMwIDEuOTIuNDQgMy43MyAxLjI0IDUuMzNsNC4wNC0zLjA2WiIvPjwvc3ZnPg==",
+        bg: "#fff",
+        text: "#000",
+      },
     }),
   ],
   callbacks: {

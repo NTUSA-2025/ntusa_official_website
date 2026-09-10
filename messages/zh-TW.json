@@ -75,8 +75,12 @@
       "deptsSub": "學生會由多個部門共同運作，各司其職，守護學生權益"
     },
     "depts": {
-      "hq": {
-        "name": "會本部",
+      "presidency": {
+        "name": "正副會長",
+        "desc": "部門簡介尚未提供，敬請期待。"
+      },
+      "secretary": {
+        "name": "會長秘書",
         "desc": "部門簡介尚未提供，敬請期待。"
       },
       "secretariat": {
