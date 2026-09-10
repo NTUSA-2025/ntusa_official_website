@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
+import { useSession } from "next-auth/react";
 import { proxyR2Url } from "@/lib/r2-proxy";
 import { tabFromHashFragment } from "@/lib/home-active-tab";
 import AlternatingPostList from "./AlternatingPostList";
@@ -28,11 +29,27 @@ type PostType = {
   coverImage: string | null;
 };
 
-export default function HomeClient({ posts }: { posts: PostType[] }) {
+export interface HomeMinuteItem {
+  id: string;
+  date: string;
+  title?: string;
+  type?: string;
+  file: string;
+}
+
+export default function HomeClient({
+  posts,
+  initialMinutes,
+}: {
+  posts: PostType[];
+  initialMinutes?: HomeMinuteItem[];
+}) {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState(() => (
     typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
   ));
   const [dataTab, setDataTab] = useState("minutes");
+  const minutesData = initialMinutes && initialMinutes.length > 0 ? initialMinutes : meetingMinutes;
   const locale = useLocale();
   const tNews = useTranslations("home.news");
   const tAbout = useTranslations("home.about");
@@ -274,16 +291,27 @@ export default function HomeClient({ posts }: { posts: PostType[] }) {
           </div>
 
           <div className={`data-panel ${dataTab === "minutes" ? "active" : ""}`}>
-            <p className="minutes-intro fade-up-target">{tData("minutesDesc")}</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+              <p className="minutes-intro fade-up-target m-0">{tData("minutesDesc")}</p>
+              {session?.user && (
+                <Link
+                  href="/minutes/upload"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors shadow-sm shrink-0 self-start sm:self-center"
+                >
+                  <span>＋</span>
+                  <span>{tData("uploadButton")}</span>
+                </Link>
+              )}
+            </div>
             <ul className="minutes-list">
-              {meetingMinutes.map((m) => {
+              {minutesData.map((m) => {
                 const meetingDate = new Date(`${m.date}T00:00:00`);
                 const dateLabel = meetingDate.toLocaleDateString(locale, {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
                 });
-                const title = tData(`types.${m.type}`);
+                const title = m.title || (m.type ? tData(`types.${m.type}`) : tData("minutesTitle"));
                 return (
                   <li key={m.id} className="minute-card fade-up-target">
                     <time className="minute-date" dateTime={m.date}>{dateLabel}</time>

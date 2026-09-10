@@ -8,7 +8,8 @@
   "common": {
     "locale": "EN",
     "switchToEn": "Switch to English",
-    "switchToZh": "切換為中文"
+    "switchToZh": "切換為中文",
+    "delete": "Delete"
   },
   "nav": {
     "home": "Home",
@@ -18,6 +19,7 @@
     "data": "Records",
     "newPost": "New Post",
     "review": "Review",
+    "uploadMinutes": "Upload Minutes",
     "signOut": "Sign out",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
@@ -142,6 +144,7 @@
       "types": {
         "admin": "Administrative Dept. Meeting"
       },
+      "uploadButton": "Upload Minutes",
       "budgetTitle": "Historical Budgets and Final Accounts",
       "budgetDesc": "Past budgets and final accounts of the Student Association, published on Google Drive.",
       "budgetOpenDrive": "Open in Google Drive →",
@@ -252,6 +255,39 @@
       "rejectButton": "Reject",
       "editButton": "Edit Post",
       "buttonLoading": "Processing…"
+    }
+  },
+  "minutesUpload": {
+    "pageTitle": "Upload Meeting Minutes",
+    "pageDescription": "All members with an @ntusa.ntu.edu.tw email can add meeting minutes and public links here.",
+    "formTitle": "Add Meeting Minutes",
+    "formSubtitle": "Please enter the meeting date, display title, and Google Drive link",
+    "fields": {
+      "date": "Meeting Date",
+      "title": "Meeting Title (Display Name)",
+      "titlePlaceholder": "e.g., 38th Administrative Department Meeting #1",
+      "url": "Google Drive / Document Link"
+    },
+    "driveTipTitle": "Google Drive Sharing Tip",
+    "driveTipContent": "Please ensure the file or folder sharing permissions on Google Drive are set to 'Anyone with the link can view' so that students can access it.",
+    "submitButton": "Publish Minutes",
+    "submitting": "Publishing...",
+    "listTitle": "Published Records Management",
+    "totalCount": "{count} total",
+    "noMinutesYet": "No dynamic meeting minutes published yet",
+    "publishedBy": "Published by: {name}",
+    "openLink": "Open Link",
+    "deleting": "Deleting...",
+    "successAdd": "Meeting minutes published successfully!",
+    "successDelete": "Meeting minute deleted successfully!",
+    "deleteConfirm": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+    "errors": {
+      "titleRequired": "Please enter a meeting title",
+      "dateRequired": "Please select a meeting date",
+      "urlRequired": "Please provide a document or Google Drive link",
+      "invalidUrl": "Invalid URL format. Please enter a valid URL starting with http:// or https://",
+      "submitFailed": "Failed to publish. Please try again later.",
+      "deleteFailed": "Failed to delete. Please verify you have permission to perform this action."
     }
   },
   "errors": {

@@ -13,8 +13,10 @@ export interface MeetingMinute {
   /** ISO date (YYYY-MM-DD) of the meeting, formatted per locale in the UI. */
   date: string;
   /** Meeting category; resolved to a localized title. */
-  type: MeetingType;
-  /** Public path to the PDF served from `public/`. */
+  type?: MeetingType;
+  /** Custom display title if provided. */
+  title?: string;
+  /** Public path to the PDF served from `public/` or external URL. */
   file: string;
 }
 
