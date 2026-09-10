@@ -10,7 +10,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // 從 .env 讀取審核者信箱清單，若沒設定則提供基本預設值
 const PR_EMAILS = process.env.REVIEWER_EMAILS 
   ? process.env.REVIEWER_EMAILS.split(",").map(email => email.trim())
-  : ["pr-dept@ntusa.ntu.edu.tw"];
+  : ["pr-dept@ntusa.ntu.edu.tw", "president@ntusa.ntu.edu.tw"];
 
 export async function POST(request: Request) {
   try {

@@ -3,11 +3,17 @@ import GoogleProvider from "next-auth/providers/google";
 import { getUserGroups } from "./google-admin";
 
 const PR_DEPT_GROUP_EMAIL = "pr-dept@ntusa.ntu.edu.tw";
+const PRESIDENT_GROUP_EMAIL = "president@ntusa.ntu.edu.tw";
 const INFOR_GROUP_EMAIL = "infor@ntusa.ntu.edu.tw";
 type UserRole = "admin" | "reviewer" | "editor";
 
+const REVIEWER_GROUP_EMAILS = [
+  PR_DEPT_GROUP_EMAIL,
+  PRESIDENT_GROUP_EMAIL,
+];
+
 export const ADDITIONAL_REVIEWER_EMAILS = [
-  "sun.thuan.tiat@ntusa.ntu.edu.tw",
+  PRESIDENT_GROUP_EMAIL,
 ];
 
 export const isReviewerUser = (email?: string | null): boolean => {
@@ -90,7 +96,7 @@ const DEPARTMENT_GROUPS: Record<string, DepartmentGroupConfig> = {
     departmentId: "president-office",
     departmentName: "會本部",
   },
-  "president@ntusa.ntu.edu.tw": {
+  [PRESIDENT_GROUP_EMAIL]: {
     departmentId: "president-office",
     departmentName: "會本部",
   },
@@ -139,7 +145,7 @@ export const authOptions: NextAuthOptions = {
           const groups = await getUserGroups(userEmail);
           let role: UserRole = "editor";
           let department: string = "一般部門";
-          let isInPrDept = false;
+          let isInReviewerGroup = false;
           let matchedDepartment: DepartmentGroupConfig | null = null;
 
           for (const group of groups) {
@@ -155,8 +161,8 @@ export const authOptions: NextAuthOptions = {
             const mappedDepartment = DEPARTMENT_GROUPS[groupEmail];
             if (!mappedDepartment) continue;
 
-            if (groupEmail === PR_DEPT_GROUP_EMAIL) {
-              isInPrDept = true;
+            if (REVIEWER_GROUP_EMAILS.includes(groupEmail)) {
+              isInReviewerGroup = true;
               matchedDepartment = mappedDepartment;
               continue;
             }
@@ -168,15 +174,15 @@ export const authOptions: NextAuthOptions = {
 
           const isDesignatedReviewer = isReviewerUser(userEmail);
 
-          // PR department members and designated reviewers can review (approve/reject) articles.
-          if ((isInPrDept || isDesignatedReviewer) && role !== "admin") {
+          // PR department members, President's office, and designated reviewers can review (approve/reject) articles.
+          if ((isInReviewerGroup || isDesignatedReviewer) && role !== "admin") {
             role = "reviewer";
           }
 
           if (role !== "admin") {
             if (matchedDepartment) {
               department = matchedDepartment.departmentName;
-            } else if (userEmail === "sun.thuan.tiat@ntusa.ntu.edu.tw") {
+            } else if (userEmail === PRESIDENT_GROUP_EMAIL) {
               department = "會本部";
             }
           }
@@ -186,7 +192,7 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error("[NextAuth] Error fetching user groups:", error);
           token.role = isReviewerUser(userEmail) ? "reviewer" : "editor";
-          token.department = userEmail === "sun.thuan.tiat@ntusa.ntu.edu.tw" ? "會本部" : "一般部門";
+          token.department = userEmail === PRESIDENT_GROUP_EMAIL ? "會本部" : "一般部門";
         }
       }
       return token;

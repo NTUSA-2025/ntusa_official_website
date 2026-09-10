@@ -89,14 +89,28 @@ describe("auth group mapping", () => {
     expect(token.department).toBe("資訊部");
   });
 
-  it("maps the president sun.thuan.tiat@ntusa.ntu.edu.tw to reviewer role", async () => {
-    const token = await buildTokenForGroups([], "sun.thuan.tiat@ntusa.ntu.edu.tw");
+  it("maps president-office group (president@ntusa.ntu.edu.tw) members to reviewer role and 會本部", async () => {
+    const token = await buildTokenForGroups([{ email: "president@ntusa.ntu.edu.tw" }]);
 
     expect(token.role).toBe("reviewer");
     expect(token.department).toBe("會本部");
   });
 
-  it("maps the president with president-office group to reviewer role", async () => {
+  it("maps direct president@ntusa.ntu.edu.tw login to reviewer role and 會本部", async () => {
+    const token = await buildTokenForGroups([], "president@ntusa.ntu.edu.tw");
+
+    expect(token.role).toBe("reviewer");
+    expect(token.department).toBe("會本部");
+  });
+
+  it("does not hardcode sun.thuan.tiat@ntusa.ntu.edu.tw as reviewer when without groups", async () => {
+    const token = await buildTokenForGroups([], "sun.thuan.tiat@ntusa.ntu.edu.tw");
+
+    expect(token.role).toBe("editor");
+    expect(token.department).toBe("一般部門");
+  });
+
+  it("grants reviewer to sun.thuan.tiat@ntusa.ntu.edu.tw when in president@ntusa.ntu.edu.tw group", async () => {
     const token = await buildTokenForGroups(
       [{ email: "president@ntusa.ntu.edu.tw" }],
       "sun.thuan.tiat@ntusa.ntu.edu.tw",
