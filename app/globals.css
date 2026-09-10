@@ -232,13 +232,18 @@ p, .body { font-size: 16px; font-weight: 400; }
   display: flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
 }
 .nav-link {
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 100px;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
   transition: background var(--transition), color var(--transition);
 }
 .nav-link:hover { background: var(--color-brand-light); color: var(--color-brand-dark); }
@@ -1228,15 +1233,37 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 /* =====================================================
    RESPONSIVE
    ===================================================== */
+@media (max-width: 1200px) {
+  .nav-inner {
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .nav-logo {
+    gap: 8px;
+  }
+  .logo-sub {
+    display: none;
+  }
+  .nav-links {
+    gap: 2px;
+  }
+  .nav-link {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 1024px) {
   .dept-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 768px) {
-  :root { --nav-h: 56px; }
-
+@media (max-width: 960px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
+}
+
+@media (max-width: 768px) {
+  :root { --nav-h: 56px; }
 
   .section-wrap { padding: 56px 20px; }
 

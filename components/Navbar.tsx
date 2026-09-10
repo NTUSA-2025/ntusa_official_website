@@ -128,7 +128,7 @@ export default function Navbar() {
             {/* 登入後才會顯示的按鈕 */}
             {session && (
               <>
-                <div style={{ width: "1px", height: "20px", background: "var(--color-border)", margin: "0 8px" }}></div>
+                <div style={{ width: "1px", height: "20px", background: "var(--color-border)", margin: "0 8px", flexShrink: 0 }}></div>
                 <Link href="/editor" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
                   {t("newPost")}
                 </Link>
