@@ -316,10 +316,8 @@ export default function HomeClient({
                 return (
                   <li key={m.id} className="minute-card fade-up-target">
                     <time className="minute-date" dateTime={m.date}>{dateLabel}</time>
-                    <div className="minute-body">
-                      <h3 className="minute-title">{title}</h3>
-                      <span className="minute-tag">{tData("minutesTag")}</span>
-                    </div>
+                    <h3 className="minute-title">{title}</h3>
+                    <span className="minute-tag">{tData("minutesTag")}</span>
                     <a
                       className="minute-link"
                       href={m.file}
