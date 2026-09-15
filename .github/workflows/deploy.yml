@@ -27,7 +27,7 @@ jobs:
           cd /home/flavian/ntusa_official_website_mvp
           
           git fetch origin main
-          git reset --hard FETCH_HEAD
+          git reset --hard origin/main
           
         
           npm ci
