@@ -282,8 +282,13 @@
     "noMinutesYet": "No dynamic meeting minutes published yet",
     "publishedBy": "Published by: {name}",
     "openLink": "Open Link",
+    "editButton": "Edit",
+    "saveEdit": "Save Changes",
+    "cancelEdit": "Cancel",
+    "updating": "Saving...",
     "deleting": "Deleting...",
     "successAdd": "Meeting minutes published successfully!",
+    "successUpdate": "Meeting minutes updated successfully!",
     "successDelete": "Meeting minute deleted successfully!",
     "deleteConfirm": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
     "errors": {
@@ -292,6 +297,7 @@
       "urlRequired": "Please provide a document or Google Drive link",
       "invalidUrl": "Invalid URL format. Please enter a valid URL starting with http:// or https://",
       "submitFailed": "Failed to publish. Please try again later.",
+      "updateFailed": "Failed to update. Please verify you have permission to perform this action.",
       "deleteFailed": "Failed to delete. Please verify you have permission to perform this action."
     }
   },

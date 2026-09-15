@@ -282,8 +282,13 @@
     "noMinutesYet": "目前尚無動態發布的會議紀錄",
     "publishedBy": "發布者：{name}",
     "openLink": "開啟連結",
+    "editButton": "編輯",
+    "saveEdit": "儲存變更",
+    "cancelEdit": "取消",
+    "updating": "儲存中...",
     "deleting": "刪除中...",
     "successAdd": "會議紀錄已成功發布！",
+    "successUpdate": "會議紀錄已成功更新！",
     "successDelete": "已成功刪除該筆會議紀錄！",
     "deleteConfirm": "確定要刪除「{title}」嗎？此操作無法復原。",
     "errors": {
@@ -292,6 +297,7 @@
       "urlRequired": "請提供檔案或 Google Drive 連結",
       "invalidUrl": "連結格式不正確，請輸入以 http:// 或 https:// 開頭的有效網址",
       "submitFailed": "發布失敗，請稍後再試",
+      "updateFailed": "更新失敗，請確認您是否有權限執行此操作",
       "deleteFailed": "刪除失敗，請確認您是否有權限執行此操作"
     }
   },

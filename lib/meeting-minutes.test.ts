@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { POST as createMinute } from "../app/api/minutes/route";
-import { DELETE as deleteMinute } from "../app/api/minutes/[id]/route";
+import { DELETE as deleteMinute, PATCH as updateMinute } from "../app/api/minutes/[id]/route";
 import { getServerSession } from "next-auth/next";
 import type { Session } from "next-auth";
 import prisma from "./prisma";
@@ -15,6 +15,7 @@ vi.mock("./prisma", () => ({
       findMany: vi.fn(),
       findUnique: vi.fn(),
       create: vi.fn(),
+      update: vi.fn(),
       delete: vi.fn(),
     },
   },
@@ -219,6 +220,87 @@ describe("Meeting Minutes API", () => {
 
       expect(res.status).toBe(200);
       expect(mockedPrisma.meetingMinute.delete).toHaveBeenCalledWith({ where: { id: "m-1" } });
+    });
+  });
+
+  describe("PATCH /api/minutes/[id]", () => {
+    const existingMinute = {
+      id: "m-1",
+      title: "Original title",
+      date: "2026-09-10",
+      url: "https://drive.google.com/original",
+      authorEmail: "author@ntusa.ntu.edu.tw",
+      authorName: "Author",
+      department: "公關部",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    it("allows the author to update a meeting minute", async () => {
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "author@ntusa.ntu.edu.tw" })
+      );
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce(existingMinute);
+
+      const updatedMinute = {
+        ...existingMinute,
+        title: "Updated title",
+        date: "2026-09-17",
+        url: "https://drive.google.com/updated",
+      };
+      vi.mocked(mockedPrisma.meetingMinute.update).mockResolvedValueOnce(updatedMinute);
+
+      const req = new Request("http://localhost/api/minutes/m-1", {
+        method: "PATCH",
+        body: JSON.stringify({
+          title: updatedMinute.title,
+          date: updatedMinute.date,
+          url: updatedMinute.url,
+        }),
+      });
+      const res = await updateMinute(req, { params: Promise.resolve({ id: "m-1" }) });
+
+      expect(res.status).toBe(200);
+      expect(mockedPrisma.meetingMinute.update).toHaveBeenCalledWith({
+        where: { id: "m-1" },
+        data: {
+          title: updatedMinute.title,
+          date: updatedMinute.date,
+          url: updatedMinute.url,
+        },
+      });
+    });
+
+    it("rejects updates from a user without permission", async () => {
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "other@ntusa.ntu.edu.tw", role: "editor", department: "學術部" })
+      );
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce(existingMinute);
+
+      const req = new Request("http://localhost/api/minutes/m-1", {
+        method: "PATCH",
+        body: JSON.stringify({ title: "Updated", date: "2026-09-17", url: "https://example.com" }),
+      });
+      const res = await updateMinute(req, { params: Promise.resolve({ id: "m-1" }) });
+
+      expect(res.status).toBe(403);
+      expect(mockedPrisma.meetingMinute.update).not.toHaveBeenCalled();
+    });
+
+    it("rejects invalid update input", async () => {
+      mockedGetServerSession.mockResolvedValueOnce(
+        createMockSession({ email: "author@ntusa.ntu.edu.tw" })
+      );
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce(existingMinute);
+
+      const req = new Request("http://localhost/api/minutes/m-1", {
+        method: "PATCH",
+        body: JSON.stringify({ title: "Updated", date: "2026-09-17", url: "file:///private/document.pdf" }),
+      });
+      const res = await updateMinute(req, { params: Promise.resolve({ id: "m-1" }) });
+
+      expect(res.status).toBe(400);
+      expect(mockedPrisma.meetingMinute.update).not.toHaveBeenCalled();
     });
   });
 });

@@ -38,6 +38,11 @@ export default function MinutesUploadManager({
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDate, setEditDate] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editUrl, setEditUrl] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [minutesList, setMinutesList] = useState<MinuteRecord[]>(initialMinutes);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -132,6 +137,82 @@ export default function MinutesUploadManager({
       setErrorMessage(msg);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const startEditing = (minute: MinuteRecord) => {
+    setEditingId(minute.id);
+    setEditDate(minute.date);
+    setEditTitle(minute.title);
+    setEditUrl(minute.url);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditDate("");
+    setEditTitle("");
+    setEditUrl("");
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingId) return;
+
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!editTitle.trim()) {
+      setErrorMessage(t("errors.titleRequired"));
+      return;
+    }
+    if (!editDate.trim()) {
+      setErrorMessage(t("errors.dateRequired"));
+      return;
+    }
+    if (!editUrl.trim()) {
+      setErrorMessage(t("errors.urlRequired"));
+      return;
+    }
+
+    try {
+      new URL(editUrl.trim());
+    } catch {
+      setErrorMessage(t("errors.invalidUrl"));
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      const res = await fetch(`/api/minutes/${editingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editTitle.trim(),
+          date: editDate.trim(),
+          url: editUrl.trim(),
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.errorCode || t("errors.updateFailed"));
+      }
+
+      const updatedItem: MinuteRecord = await res.json();
+      setMinutesList((prev) => prev
+        .map((item) => item.id === updatedItem.id ? updatedItem : item)
+        .sort((a, b) => b.date.localeCompare(a.date))
+      );
+      cancelEditing();
+      setSuccessMessage(t("successUpdate"));
+      router.refresh();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t("errors.updateFailed");
+      setErrorMessage(msg);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -237,9 +318,60 @@ export default function MinutesUploadManager({
         ) : (
           <div className="divide-y divide-gray-100">
             {minutesList.map((item) => {
-              const userCanDelete = canDelete(item);
+              const userCanManage = canDelete(item);
               return (
                 <div key={item.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  {editingId === item.id ? (
+                    <form onSubmit={handleUpdate} className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <label className="text-xs font-semibold text-gray-600">
+                        {t("fields.date")}
+                        <input
+                          type="date"
+                          required
+                          value={editDate}
+                          onChange={(e) => setEditDate(e.target.value)}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800"
+                        />
+                      </label>
+                      <label className="text-xs font-semibold text-gray-600">
+                        {t("fields.title")}
+                        <input
+                          type="text"
+                          required
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800"
+                        />
+                      </label>
+                      <label className="sm:col-span-2 text-xs font-semibold text-gray-600">
+                        {t("fields.url")}
+                        <input
+                          type="url"
+                          required
+                          value={editUrl}
+                          onChange={(e) => setEditUrl(e.target.value)}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800"
+                        />
+                      </label>
+                      <div className="sm:col-span-2 flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={cancelEditing}
+                          disabled={isUpdating}
+                          className="px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors disabled:opacity-50"
+                        >
+                          {t("cancelEdit")}
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isUpdating}
+                          className="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50"
+                        >
+                          {isUpdating ? t("updating") : t("saveEdit")}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
                   <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
@@ -254,8 +386,9 @@ export default function MinutesUploadManager({
                       {item.department && <span>{item.department}</span>}
                     </div>
                   </div>
+                  )}
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  {editingId !== item.id && <div className="flex items-center gap-2 shrink-0">
                     <a
                       href={item.url}
                       target="_blank"
@@ -264,7 +397,16 @@ export default function MinutesUploadManager({
                     >
                       🔗 {t("openLink")}
                     </a>
-                    {userCanDelete && (
+                    {userCanManage && (
+                      <button
+                        type="button"
+                        onClick={() => startEditing(item)}
+                        className="px-3 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-50 border border-blue-200 rounded-md transition-colors"
+                      >
+                        {t("editButton")}
+                      </button>
+                    )}
+                    {userCanManage && (
                       <button
                         type="button"
                         onClick={() => handleDelete(item.id, item.title)}
@@ -274,7 +416,7 @@ export default function MinutesUploadManager({
                         {deletingId === item.id ? t("deleting") : tCommon("delete")}
                       </button>
                     )}
-                  </div>
+                  </div>}
                 </div>
               );
             })}
