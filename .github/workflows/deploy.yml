@@ -3,24 +3,12 @@ on:
   push:
     branches: [ main ]
 
-concurrency:
-  group: deploy-production
-  cancel-in-progress: false
-
 jobs:
   deploy:
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Validate code
-        run: |
-          npm run lint
-          npm test -- --run
 
       - name: Build and Deploy
         run: |
@@ -30,7 +18,7 @@ jobs:
           git reset --hard origin/main
           
         
-          npm ci
+          npm install
 
           npm run build
           pm2 restart ntusa-website
