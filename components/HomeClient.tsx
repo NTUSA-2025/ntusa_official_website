@@ -8,7 +8,6 @@ import { proxyR2Url } from "@/lib/r2-proxy";
 import { tabFromHashFragment } from "@/lib/home-active-tab";
 import AlternatingPostList from "./AlternatingPostList";
 import HomeHero from "./HomeHero";
-import { meetingMinutes } from "@/data/meetingMinutes";
 
 const DEPT_KEYS = [
   "presidency",
@@ -50,7 +49,7 @@ export default function HomeClient({
     typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
   ));
   const [dataTab, setDataTab] = useState("minutes");
-  const minutesData = initialMinutes && initialMinutes.length > 0 ? initialMinutes : meetingMinutes;
+  const minutesData = initialMinutes ?? [];
   const locale = useLocale();
   const tNews = useTranslations("home.news");
   const tAbout = useTranslations("home.about");
@@ -304,33 +303,37 @@ export default function HomeClient({
                 </Link>
               )}
             </div>
-            <ul className="minutes-list">
-              {minutesData.map((m) => {
-                const meetingDate = new Date(`${m.date}T00:00:00`);
-                const dateLabel = meetingDate.toLocaleDateString(locale, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                });
-                const title = m.title || (m.type ? tData(`types.${m.type}`) : tData("minutesTitle"));
-                return (
-                  <li key={m.id} className="minute-card fade-up-target">
-                    <time className="minute-date" dateTime={m.date}>{dateLabel}</time>
-                    <h3 className="minute-title">{title}</h3>
-                    <span className="minute-tag">{tData("minutesTag")}</span>
-                    <a
-                      className="minute-link"
-                      href={m.file}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${dateLabel} ${title} — ${tData("minutesViewPdf")}`}
-                    >
-                      {tData("minutesViewPdf")}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
+            {minutesData.length > 0 ? (
+              <ul className="minutes-list">
+                {minutesData.map((m) => {
+                  const meetingDate = new Date(`${m.date}T00:00:00`);
+                  const dateLabel = meetingDate.toLocaleDateString(locale, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  });
+                  const title = m.title || (m.type ? tData(`types.${m.type}`) : tData("minutesTitle"));
+                  return (
+                    <li key={m.id} className="minute-card fade-up-target">
+                      <time className="minute-date" dateTime={m.date}>{dateLabel}</time>
+                      <h3 className="minute-title">{title}</h3>
+                      <span className="minute-tag">{tData("minutesTag")}</span>
+                      <a
+                        className="minute-link"
+                        href={m.file}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${dateLabel} ${title} — ${tData("minutesViewPdf")}`}
+                      >
+                        {tData("minutesViewPdf")}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p className="minutes-empty">{tData("minutesEmpty")}</p>
+            )}
           </div>
           <div className={`data-panel ${dataTab === "budget" ? "active" : ""}`}>
             <div className="rights-placeholder-box fade-up-target">

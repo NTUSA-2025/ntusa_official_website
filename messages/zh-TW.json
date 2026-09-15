@@ -143,6 +143,7 @@
       "tabOther": "其他文件",
       "minutesTitle": "會議紀錄",
       "minutesDesc": "學生會各次會議之公開紀錄，點擊即可檢視或下載 PDF。",
+      "minutesEmpty": "目前尚未發布會議紀錄。",
       "minutesTag": "公告版",
       "minutesViewPdf": "查看 PDF →",
       "types": {

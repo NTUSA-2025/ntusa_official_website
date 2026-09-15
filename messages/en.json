@@ -143,6 +143,7 @@
       "tabOther": "Other",
       "minutesTitle": "Meeting Minutes",
       "minutesDesc": "Public minutes from Student Association meetings. Click to view or download the PDF.",
+      "minutesEmpty": "No meeting minutes have been published yet.",
       "minutesTag": "Public Release",
       "minutesViewPdf": "View PDF →",
       "types": {
