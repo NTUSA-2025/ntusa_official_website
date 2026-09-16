@@ -956,9 +956,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   font-size: 14px;
   color: rgba(255,255,255,.6);
   border-radius: 100px;
-  transition: background var(--transition), color var(--transition);
+  background-color: transparent;
+  transition: color .2s ease;
 }
-.footer-links a:hover { background: rgba(255,255,255,.1); color: var(--color-text-invert); }
+.footer-links a:hover { background-color: transparent; color: #f4f0eb; }
+.footer-links a.active { background-color: transparent; color: #ffffff; }
 .footer-copy {
   font-size: 13px;
   color: rgba(255,255,255,.35);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +11,18 @@ export default function Footer() {
   const pathname = usePathname();
   const t = useTranslations("footer");
   const tNav = useTranslations("nav");
+  const [activeHash, setActiveHash] = useState(() => (
+    typeof window === "undefined" ? "home" : window.location.hash.slice(1) || "home"
+  ));
+
+  useEffect(() => {
+    const updateActiveHash = () => setActiveHash(window.location.hash.slice(1) || "home");
+
+    window.addEventListener("hashchange", updateActiveHash);
+    updateActiveHash();
+
+    return () => window.removeEventListener("hashchange", updateActiveHash);
+  }, [pathname]);
 
   const handleLogoClick = () => {
     router.push("/api/auth/signin");
@@ -22,6 +35,8 @@ export default function Footer() {
       window.dispatchEvent(new Event("hashchange"));
     }
   };
+
+  const isActive = (hashId: string) => pathname === "/" && activeHash === hashId;
 
   return (
     <footer className="footer">
@@ -49,19 +64,19 @@ export default function Footer() {
         </div>
 
         <div className="footer-links">
-          <Link href="/#home" onClick={(e) => handleHashNavigation(e, "home")}>
+          <Link href="/#home" onClick={(e) => handleHashNavigation(e, "home")} className={isActive("home") ? "active" : undefined}>
             {tNav("home")}
           </Link>
-          <Link href="/#about" onClick={(e) => handleHashNavigation(e, "about")}>
+          <Link href="/#about" onClick={(e) => handleHashNavigation(e, "about")} className={isActive("about") ? "active" : undefined}>
             {tNav("about")}
           </Link>
-          <Link href="/#announcements" onClick={(e) => handleHashNavigation(e, "announcements")}>
+          <Link href="/#announcements" onClick={(e) => handleHashNavigation(e, "announcements")} className={isActive("announcements") ? "active" : undefined}>
             {tNav("rights")}
           </Link>
-         <Link href="/#forms" onClick={(e) => handleHashNavigation(e, "forms")}>
+         <Link href="/#forms" onClick={(e) => handleHashNavigation(e, "forms")} className={isActive("forms") ? "active" : undefined}>
             {tNav("forms")}
           </Link>
-          <Link href="/#data" onClick={(e) => handleHashNavigation(e, "data")}>
+          <Link href="/#data" onClick={(e) => handleHashNavigation(e, "data")} className={isActive("data") ? "active" : undefined}>
             {tNav("data")}
           </Link>
         </div>
