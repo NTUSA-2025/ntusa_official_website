@@ -766,7 +766,14 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
    DATA TABS
    ===================================================== */
 .data-tabs {
-  display: flex; gap: 8px;
+  display: flex;
+  gap: 8px;
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 10;
+  background: var(--color-surface);
+  padding-top: 12px;
+  margin-top: -12px;
   margin-bottom: 40px;
   border-bottom: 2px solid var(--color-border);
   padding-bottom: 0;
