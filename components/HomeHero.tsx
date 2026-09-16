@@ -324,7 +324,6 @@ export default function HomeHero() {
       <div className="hero">
         <canvas ref={canvasRef} id="heroCanvas" />
         <div className="hero-content fade-up-target">
-          <p className="hero-eyebrow">{t("eyebrow")}</p>
           <h1 className="hero-title">{t("title")}</h1>
           <p className="hero-desc">
             {t("descLine1")}
