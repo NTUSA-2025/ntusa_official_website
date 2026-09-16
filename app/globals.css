@@ -244,12 +244,13 @@ p, .body { font-size: 16px; font-weight: 400; }
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  transition: background var(--transition), color var(--transition);
+  background-color: transparent;
+  transition: color .2s ease;
 }
-.nav-link:hover { background: var(--color-brand-light); color: var(--color-brand-dark); }
+.nav-link:hover { background-color: transparent; color: #72b3c0; }
 .nav-link.active {
-  background: var(--color-secondary);
-  color: var(--color-text-invert);
+  background-color: transparent;
+  color: #5a9aac;
 }
 
 /* Hamburger */
@@ -324,10 +325,11 @@ p, .body { font-size: 16px; font-weight: 400; }
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text-secondary);
-  transition: background var(--transition), color var(--transition), padding-left var(--transition);
+  background-color: transparent;
+  transition: color .2s ease, padding-left var(--transition);
 }
-.drawer-link:hover { background: var(--color-brand-light); color: var(--color-brand-dark); padding-left: 22px; }
-.drawer-link.active { background: var(--color-secondary); color: var(--color-text-invert); }
+.drawer-link:hover { background-color: transparent; color: #72b3c0; padding-left: 22px; }
+.drawer-link.active { background-color: transparent; color: #5a9aac; }
 
 .drawer-divider {
   height: 1px;
@@ -462,19 +464,6 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   width: 100%;
   margin: 0 auto;
   padding: 0 32px;
-}
-
-.hero-eyebrow {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: #72B3C0;
-  padding: 4px 14px;
-  background: rgba(114, 179, 192, .18);
-  border-radius: 100px;
-  margin-bottom: 16px;
 }
 
 .hero-title {
@@ -628,11 +617,6 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   margin-bottom: 10px;
 }
 .page-desc { color: rgba(255,255,255,.65); font-size: 16px; max-width: 520px; }
-.page-hero-mini .section-tag {
-  background: rgba(114,179,192,.2);
-  color: var(--color-brand);
-}
-
 /* =====================================================
    ABOUT — HISTORY BODY
    ===================================================== */
@@ -782,7 +766,14 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
    DATA TABS
    ===================================================== */
 .data-tabs {
-  display: flex; gap: 8px;
+  display: flex;
+  gap: 8px;
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 10;
+  background: var(--color-surface);
+  padding-top: 12px;
+  margin-top: -12px;
   margin-bottom: 40px;
   border-bottom: 2px solid var(--color-border);
   padding-bottom: 0;
@@ -832,7 +823,6 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   padding: 20px 24px;
   background: var(--color-card-bg);
   border: 1px solid var(--color-border);
-  border-left: 4px solid var(--color-brand);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition);
@@ -955,9 +945,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   font-size: 14px;
   color: rgba(255,255,255,.6);
   border-radius: 100px;
-  transition: background var(--transition), color var(--transition);
+  background-color: transparent;
+  transition: color .2s ease;
 }
-.footer-links a:hover { background: rgba(255,255,255,.1); color: var(--color-text-invert); }
+.footer-links a:hover { background-color: transparent; color: #f4f0eb; }
+.footer-links a.active { background-color: transparent; color: #ffffff; }
 .footer-copy {
   font-size: 13px;
   color: rgba(255,255,255,.35);

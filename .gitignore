@@ -48,3 +48,7 @@ next-env.d.ts
 
 /app/generated/prisma
 env.bak
+
+# internal documentation
+docs/HANDOVER.md
+
