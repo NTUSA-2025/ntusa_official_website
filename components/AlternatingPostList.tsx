@@ -50,7 +50,7 @@ export default function AlternatingPostList({ posts }: { posts: Post[] }) {
 
             {/* 文字內容區塊 */}
             <div className="w-full md:w-1/2 flex flex-col justify-center">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800 group-hover:text-blue-600 transition-colors">
+              <h2 className="text-2xl font-bold mb-4 text-gray-800 group-hover:text-[#72b3c0] transition-colors">
                 {post.title}
               </h2>
               <p className="text-gray-600 mb-4 line-clamp-4">
