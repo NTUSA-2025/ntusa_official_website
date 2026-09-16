@@ -325,10 +325,11 @@ p, .body { font-size: 16px; font-weight: 400; }
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text-secondary);
-  transition: background var(--transition), color var(--transition), padding-left var(--transition);
+  background-color: transparent;
+  transition: color .2s ease, padding-left var(--transition);
 }
-.drawer-link:hover { background: var(--color-brand-light); color: var(--color-brand-dark); padding-left: 22px; }
-.drawer-link.active { background: var(--color-secondary); color: var(--color-text-invert); }
+.drawer-link:hover { background-color: transparent; color: #72b3c0; padding-left: 22px; }
+.drawer-link.active { background-color: transparent; color: #5a9aac; }
 
 .drawer-divider {
   height: 1px;
