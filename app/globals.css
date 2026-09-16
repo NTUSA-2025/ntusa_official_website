@@ -616,11 +616,6 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   margin-bottom: 10px;
 }
 .page-desc { color: rgba(255,255,255,.65); font-size: 16px; max-width: 520px; }
-.page-hero-mini .section-tag {
-  background: rgba(114,179,192,.2);
-  color: var(--color-brand);
-}
-
 /* =====================================================
    ABOUT — HISTORY BODY
    ===================================================== */

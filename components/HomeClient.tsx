@@ -167,7 +167,6 @@ export default function HomeClient({
       <section className={`page ${activeTab === "about" ? "active" : ""}`} id="about">
         <div className="page-hero-mini">
           <div className="page-hero-mini-content">
-            <div className="section-tag">{tAbout("eyebrow")}</div>
             <h1 className="page-title">{tAbout("title")}</h1>
             <p className="page-desc">{tAbout("desc")}</p>
           </div>
@@ -207,7 +206,6 @@ export default function HomeClient({
       <section className={`page ${activeTab === "announcements" ? "active" : ""}`} id="announcements">
         <div className="page-hero-mini">
           <div className="page-hero-mini-content">
-            <div className="section-tag">{tRights("eyebrow")}</div>
             <h1 className="page-title">{tRights("title")}</h1>
             <p className="page-desc">{tRights("desc")}</p>
           </div>
@@ -225,7 +223,6 @@ export default function HomeClient({
       <section className={`page ${activeTab === "forms" ? "active" : ""}`} id="forms">
         <div className="page-hero-mini">
           <div className="page-hero-mini-content">
-            <div className="section-tag">{tForms("eyebrow")}</div>
             <h1 className="page-title">{tForms("title")}</h1>
             <p className="page-desc">{tForms("desc")}</p>
           </div>
@@ -277,7 +274,6 @@ export default function HomeClient({
       <section className={`page ${activeTab === "data" ? "active" : ""}`} id="data">
         <div className="page-hero-mini">
           <div className="page-hero-mini-content">
-            <div className="section-tag">{tData("eyebrow")}</div>
             <h1 className="page-title">{tData("title")}</h1>
             <p className="page-desc">{tData("desc")}</p>
           </div>
