@@ -1302,7 +1302,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   .footer-links { gap: 2px; }
 
   /* Data tabs */
-  .data-tabs { overflow-x: auto; padding-bottom: 0; }
+  .data-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0;
+  }
   .data-tab { white-space: nowrap; }
 
   .home-tools-cta-inner {
