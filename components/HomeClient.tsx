@@ -283,7 +283,6 @@ export default function HomeClient({
           <div className="data-tabs">
             <button className={`data-tab ${dataTab === "minutes" ? "active" : ""}`} onClick={() => setDataTab("minutes")}>{tData("tabMinutes")}</button>
             <button className={`data-tab ${dataTab === "budget" ? "active" : ""}`} onClick={() => setDataTab("budget")}>{tData("tabBudget")}</button>
-            <button className={`data-tab ${dataTab === "other" ? "active" : ""}`} onClick={() => setDataTab("other")}>{tData("tabOther")}</button>
           </div>
 
           <div className={`data-panel ${dataTab === "minutes" ? "active" : ""}`}>
@@ -345,14 +344,6 @@ export default function HomeClient({
               >
                 {tData("budgetOpenDrive")}
               </a>
-            </div>
-          </div>
-          <div className={`data-panel ${dataTab === "other" ? "active" : ""}`}>
-            <div className="rights-placeholder-box fade-up-target">
-              <div className="placeholder-icon">📂</div>
-              <h3>{tData("otherTitle")}</h3>
-              <p>{tData("otherDesc")}</p>
-              <div className="placeholder-badge">{tData("otherBadge")}</div>
             </div>
           </div>
         </div>
