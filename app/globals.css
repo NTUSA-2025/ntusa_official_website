@@ -244,12 +244,13 @@ p, .body { font-size: 16px; font-weight: 400; }
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  transition: background var(--transition), color var(--transition);
+  background-color: transparent;
+  transition: color .2s ease;
 }
-.nav-link:hover { background: var(--color-brand-light); color: var(--color-brand-dark); }
+.nav-link:hover { background-color: transparent; color: #72b3c0; }
 .nav-link.active {
-  background: var(--color-secondary);
-  color: var(--color-text-invert);
+  background-color: transparent;
+  color: #5a9aac;
 }
 
 /* Hamburger */
