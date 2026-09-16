@@ -196,13 +196,13 @@ export default function Navbar() {
             <>
               <div style={{ height: "1px", background: "var(--color-border)", margin: "8px 0" }}></div>
               <Link href="/editor" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                ✨ {t("newPost")}
+                {t("newPost")}
               </Link>
               <Link href="/review" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-secondary)", fontWeight: "bold" }}>
-                📋 {t("review")}
+                {t("review")}
               </Link>
               <Link href="/minutes/upload" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                📁 {t("uploadMinutes")}
+                {t("uploadMinutes")}
               </Link>
               <button onClick={() => { closeDrawer(); signOut({ callbackUrl: '/' }); }} className="drawer-link" style={{ color: "#e53e3e", textAlign: "left" }}>
                 {t("signOut")}
