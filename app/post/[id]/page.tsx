@@ -100,7 +100,7 @@ export default async function PostPage({
 
       {/* 底部操作區塊：包含「返回首頁」、「修改文章」與「刪除文章」 */}
       <div className="mt-12 pt-8 border-t flex flex-wrap justify-between items-center gap-4">
-        <Link href="/" className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center transition-colors">
+        <Link href="/" className="text-[#72b3c0] hover:text-[#5a9aac] font-medium inline-flex items-center transition-colors">
           <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
