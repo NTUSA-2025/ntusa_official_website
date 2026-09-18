@@ -26,19 +26,16 @@ Apply this workflow only to this repository.
 
 When the user asks to “sync to Vercel” after staging:
 
-1. Push `staging` first.
-2. Deploy the checked-out staging code as a Vercel Preview, never with `--prod`:
+1. Ensure the checked-out branch is `staging`, all changes are committed, and `staging` has been pushed.
+2. Run the repository deployment command:
 
    ```sh
-   npx --yes vercel --yes --scope team_uefNFBLSCeLqFdhBzCe4TePo
+   npm run deploy:staging
    ```
 
-3. Inspect the generated deployment and wait for status `Ready`.
-4. Move the stable staging alias to that ready deployment:
+   The script verifies a clean `staging` working tree, fetches and pushes `origin/staging`, creates a Vercel Preview, waits for status `Ready`, and moves the stable staging alias. It never deploys with `--prod`.
 
-   ```sh
-   npx --yes vercel alias set <preview-url> ntusa-website-staging-ntusa.vercel.app --scope team_uefNFBLSCeLqFdhBzCe4TePo
-   ```
+3. Report the generated immutable Preview URL and the stable staging alias. If the checkout has not been linked to Vercel, instruct the user to run `npx vercel link` first.
 
 The stable alias is the staging acceptance URL. The hash-based Preview URL is an immutable deployment URL and is expected to change every deployment. Preview deployment protection requiring Vercel login is normal.
 
