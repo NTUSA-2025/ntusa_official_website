@@ -76,8 +76,12 @@
     },
     "depts": {
       "presidency": {
-        "name": "President, Vice Presidents & Presidential Secretary",
-        "desc": "The President is elected by all National Taiwan University students, represents the Association externally, and leads and coordinates its administrative departments internally. One Internal Vice President and one External Vice President are nominated by the President and approved by the Student Senate to assist with Association affairs.\n\nUp to two Presidential Secretaries are nominated by the President and approved by the Student Senate. They assist the President and Vice Presidents with administrative affairs, political judgment, and external liaison work."
+        "name": "President and Vice Presidents",
+        "desc": "The President is elected by all National Taiwan University students, represents the Association externally, and leads and coordinates its administrative departments internally. One Internal Vice President and one External Vice President are nominated by the President and approved by the Student Senate to assist with Association affairs."
+      },
+      "secretary": {
+        "name": "Presidential Secretary",
+        "desc": "Up to two Presidential Secretaries are nominated by the President and approved by the Student Senate. They assist the President and Vice Presidents with administrative affairs, political judgment, and external liaison work."
       },
       "secretariat": {
         "name": "Secretariat",

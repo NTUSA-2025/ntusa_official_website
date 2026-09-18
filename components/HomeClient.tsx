@@ -11,6 +11,7 @@ import HomeHero from "./HomeHero";
 
 const DEPT_KEYS = [
   "presidency",
+  "secretary",
   "secretariat",
   "finance",
   "studentRights",
