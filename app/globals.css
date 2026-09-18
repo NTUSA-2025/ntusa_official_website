@@ -664,6 +664,16 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 }
 .dept-card--academic {
   grid-column: 1 / -1;
+  padding: 24px 0 4px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.dept-card--academic:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
 }
 .dept-icon { font-size: 28px; line-height: 1; }
 .dept-name { font-size: 16px; font-weight: 700; color: var(--color-secondary); }
@@ -698,21 +708,23 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   border-radius: 2px;
 }
 .dept-placeholder { font-style: italic; color: #bbb; }
-.academic-intro { flex: initial; }
+.academic-intro {
+  flex: initial;
+  max-width: 680px;
+}
 .academic-groups {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 6px;
+  gap: 18px 32px;
+  margin-top: 10px;
 }
 .academic-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 18px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-card-bg) 80%, var(--color-brand) 4%);
+  min-width: 0;
+  padding: 2px 0 2px 16px;
+  border-left: 3px solid var(--color-brand);
 }
 .academic-group-name {
   color: var(--color-secondary);
@@ -727,7 +739,7 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 .academic-group-desc:not(.is-expanded) {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 
