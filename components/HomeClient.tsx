@@ -11,14 +11,15 @@ import HomeHero from "./HomeHero";
 
 const DEPT_KEYS = [
   "presidency",
-  "secretary",
   "secretariat",
-  "academic",
-  "pr",
-  "it",
   "finance",
-  "international",
+  "studentRights",
+  "academic",
+  "culture",
+  "pr",
   "election",
+  "international",
+  "it",
 ] as const;
 
 type PostType = {
@@ -49,6 +50,7 @@ export default function HomeClient({
     typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
   ));
   const [dataTab, setDataTab] = useState("minutes");
+  const [expandedDepts, setExpandedDepts] = useState<Set<string>>(() => new Set());
   const minutesData = initialMinutes ?? [];
   const locale = useLocale();
   const tNews = useTranslations("home.news");
@@ -65,6 +67,15 @@ export default function HomeClient({
     name: tDepts(`${key}.name`),
     desc: tDepts(`${key}.desc`),
   }));
+
+  const toggleDeptDescription = (key: string) => {
+    setExpandedDepts((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
   const applyHashToTab = useCallback((scrollBehavior: ScrollBehavior = "smooth") => {
     const tab = tabFromHashFragment(window.location.hash);
@@ -191,11 +202,28 @@ export default function HomeClient({
             <p className="section-sub">{tAbout("deptsSub")}</p>
           </div>
 
-        <div className="dept-grid">
+          <div className="dept-grid">
             {deptsData.map((dept) => (
               <div className="dept-card fade-up-target" key={dept.key}>
                 <h3 className="dept-name">{dept.name}</h3>
-                <p className="dept-desc">{dept.desc}</p>
+                <p
+                  className={`dept-desc ${expandedDepts.has(dept.key) ? "is-expanded" : ""}`}
+                  id={`department-description-${dept.key}`}
+                >
+                  {dept.desc}
+                </p>
+                {dept.desc.length > 100 && (
+                  <button
+                    type="button"
+                    className="dept-toggle"
+                    aria-expanded={expandedDepts.has(dept.key)}
+                    aria-controls={`department-description-${dept.key}`}
+                    onClick={() => toggleDeptDescription(dept.key)}
+                  >
+                    {expandedDepts.has(dept.key) ? tDepts("showLess") : tDepts("showMore")}
+                    <span aria-hidden="true">{expandedDepts.has(dept.key) ? "↑" : "↓"}</span>
+                  </button>
+                )}
               </div>
             ))}
           </div>
