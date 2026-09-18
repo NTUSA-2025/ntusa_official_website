@@ -15,12 +15,12 @@ const DEPT_KEYS = [
   "secretariat",
   "finance",
   "studentRights",
-  "academic",
   "culture",
   "pr",
   "election",
   "international",
   "it",
+  "academic",
 ] as const;
 
 const ACADEMIC_GROUP_KEYS = [
