@@ -662,6 +662,9 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   box-shadow: var(--shadow-md);
   border-color: var(--color-brand);
 }
+.dept-card--academic {
+  grid-column: 1 / -1;
+}
 .dept-icon { font-size: 28px; line-height: 1; }
 .dept-name { font-size: 16px; font-weight: 700; color: var(--color-secondary); }
 .dept-desc {
@@ -695,6 +698,38 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   border-radius: 2px;
 }
 .dept-placeholder { font-style: italic; color: #bbb; }
+.academic-intro { flex: initial; }
+.academic-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+.academic-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-card-bg) 80%, var(--color-brand) 4%);
+}
+.academic-group-name {
+  color: var(--color-secondary);
+  font-size: 15px;
+  font-weight: 700;
+}
+.academic-group-desc {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.academic-group-desc:not(.is-expanded) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
 
 /* =====================================================
    RIGHTS / DATA — PLACEHOLDER BOX
@@ -1319,6 +1354,7 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   /* Dept */
   .dept-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
   .dept-card { padding: 20px 16px; }
+  .academic-groups { grid-template-columns: 1fr; }
 
   /* Links */
   .links-grid { grid-template-columns: 1fr; }

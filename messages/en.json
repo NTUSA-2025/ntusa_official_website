@@ -97,7 +97,26 @@
       },
       "academic": {
         "name": "Academic Department",
-        "desc": "The Gender Equality Workshop is a group of members passionate about gender and equality. Through talks, workshops, and campus outings, it advocates for gender issues and works to create a campus where every NTU member can comfortably express themselves and live together.\n\nThe Sustainability Group advances environmental advocacy, resource connections, and sustainable action on campus. This academic year, it will focus on building a sustainable student-club alliance, outreach, and firefly restoration.\n\nThe Transitional Justice Group uses talks, reading groups, guided walks, exhibitions, and other campus events to introduce students to the human rights, memory, and archival issues involved in transitional justice. Members can take part in event planning, research, speaker liaison, copywriting, and on-site delivery.\n\nThe Indigenous and Local Languages Group promotes the use of local languages and a multilingual campus environment. Through language courses, talks, reading groups, cultural exchange, and advocacy, it seeks to make Taiwanese, Hakka, Indigenous languages, and other local languages a natural part of campus life."
+        "desc": "Through advocacy, knowledge exchange, and campus action, we engage with public issues including gender equality, sustainability, transitional justice, and local languages.",
+        "groupsLabel": "Academic Department groups",
+        "groups": {
+          "genderEquality": {
+            "name": "Gender Equality Workshop",
+            "desc": "A group of members passionate about gender and equality. Through talks, workshops, and campus outings, it advocates for gender issues and works to create a campus where every NTU member can comfortably express themselves and live together."
+          },
+          "sustainability": {
+            "name": "Sustainability Group",
+            "desc": "Advances environmental advocacy, resource connections, and sustainable action on campus. This academic year, it will focus on building a sustainable student-club alliance, outreach, and firefly restoration."
+          },
+          "transitionalJustice": {
+            "name": "Transitional Justice Group",
+            "desc": "Uses talks, reading groups, guided walks, exhibitions, and other campus events to introduce students to the human rights, memory, and archival issues involved in transitional justice. Members can take part in event planning, research, speaker liaison, copywriting, and on-site delivery."
+          },
+          "localLanguages": {
+            "name": "Indigenous and Local Languages Group",
+            "desc": "Promotes the use of local languages and a multilingual campus environment. Through language courses, talks, reading groups, cultural exchange, and advocacy, it seeks to make Taiwanese, Hakka, Indigenous languages, and other local languages a natural part of campus life."
+          }
+        }
       },
       "culture": {
         "name": "Cultural Department",
