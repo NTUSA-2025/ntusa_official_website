@@ -664,6 +664,12 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 }
 .dept-icon { font-size: 28px; line-height: 1; }
 .dept-name { font-size: 16px; font-weight: 700; color: var(--color-secondary); }
+.dept-parent {
+  color: var(--color-brand-dark);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
 .dept-desc {
   font-size: 14px;
   color: var(--color-text-secondary);
