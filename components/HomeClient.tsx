@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
@@ -59,6 +59,8 @@ export default function HomeClient({
   ));
   const [dataTab, setDataTab] = useState("minutes");
   const [expandedDepts, setExpandedDepts] = useState<Set<string>>(() => new Set());
+  const [truncatedDepts, setTruncatedDepts] = useState<Set<string>>(() => new Set());
+  const deptDescRefs = useRef(new Map<string, HTMLParagraphElement>());
   const minutesData = initialMinutes ?? [];
   const locale = useLocale();
   const tNews = useTranslations("home.news");
@@ -95,6 +97,32 @@ export default function HomeClient({
       ];
     }),
   ];
+
+  useLayoutEffect(() => {
+    const measureTruncation = () => {
+      const next = new Set<string>();
+
+      deptDescRefs.current.forEach((element, key) => {
+        if (expandedDepts.has(key) || element.scrollHeight > element.clientHeight + 1) {
+          next.add(key);
+        }
+      });
+
+      setTruncatedDepts((current) => {
+        if (current.size === next.size && [...current].every((key) => next.has(key))) return current;
+        return next;
+      });
+    };
+
+    const frame = window.requestAnimationFrame(measureTruncation);
+    const resizeObserver = new ResizeObserver(measureTruncation);
+    deptDescRefs.current.forEach((element) => resizeObserver.observe(element));
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+    };
+  }, [expandedDepts, locale]);
 
   const toggleDeptDescription = (key: string) => {
     setExpandedDepts((current) => {
@@ -238,10 +266,14 @@ export default function HomeClient({
                 <p
                   className={`dept-desc ${expandedDepts.has(dept.key) ? "is-expanded" : ""}`}
                   id={`department-description-${dept.key}`}
+                  ref={(element) => {
+                    if (element) deptDescRefs.current.set(dept.key, element);
+                    else deptDescRefs.current.delete(dept.key);
+                  }}
                 >
                   {dept.desc}
                 </p>
-                {dept.desc.length > 100 && (
+                {truncatedDepts.has(dept.key) && (
                   <button
                     type="button"
                     className="dept-toggle"
