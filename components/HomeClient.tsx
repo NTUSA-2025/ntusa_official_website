@@ -15,6 +15,7 @@ const DEPT_KEYS = [
   "secretariat",
   "finance",
   "studentRights",
+  "academic",
   "culture",
   "pr",
   "election",
@@ -75,21 +76,24 @@ export default function HomeClient({
     desc: tDepts(`academic.groups.${key}.desc`),
   }));
   const deptsData: Array<{ key: string; name: string; desc: string; parent?: string }> = [
-    ...DEPT_KEYS.map((key) => ({
-      key,
-      name: tDepts(`${key}.name`),
-      desc: tDepts(`${key}.desc`),
-    })),
-    {
-      key: "academic",
-      name: tDepts("academic.name"),
-      desc: tDepts("academic.desc"),
-    },
-    ...academicGroups.map((group) => ({
-      ...group,
-      key: `academic-${group.key}`,
-      parent: tDepts("academic.name"),
-    })),
+    ...DEPT_KEYS.flatMap((key) => {
+      const department = {
+        key,
+        name: tDepts(`${key}.name`),
+        desc: tDepts(`${key}.desc`),
+      };
+
+      if (key !== "academic") return department;
+
+      return [
+        department,
+        ...academicGroups.map((group) => ({
+          ...group,
+          key: `academic-${group.key}`,
+          parent: department.name,
+        })),
+      ];
+    }),
   ];
 
   const toggleDeptDescription = (key: string) => {
