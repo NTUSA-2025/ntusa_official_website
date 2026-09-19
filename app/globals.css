@@ -30,6 +30,11 @@
   margin-bottom: 0.75rem !important;
 }
 
+.tiptap a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .tiptap ul {
   list-style-type: disc !important;
   padding-left: 1.5rem !important;
