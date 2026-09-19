@@ -20,7 +20,6 @@ const DEPT_KEYS = [
   "election",
   "international",
   "it",
-  "academic",
 ] as const;
 
 const ACADEMIC_GROUP_KEYS = [
@@ -70,16 +69,28 @@ export default function HomeClient({
 
   const rawHistory = tAbout.raw("history");
   const historyParagraphs = Array.isArray(rawHistory) ? (rawHistory as string[]) : [];
-  const deptsData = DEPT_KEYS.map((key) => ({
-    key,
-    name: tDepts(`${key}.name`),
-    desc: tDepts(`${key}.desc`),
-  }));
   const academicGroups = ACADEMIC_GROUP_KEYS.map((key) => ({
     key,
     name: tDepts(`academic.groups.${key}.name`),
     desc: tDepts(`academic.groups.${key}.desc`),
   }));
+  const deptsData: Array<{ key: string; name: string; desc: string; parent?: string }> = [
+    ...DEPT_KEYS.map((key) => ({
+      key,
+      name: tDepts(`${key}.name`),
+      desc: tDepts(`${key}.desc`),
+    })),
+    {
+      key: "academic",
+      name: tDepts("academic.name"),
+      desc: tDepts("academic.desc"),
+    },
+    ...academicGroups.map((group) => ({
+      ...group,
+      key: `academic-${group.key}`,
+      parent: tDepts("academic.name"),
+    })),
+  ];
 
   const toggleDeptDescription = (key: string) => {
     setExpandedDepts((current) => {
@@ -217,56 +228,26 @@ export default function HomeClient({
 
           <div className="dept-grid">
             {deptsData.map((dept) => (
-              <div className={`dept-card fade-up-target ${dept.key === "academic" ? "dept-card--academic" : ""}`} key={dept.key}>
+              <div className="dept-card fade-up-target" key={dept.key}>
+                {dept.parent && <p className="dept-parent">{dept.parent}</p>}
                 <h3 className="dept-name">{dept.name}</h3>
-                {dept.key === "academic" ? (
-                  <>
-                    <p className="dept-desc academic-intro">{dept.desc}</p>
-                    <div className="academic-groups" aria-label={tDepts("academic.groupsLabel")}>
-                      {academicGroups.map((group) => (
-                        <article className="academic-group" key={group.key}>
-                          <h4 className="academic-group-name">{group.name}</h4>
-                          <p
-                            className={`academic-group-desc ${expandedDepts.has(group.key) ? "is-expanded" : ""}`}
-                            id={`academic-group-description-${group.key}`}
-                          >
-                            {group.desc}
-                          </p>
-                          <button
-                            type="button"
-                            className="dept-toggle"
-                            aria-expanded={expandedDepts.has(group.key)}
-                            aria-controls={`academic-group-description-${group.key}`}
-                            onClick={() => toggleDeptDescription(group.key)}
-                          >
-                            {expandedDepts.has(group.key) ? tDepts("showLess") : tDepts("showMore")}
-                            <span aria-hidden="true">{expandedDepts.has(group.key) ? "↑" : "↓"}</span>
-                          </button>
-                        </article>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p
-                      className={`dept-desc ${expandedDepts.has(dept.key) ? "is-expanded" : ""}`}
-                      id={`department-description-${dept.key}`}
-                    >
-                      {dept.desc}
-                    </p>
-                    {dept.desc.length > 100 && (
-                      <button
-                        type="button"
-                        className="dept-toggle"
-                        aria-expanded={expandedDepts.has(dept.key)}
-                        aria-controls={`department-description-${dept.key}`}
-                        onClick={() => toggleDeptDescription(dept.key)}
-                      >
-                        {expandedDepts.has(dept.key) ? tDepts("showLess") : tDepts("showMore")}
-                        <span aria-hidden="true">{expandedDepts.has(dept.key) ? "↑" : "↓"}</span>
-                      </button>
-                    )}
-                  </>
+                <p
+                  className={`dept-desc ${expandedDepts.has(dept.key) ? "is-expanded" : ""}`}
+                  id={`department-description-${dept.key}`}
+                >
+                  {dept.desc}
+                </p>
+                {dept.desc.length > 100 && (
+                  <button
+                    type="button"
+                    className="dept-toggle"
+                    aria-expanded={expandedDepts.has(dept.key)}
+                    aria-controls={`department-description-${dept.key}`}
+                    onClick={() => toggleDeptDescription(dept.key)}
+                  >
+                    {expandedDepts.has(dept.key) ? tDepts("showLess") : tDepts("showMore")}
+                    <span aria-hidden="true">{expandedDepts.has(dept.key) ? "↑" : "↓"}</span>
+                  </button>
                 )}
               </div>
             ))}
