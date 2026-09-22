@@ -348,13 +348,45 @@ export default function HomeClient({
             <h2 className="section-title">{tForms("deptLinksTitle")}</h2>
           </div>
           <div className="links-grid">
-            <div className="link-card link-card-placeholder fade-up-target">
+            <a
+              href="https://sc.ntusa.ntu.edu.tw/notifi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-card fade-up-target"
+            >
               <div className="link-card-body">
-                <div className="link-card-tag">{tForms("comingSoonTag")}</div>
-                <h3 className="link-card-title">{tForms("comingSoonTitle")}</h3>
-                <p className="link-card-desc">{tForms("comingSoonDesc")}</p>
+                <div className="link-card-tag">{tForms("studentCongressTag")}</div>
+                <h3 className="link-card-title">{tForms("studentCongressTitle")}</h3>
+                <p className="link-card-desc">{tForms("studentCongressDesc")}</p>
               </div>
-            </div>
+              <span className="link-card-arrow">→</span>
+            </a>
+            <a
+              href="https://www.facebook.com/NTUStudentJudiciary"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-card fade-up-target"
+            >
+              <div className="link-card-body">
+                <div className="link-card-tag">{tForms("studentJudiciaryTag")}</div>
+                <h3 className="link-card-title">{tForms("studentJudiciaryTitle")}</h3>
+                <p className="link-card-desc">{tForms("studentJudiciaryDesc")}</p>
+              </div>
+              <span className="link-card-arrow">→</span>
+            </a>
+            <a
+              href="https://election.ntusa.ntu.edu.tw/notice"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-card fade-up-target"
+            >
+              <div className="link-card-body">
+                <div className="link-card-tag">{tForms("electionCommitteeTag")}</div>
+                <h3 className="link-card-title">{tForms("electionCommitteeTitle")}</h3>
+                <p className="link-card-desc">{tForms("electionCommitteeDesc")}</p>
+              </div>
+              <span className="link-card-arrow">→</span>
+            </a>
           </div>
         </div>
       </section>

@@ -159,9 +159,15 @@
       "lineCardDesc": "Add @ntusa on LINE to report student-rights issues directly to the Association.",
       "deptLinksTag": "Departments",
       "deptLinksTitle": "Department Websites",
-      "comingSoonTag": "Coming Soon",
-      "comingSoonTitle": "Department Websites",
-      "comingSoonDesc": "Department links will be added progressively."
+      "studentCongressTag": "Student Self-Governance",
+      "studentCongressTitle": "Student Congress Regulations System",
+      "studentCongressDesc": "Visit the Student Congress announcements website.",
+      "studentJudiciaryTag": "Student Self-Governance",
+      "studentJudiciaryTitle": "Student Judiciary Decisions",
+      "studentJudiciaryDesc": "Visit the Student Judiciary Facebook page.",
+      "electionCommitteeTag": "Student Self-Governance",
+      "electionCommitteeTitle": "Election Committee Website",
+      "electionCommitteeDesc": "Visit the Election Committee announcements website."
     },
     "data": {
       "eyebrow": "Public Records",

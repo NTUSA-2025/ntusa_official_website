@@ -159,9 +159,15 @@
       "lineCardDesc": "加入 @ntusa 官方帳號，直接向學生會反映學權問題。",
       "deptLinksTag": "各部門",
       "deptLinksTitle": "部門網站連結",
-      "comingSoonTag": "即將上線",
-      "comingSoonTitle": "各部門網站",
-      "comingSoonDesc": "部門連結即將陸續新增。"
+      "studentCongressTag": "學生自治組織",
+      "studentCongressTitle": "學代會法規系統",
+      "studentCongressDesc": "前往學生代表大會公告網站。",
+      "studentJudiciaryTag": "學生自治組織",
+      "studentJudiciaryTitle": "學生法院判決",
+      "studentJudiciaryDesc": "前往學生法院 Facebook 專頁。",
+      "electionCommitteeTag": "學生自治組織",
+      "electionCommitteeTitle": "選委會官網",
+      "electionCommitteeDesc": "前往選舉委員會公告網站。"
     },
     "data": {
       "eyebrow": "Public Records",
