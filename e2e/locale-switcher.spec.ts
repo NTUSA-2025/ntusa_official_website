@@ -202,4 +202,40 @@ test.describe("LocaleSwitcher E2E", () => {
     const htmlLang = await page.locator("html").getAttribute("lang");
     expect(htmlLang, "html[lang] after drawer EN click").toBe("en");
   });
+
+  test("7. English navigation keeps the bilingual brand name", async ({
+    page,
+    context,
+  }) => {
+    await context.addCookies([
+      {
+        name: "NEXT_LOCALE",
+        value: "en",
+        domain: "localhost",
+        path: "/",
+      },
+    ]);
+    await page.goto(BASE, { waitUntil: "networkidle" });
+
+    const desktopBrand = page.locator("header .logo-text");
+    await expect(desktopBrand.locator(".logo-title")).toHaveText(
+      "國立臺灣大學學生會"
+    );
+    await expect(desktopBrand.locator(".logo-sub")).toHaveText(
+      "NTU Student Association"
+    );
+
+    await page.setViewportSize({ width: 375, height: 800 });
+    const hamburger = page.locator('button[aria-label="Open menu"]');
+    await expect(hamburger, "mobile menu button").toBeVisible();
+    await hamburger.click();
+
+    const drawerBrand = page.locator(".drawer .logo-text");
+    await expect(drawerBrand.locator(".logo-title")).toHaveText(
+      "國立臺灣大學學生會"
+    );
+    await expect(drawerBrand.locator(".logo-sub")).toHaveText(
+      "NTU Student Association"
+    );
+  });
 });
