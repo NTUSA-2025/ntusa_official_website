@@ -41,7 +41,7 @@
     },
     "news": {
       "sectionTag": "最新消息",
-      "sectionTitle": "公告動態",
+      "sectionTitle": "公告",
       "sectionSub": "即時掌握學生會最新公告與活動資訊",
       "emptyState": "目前尚無公告文章",
       "cardTag": "公告",
@@ -186,7 +186,7 @@
       },
       "uploadButton": "上傳會議紀錄",
       "budgetTitle": "歷年預決算",
-      "budgetDesc": "學生會歷年預算與決算資料，公開於 Google Drive。",
+      "budgetDesc": "學生會歷年預算與決算資料",
       "budgetOpenDrive": "在 Google Drive 中開啟 →",
       "otherTitle": "其他文件",
       "otherDesc": "其他公開資料將陸續更新於此。",

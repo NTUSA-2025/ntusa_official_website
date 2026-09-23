@@ -41,7 +41,7 @@
     },
     "news": {
       "sectionTag": "Latest",
-      "sectionTitle": "Student Rights Updates",
+      "sectionTitle": "Announcements",
       "sectionSub": "Stay current with the latest announcements and activities from the Student Association",
       "emptyState": "No announcements yet",
       "cardTag": "Announcement",
@@ -186,7 +186,7 @@
       },
       "uploadButton": "Upload Minutes",
       "budgetTitle": "Historical Budgets and Final Accounts",
-      "budgetDesc": "Past budgets and final accounts of the Student Association, published on Google Drive.",
+      "budgetDesc": "Past budgets and final accounts of the Student Association.",
       "budgetOpenDrive": "Open in Google Drive →",
       "otherTitle": "Other Documents",
       "otherDesc": "Additional public records will be added here over time.",
