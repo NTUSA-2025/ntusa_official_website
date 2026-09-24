@@ -208,7 +208,6 @@ export default function HomeClient({
                   </div>
                   <div className="news-card-body">
                     <div className="news-card-meta">
-                      <span className="news-card-tag">{tNews("cardTag")}</span>
                       <span className="news-card-date">{post.createdAt}</span>
                     </div>
                     <h3 className="news-card-title line-clamp-2">{post.title}</h3>
@@ -355,7 +354,6 @@ export default function HomeClient({
               className="link-card fade-up-target"
             >
               <div className="link-card-body">
-                <div className="link-card-tag">{tForms("studentCongressTag")}</div>
                 <h3 className="link-card-title">{tForms("studentCongressTitle")}</h3>
                 <p className="link-card-desc">{tForms("studentCongressDesc")}</p>
               </div>
@@ -368,7 +366,6 @@ export default function HomeClient({
               className="link-card fade-up-target"
             >
               <div className="link-card-body">
-                <div className="link-card-tag">{tForms("studentJudiciaryTag")}</div>
                 <h3 className="link-card-title">{tForms("studentJudiciaryTitle")}</h3>
                 <p className="link-card-desc">{tForms("studentJudiciaryDesc")}</p>
               </div>
@@ -381,7 +378,6 @@ export default function HomeClient({
               className="link-card fade-up-target"
             >
               <div className="link-card-body">
-                <div className="link-card-tag">{tForms("electionCommitteeTag")}</div>
                 <h3 className="link-card-title">{tForms("electionCommitteeTitle")}</h3>
                 <p className="link-card-desc">{tForms("electionCommitteeDesc")}</p>
               </div>
@@ -433,7 +429,6 @@ export default function HomeClient({
                     <li key={m.id} className="minute-card fade-up-target">
                       <time className="minute-date" dateTime={m.date}>{dateLabel}</time>
                       <h3 className="minute-title">{title}</h3>
-                      <span className="minute-tag">{tData("minutesTag")}</span>
                       <a
                         className="minute-link"
                         href={m.file}
