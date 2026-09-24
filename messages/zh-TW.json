@@ -44,7 +44,6 @@
       "sectionTitle": "公告",
       "sectionSub": "即時掌握學生會最新公告與活動資訊",
       "emptyState": "目前尚無公告文章",
-      "cardTag": "公告",
       "readMore": "閱讀更多",
       "viewAll": "查看所有公告 →"
     },
@@ -159,13 +158,10 @@
       "lineCardDesc": "加入 @ntusa 官方帳號，直接向學生會反映學權問題。",
       "deptLinksTag": "各部門",
       "deptLinksTitle": "部門網站連結",
-      "studentCongressTag": "學生自治組織",
       "studentCongressTitle": "學代會法規系統",
       "studentCongressDesc": "前往學生代表大會公告網站。",
-      "studentJudiciaryTag": "學生自治組織",
       "studentJudiciaryTitle": "學生法院判決",
       "studentJudiciaryDesc": "前往學生法院 Facebook 專頁。",
-      "electionCommitteeTag": "學生自治組織",
       "electionCommitteeTitle": "選委會官網",
       "electionCommitteeDesc": "前往選舉委員會公告網站。"
     },
@@ -179,7 +175,6 @@
       "minutesTitle": "會議紀錄",
       "minutesDesc": "學生會各次會議之公開紀錄，點擊即可檢視或下載 PDF。",
       "minutesEmpty": "目前尚未發布會議紀錄。",
-      "minutesTag": "公告版",
       "minutesViewPdf": "查看 PDF →",
       "types": {
         "admin": "行政部門會議"
