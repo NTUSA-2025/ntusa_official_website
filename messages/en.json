@@ -44,7 +44,6 @@
       "sectionTitle": "Announcements",
       "sectionSub": "Stay current with the latest announcements and activities from the Student Association",
       "emptyState": "No announcements yet",
-      "cardTag": "Announcement",
       "readMore": "Read more",
       "viewAll": "View all announcements →"
     },
@@ -159,13 +158,10 @@
       "lineCardDesc": "Add @ntusa on LINE to report student-rights issues directly to the Association.",
       "deptLinksTag": "Departments",
       "deptLinksTitle": "Department Websites",
-      "studentCongressTag": "Student Self-Governance",
       "studentCongressTitle": "Student Congress Regulations System",
       "studentCongressDesc": "Visit the Student Congress announcements website.",
-      "studentJudiciaryTag": "Student Self-Governance",
       "studentJudiciaryTitle": "Student Judiciary Decisions",
       "studentJudiciaryDesc": "Visit the Student Judiciary Facebook page.",
-      "electionCommitteeTag": "Student Self-Governance",
       "electionCommitteeTitle": "Election Committee Website",
       "electionCommitteeDesc": "Visit the Election Committee announcements website."
     },
@@ -179,7 +175,6 @@
       "minutesTitle": "Meeting Minutes",
       "minutesDesc": "Public minutes from Student Association meetings. Click to view or download the PDF.",
       "minutesEmpty": "No meeting minutes have been published yet.",
-      "minutesTag": "Public Release",
       "minutesViewPdf": "View PDF →",
       "types": {
         "admin": "Administrative Dept. Meeting"
