@@ -10,12 +10,15 @@ vi.mock("./google-admin", () => ({
 
 const mockedGetUserGroups = vi.mocked(getUserGroups);
 
-const jwtCallback = authOptions.callbacks?.jwt;
-const sessionCallback = authOptions.callbacks?.session;
+const configuredJwtCallback = authOptions.callbacks?.jwt;
+const configuredSessionCallback = authOptions.callbacks?.session;
 
-if (!jwtCallback || !sessionCallback) {
+if (!configuredJwtCallback || !configuredSessionCallback) {
   throw new Error("Auth callbacks must be configured for these tests.");
 }
+
+const jwtCallback: NonNullable<typeof configuredJwtCallback> = configuredJwtCallback;
+const sessionCallback: NonNullable<typeof configuredSessionCallback> = configuredSessionCallback;
 
 function user(email: string): User {
   return {
@@ -126,7 +129,7 @@ describe("auth group mapping", () => {
       token: { role: "reviewer", department: "公關部" },
     } as Parameters<typeof sessionCallback>[0]);
 
-    expect(session.user.role).toBe("reviewer");
-    expect(session.user.department).toBe("公關部");
+    expect(session.user && "role" in session.user ? session.user.role : undefined).toBe("reviewer");
+    expect(session.user && "department" in session.user ? session.user.department : undefined).toBe("公關部");
   });
 });
