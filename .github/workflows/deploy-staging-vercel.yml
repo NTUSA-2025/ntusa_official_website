@@ -61,11 +61,13 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Vercel Preview
-        run: >-
-          npx --yes vercel@${VERCEL_CLI_VERSION} build
-          --target=preview
-          --scope=${VERCEL_ORG_ID}
-          --token=${VERCEL_TOKEN}
+        shell: bash
+        run: |
+          npx_path="$(command -v npx)"
+          node --env-file=.env "${npx_path}" --yes vercel@${VERCEL_CLI_VERSION} build \
+            --target=preview \
+            --scope=${VERCEL_ORG_ID} \
+            --token=${VERCEL_TOKEN}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
