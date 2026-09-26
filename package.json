@@ -47,7 +47,7 @@
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.1"
   },
   "overrides": {
     "baseline-browser-mapping": "^2.11.0",
