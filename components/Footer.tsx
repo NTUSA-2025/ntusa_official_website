@@ -5,18 +5,17 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { tabFromHashFragment } from "@/lib/home-active-tab";
 
 export default function Footer() {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("footer");
   const tNav = useTranslations("nav");
-  const [activeHash, setActiveHash] = useState(() => (
-    typeof window === "undefined" ? "home" : window.location.hash.slice(1) || "home"
-  ));
+  const [activeHash, setActiveHash] = useState("home");
 
   useEffect(() => {
-    const updateActiveHash = () => setActiveHash(window.location.hash.slice(1) || "home");
+    const updateActiveHash = () => setActiveHash(tabFromHashFragment(window.location.hash));
 
     window.addEventListener("hashchange", updateActiveHash);
     updateActiveHash();
@@ -31,8 +30,7 @@ export default function Footer() {
   const handleHashNavigation = (e: React.MouseEvent<HTMLAnchorElement>, hashId: string) => {
     if (pathname === "/") {
       e.preventDefault();
-      window.history.pushState(null, "", `/#${hashId}`);
-      window.dispatchEvent(new Event("hashchange"));
+      window.location.hash = hashId;
     }
   };
 
