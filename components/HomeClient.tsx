@@ -54,9 +54,9 @@ export default function HomeClient({
   initialMinutes?: HomeMinuteItem[];
 }) {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState(() => (
-    typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
-  ));
+  // Match the server render first; the layout effect below applies a direct
+  // link fragment before the browser paints the hydrated page.
+  const [activeTab, setActiveTab] = useState("home");
   const [dataTab, setDataTab] = useState("minutes");
   const [expandedDepts, setExpandedDepts] = useState<Set<string>>(() => new Set());
   const [truncatedDepts, setTruncatedDepts] = useState<Set<string>>(() => new Set());
@@ -174,8 +174,7 @@ export default function HomeClient({
 
   const navigateTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    window.history.pushState(null, "", `/#${id}`);
-    window.dispatchEvent(new Event("hashchange"));
+    window.location.hash = id;
   };
 
   return (

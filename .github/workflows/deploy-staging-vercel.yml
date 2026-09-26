@@ -1,0 +1,74 @@
+name: Deploy Staging to Vercel
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-staging
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: team_uefNFBLSCeLqFdhBzCe4TePo
+  VERCEL_PROJECT_ID: prj_yABUY7ogwQ5Io01UEcyqHSI49i3V
+  VERCEL_CLI_VERSION: 59.26.0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: staging
+      url: https://ntusa-website-staging-ntusa.vercel.app
+    steps:
+      - name: Checkout staging
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Pull Vercel Preview settings
+        run: |
+          npx --yes vercel@${VERCEL_CLI_VERSION} pull \
+            --yes \
+            --environment=preview \
+            --git-branch=staging \
+            --scope=${VERCEL_ORG_ID} \
+            --token=${VERCEL_TOKEN}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Preview on Vercel
+        id: deploy
+        shell: bash
+        run: |
+          deployment_url="$(npx --yes vercel@${VERCEL_CLI_VERSION} deploy --yes --scope=${VERCEL_ORG_ID} --token=${VERCEL_TOKEN})"
+          echo "url=${deployment_url}" >> "${GITHUB_OUTPUT}"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Update stable staging alias
+        run: >-
+          npx --yes vercel@${VERCEL_CLI_VERSION} alias set
+          ${{ steps.deploy.outputs.url }}
+          ntusa-website-staging-ntusa.vercel.app
+          --scope=${VERCEL_ORG_ID}
+          --token=${VERCEL_TOKEN}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

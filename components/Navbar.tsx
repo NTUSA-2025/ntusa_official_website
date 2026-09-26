@@ -21,9 +21,9 @@ export default function Navbar() {
   const tFooter = useTranslations("footer");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeHash, setActiveHash] = useState(() => (
-    typeof window === "undefined" ? "home" : tabFromHashFragment(window.location.hash)
-  ));
+  // Keep the first client render identical to the server render. The URL hash
+  // is applied after hydration by the effect below.
+  const [activeHash, setActiveHash] = useState("home");
 
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -71,8 +71,10 @@ export default function Navbar() {
     e.preventDefault();
     closeDrawer();
     if (pathname === "/") {
-      window.history.pushState(null, "", `/#${id}`);
-      window.dispatchEvent(new Event("hashchange"));
+      // Assigning the fragment lets the browser emit the native hashchange
+      // event, which keeps every hash consumer in sync without a synthetic
+      // DOM event.
+      window.location.hash = id;
     } else {
       router.push(`/#${id}`);
     }
