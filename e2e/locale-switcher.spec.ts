@@ -3,6 +3,21 @@ import { test, expect } from "@playwright/test";
 const BASE = "http://localhost:3000";
 
 test.describe("LocaleSwitcher E2E", () => {
+  test("direct hash link keeps navbar navigation functional", async ({ page }) => {
+    await page.goto(`${BASE}/#about`, { waitUntil: "networkidle" });
+
+    await expect(page).toHaveURL(`${BASE}/#about`);
+    await expect(page.locator("#about")).toHaveClass(/\bactive\b/);
+
+    const formsLink = page.locator('header a[href="/#forms"]');
+    await expect(formsLink).toHaveCount(1);
+    await formsLink.click();
+
+    await expect(page).toHaveURL(`${BASE}/#forms`);
+    await expect(page.locator("#forms")).toHaveClass(/\bactive\b/);
+    await expect(page.locator("#about")).not.toHaveClass(/\bactive\b/);
+  });
+
   test("1. Default landing — zh-TW", async ({ page }) => {
     await page.goto(BASE, { waitUntil: "networkidle" });
 
