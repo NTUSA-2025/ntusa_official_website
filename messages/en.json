@@ -40,7 +40,6 @@
       "scrollHint": "Scroll down"
     },
     "news": {
-      "sectionTag": "Latest",
       "sectionTitle": "Announcements",
       "sectionSub": "Stay current with the latest announcements and activities from the Student Association",
       "emptyState": "No announcements yet",
@@ -51,7 +50,6 @@
       "eyebrow": "About Us",
       "title": "About",
       "desc": "The NTU Student Association is made up of all NTU students, with departments working together to advance campus affairs.",
-      "historyTag": "About NTUSA",
       "historyTitle": "Our History",
       "history": [
         "The NTU Student Association was officially founded in August 1988, succeeding the NTU Joint Student Representative Council. Its charter, the “NTUSA Self-Governance Statute,” was ratified by a campus-wide student vote in 1990. Today the Association is in its 38th term.",
@@ -151,12 +149,9 @@
       "eyebrow": "Links",
       "title": "Links",
       "desc": "Links to department websites, student-rights complaint channels, and external resources.",
-      "complaintTag": "Student Rights",
       "complaintTitle": "Channels for Student Rights",
-      "lineCardTag": "LINE Official Account",
       "lineCardTitle": "NTUSA Official LINE",
       "lineCardDesc": "Add @ntusa on LINE to report student-rights issues directly to the Association.",
-      "deptLinksTag": "Departments",
       "deptLinksTitle": "Department Websites",
       "studentCongressTitle": "Student Congress Regulations System",
       "studentCongressDesc": "Visit the Student Congress announcements website.",
