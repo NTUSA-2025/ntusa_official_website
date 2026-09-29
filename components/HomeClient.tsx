@@ -185,7 +185,6 @@ export default function HomeClient({
 
         <div className="section-wrap">
           <div className="section-header fade-up-target">
-            <div className="section-tag">{tNews("sectionTag")}</div>
             <h2 className="section-title">{tNews("sectionTitle")}</h2>
             <p className="section-sub">{tNews("sectionSub")}</p>
           </div>
@@ -239,7 +238,6 @@ export default function HomeClient({
 
         <div className="section-wrap">
           <div className="section-header fade-up-target">
-            <div className="section-tag">{tAbout("historyTag")}</div>
             <h2 className="section-title">{tAbout("historyTitle")}</h2>
           </div>
           <div className="about-body">
@@ -317,7 +315,6 @@ export default function HomeClient({
 
         <div className="section-wrap">
           <div className="section-header fade-up-target">
-            <div className="section-tag">{tForms("complaintTag")}</div>
             <h2 className="section-title">{tForms("complaintTitle")}</h2>
           </div>
           <div className="links-grid">
@@ -333,7 +330,6 @@ export default function HomeClient({
                 </svg>
               </div>
               <div className="link-card-body">
-                <div className="link-card-tag">{tForms("lineCardTag")}</div>
                 <h3 className="link-card-title">{tForms("lineCardTitle")}</h3>
                 <p className="link-card-desc">{tForms("lineCardDesc")}</p>
               </div>
@@ -342,7 +338,6 @@ export default function HomeClient({
           </div>
 
           <div className="section-header fade-up-target" style={{ marginTop: "56px" }}>
-            <div className="section-tag">{tForms("deptLinksTag")}</div>
             <h2 className="section-title">{tForms("deptLinksTitle")}</h2>
           </div>
           <div className="links-grid">
