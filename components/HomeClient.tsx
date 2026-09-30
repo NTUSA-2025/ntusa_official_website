@@ -249,7 +249,6 @@ export default function HomeClient({
 
         <div className="section-wrap">
           <div className="section-header fade-up-target">
-            <div className="section-tag">{tAbout("deptsTag")}</div>
             <h2 className="section-title">{tAbout("deptsTitle")}</h2>
             <p className="section-sub">{tAbout("deptsSub")}</p>
           </div>
