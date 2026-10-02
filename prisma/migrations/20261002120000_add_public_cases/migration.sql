@@ -3,8 +3,10 @@
 CREATE TABLE "PublicCase" (
     "id" TEXT NOT NULL,
     "publicCaseNo" TEXT NOT NULL,
-    "category" TEXT NOT NULL,
+    "openedAt" TIMESTAMP(3) NOT NULL,
+    "source" TEXT NOT NULL,
     "currentStatus" TEXT NOT NULL,
+    "currentSituation" TEXT NOT NULL,
     "publicSummary" TEXT NOT NULL,
     "isPublic" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -41,7 +43,7 @@ CREATE TABLE "CaseAuditLog" (
 );
 
 CREATE UNIQUE INDEX "PublicCase_publicCaseNo_key" ON "PublicCase"("publicCaseNo");
-CREATE INDEX "PublicCase_isPublic_category_idx" ON "PublicCase"("isPublic", "category");
+CREATE INDEX "PublicCase_isPublic_source_idx" ON "PublicCase"("isPublic", "source");
 CREATE INDEX "PublicCase_updatedAt_idx" ON "PublicCase"("updatedAt");
 CREATE INDEX "CaseTimelineEvent_caseId_occurredAt_createdAt_idx" ON "CaseTimelineEvent"("caseId", "occurredAt", "createdAt");
 CREATE INDEX "CaseTimelineEvent_isPublic_occurredAt_idx" ON "CaseTimelineEvent"("isPublic", "occurredAt");

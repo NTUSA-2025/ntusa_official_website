@@ -26,6 +26,7 @@ export default async function PublicCaseManagePage() {
   }
   const serializedCases = cases.map((caseRecord) => ({
     ...caseRecord,
+    openedAt: caseRecord.openedAt.toISOString(),
     createdAt: caseRecord.createdAt.toISOString(),
     updatedAt: caseRecord.updatedAt.toISOString(),
     timelineEvents: caseRecord.timelineEvents.map((event) => ({

@@ -11,8 +11,10 @@ export async function GET() {
       where: { isPublic: true },
       select: {
         publicCaseNo: true,
-        category: true,
+        openedAt: true,
+        source: true,
         currentStatus: true,
+        currentSituation: true,
         publicSummary: true,
         createdAt: true,
         updatedAt: true,

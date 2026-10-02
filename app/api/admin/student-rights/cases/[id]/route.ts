@@ -25,9 +25,27 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const updated = await prisma.$transaction(async (tx) => {
       const before = await tx.publicCase.findUnique({ where: { id } });
       if (!before) return null;
+      const publishEvent = input.isPublic && !before.isPublic
+        ? await tx.caseTimelineEvent.findFirst({
+            where: { caseId: id, isPublic: true },
+            orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
+          })
+        : null;
+      if (input.isPublic && !before.isPublic && !publishEvent) {
+        throw new CaseValidationError("PUBLIC_EVENT_REQUIRED");
+      }
       const after = await tx.publicCase.update({
         where: { id },
-        data: { ...input, isPublic: input.isPublic ?? before.isPublic, updatedBy: actor },
+        data: {
+          publicCaseNo: input.publicCaseNo,
+          openedAt: input.openedAt,
+          source: input.source,
+          publicSummary: input.publicSummary,
+          currentStatus: publishEvent?.status ?? before.currentStatus,
+          currentSituation: publishEvent?.publicNote ?? before.currentSituation,
+          isPublic: input.isPublic ?? before.isPublic,
+          updatedBy: actor,
+        },
       });
       const action = !before.isPublic && after.isPublic ? "PUBLISH" : before.isPublic && !after.isPublic ? "HIDE" : "UPDATE";
       await tx.caseAuditLog.create({

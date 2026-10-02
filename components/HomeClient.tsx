@@ -49,8 +49,10 @@ export interface HomeMinuteItem {
 export interface HomePublicCaseItem {
   id: string;
   publicCaseNo: string;
-  category: string;
+  openedAt: string;
+  source: string;
   currentStatus: string;
+  currentSituation: string;
   publicSummary: string;
   updatedAt: string;
   timelineEvents: { id: string; occurredAt: string; status: string; publicNote: string }[];
@@ -343,19 +345,21 @@ export default function HomeClient({
             <div className="case-list">
               {publicCases.map((caseRecord) => {
                 const expanded = expandedCases.has(caseRecord.id);
+                const openedAt = new Date(caseRecord.openedAt).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
                 const updatedAt = new Date(caseRecord.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
                 return <article className="case-card fade-up-target" key={caseRecord.id}>
-                  <div className="case-card-meta"><span>{caseRecord.publicCaseNo}</span><span>{caseRecord.category}</span></div>
+                  <div className="case-card-meta"><span>{caseRecord.publicCaseNo}</span><span>{caseRecord.source}</span></div>
                   <h2>{caseRecord.currentStatus}</h2>
                   <p>{caseRecord.publicSummary}</p>
+                  <p className="case-current-situation">{caseRecord.currentSituation}</p>
                   <div className="case-card-footer">
-                    <span>{tCases("updatedAt", { date: updatedAt })}</span>
+                    <span>{tCases("openedAt", { date: openedAt })} · {tCases("updatedAt", { date: updatedAt })}</span>
                     <button type="button" className="case-link" aria-expanded={expanded} aria-controls={`case-timeline-${caseRecord.id}`} onClick={() => toggleCaseTimeline(caseRecord.id)}>
                       {expanded ? tCases("hideTimeline") : tCases("showTimeline")} <span aria-hidden="true">{expanded ? "↑" : "→"}</span>
                     </button>
                   </div>
                   {expanded && <div id={`case-timeline-${caseRecord.id}`} className="case-public-timeline">
-                    {caseRecord.timelineEvents.length ? <ol className="case-timeline">{caseRecord.timelineEvents.map((event) => <li key={event.id}><time dateTime={event.occurredAt}>{new Date(event.occurredAt).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" })}</time><div><h3>{event.status}</h3><p>{event.publicNote}</p></div></li>)}</ol> : <p className="case-empty">{tCases("emptyTimeline")}</p>}
+                    {caseRecord.timelineEvents.length ? <ol className="case-timeline">{caseRecord.timelineEvents.map((event) => <li key={event.id}><time dateTime={event.occurredAt}>{new Date(event.occurredAt).toLocaleString(locale, { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Taipei" })}</time><div><h3>{event.status}</h3><p>{event.publicNote}</p></div></li>)}</ol> : <p className="case-empty">{tCases("emptyTimeline")}</p>}
                   </div>}
                 </article>;
               })}

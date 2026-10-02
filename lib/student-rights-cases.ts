@@ -19,6 +19,27 @@ function optionalBoolean(value: unknown, field: string): boolean | undefined {
   return value;
 }
 
+function requiredDate(value: unknown, field: string): Date {
+  const dateText = requiredText(value, field, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateText)) throw new CaseValidationError(`${field}_INVALID`);
+  const date = new Date(`${dateText}T12:00:00.000Z`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== dateText) {
+    throw new CaseValidationError(`${field}_INVALID`);
+  }
+  return date;
+}
+
+function requiredTimestamp(value: unknown, field: string): Date {
+  const timestamp = requiredText(value, field, 32);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(timestamp)) return requiredDate(timestamp, field);
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(timestamp)) {
+    throw new CaseValidationError(`${field}_INVALID`);
+  }
+  const date = new Date(`${timestamp}:00+08:00`);
+  if (Number.isNaN(date.getTime())) throw new CaseValidationError(`${field}_INVALID`);
+  return date;
+}
+
 export function parseCaseInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;
@@ -27,8 +48,10 @@ export function parseCaseInput(body: unknown) {
 
   return {
     publicCaseNo,
-    category: requiredText(input.category, "CATEGORY", 64),
+    openedAt: requiredDate(input.openedAt, "OPENED_AT"),
+    source: requiredText(input.source, "SOURCE", 64),
     currentStatus: requiredText(input.currentStatus, "CURRENT_STATUS", 64),
+    currentSituation: requiredText(input.currentSituation, "CURRENT_SITUATION", 4000),
     publicSummary: requiredText(input.publicSummary, "PUBLIC_SUMMARY", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
   };
@@ -37,13 +60,8 @@ export function parseCaseInput(body: unknown) {
 export function parseEventInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;
-  const occurredAt = requiredText(input.occurredAt, "OCCURRED_AT", 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(occurredAt)) throw new CaseValidationError("OCCURRED_AT_INVALID");
-  const parsedDate = new Date(`${occurredAt}T12:00:00.000Z`);
-  if (Number.isNaN(parsedDate.getTime())) throw new CaseValidationError("OCCURRED_AT_INVALID");
-
   return {
-    occurredAt: parsedDate,
+    occurredAt: requiredTimestamp(input.occurredAt, "OCCURRED_AT"),
     status: requiredText(input.status, "STATUS", 64),
     publicNote: requiredText(input.publicNote, "PUBLIC_NOTE", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
