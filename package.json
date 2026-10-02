@@ -10,6 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "npm run build && playwright test",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed-public-cases": "node scripts/seed-public-cases.mjs",
     "deploy:staging": "./scripts/deploy-staging.sh"
   },
   "dependencies": {

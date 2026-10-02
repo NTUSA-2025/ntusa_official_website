@@ -84,6 +84,7 @@ export default function Navbar() {
     { kind: "hash", id: "home", label: t("home") },
     { kind: "hash", id: "about", label: t("about") },
     { kind: "hash", id: "announcements", label: t("rights") },
+    { kind: "hash", id: "cases", label: t("caseProgress") },
     { kind: "hash", id: "forms", label: t("forms") },
     { kind: "hash", id: "data", label: t("data") },
   ];
@@ -139,6 +140,9 @@ export default function Navbar() {
                 </Link>
                 <Link href="/minutes/upload" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
                   {t("uploadMinutes")}
+                </Link>
+                <Link href="/student-rights/cases/manage" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
+                  {t("caseManagement")}
                 </Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} className="nav-link" style={{ color: "#e53e3e" }}>
                   {t("signOut")}
@@ -205,6 +209,9 @@ export default function Navbar() {
               </Link>
               <Link href="/minutes/upload" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
                 {t("uploadMinutes")}
+              </Link>
+              <Link href="/student-rights/cases/manage" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
+                {t("caseManagement")}
               </Link>
               <button onClick={() => { closeDrawer(); signOut({ callbackUrl: '/' }); }} className="drawer-link" style={{ color: "#e53e3e", textAlign: "left" }}>
                 {t("signOut")}

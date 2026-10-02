@@ -8,10 +8,10 @@ datasource db {
 
 // 定義文章的狀態列舉
 enum PostStatus {
-  DRAFT     // 草稿 (如果需要的話)
-  PENDING   // 待審核 (預設)
-  APPROVED  // 已審核通過 (正式發布)
-  REJECTED  // 審核退回
+  DRAFT // 草稿 (如果需要的話)
+  PENDING // 待審核 (預設)
+  APPROVED // 已審核通過 (正式發布)
+  REJECTED // 審核退回
 }
 
 model Post {
@@ -20,8 +20,8 @@ model Post {
   content      String
   coverImage   String?
   authorEmail  String
-  authorName   String?    // 新增作者名稱欄位
-  department   String?    // 新增部門欄位
+  authorName   String? // 新增作者名稱欄位
+  department   String? // 新增部門欄位
   status       PostStatus @default(PENDING) // 新增狀態欄位，預設為待審核
   rejectReason String?
   createdAt    DateTime   @default(now())
@@ -40,3 +40,55 @@ model MeetingMinute {
   updatedAt   DateTime @updatedAt
 }
 
+// 已經過匿名化與公開核可的學權案件；不得存放原始陳情或任何個資。
+model PublicCase {
+  id               String              @id @default(cuid())
+  publicCaseNo     String              @unique
+  openedAt         DateTime
+  source           String
+  currentStatus    String
+  currentSituation String              @db.Text
+  publicSummary    String              @db.Text
+  isPublic         Boolean             @default(false)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  createdBy        String
+  updatedBy        String
+  timelineEvents   CaseTimelineEvent[]
+
+  @@index([isPublic, source])
+  @@index([updatedAt])
+}
+
+// 每次處理進度建立一筆新事件，避免以目前狀態覆寫歷史。
+model CaseTimelineEvent {
+  id         String     @id @default(cuid())
+  caseId     String
+  occurredAt DateTime
+  status     String
+  publicNote String     @db.Text
+  isPublic   Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  createdBy  String
+  updatedBy  String
+  case       PublicCase @relation(fields: [caseId], references: [id], onDelete: Restrict)
+
+  @@index([caseId, occurredAt, createdAt])
+  @@index([isPublic, occurredAt])
+}
+
+// 保留操作前後快照，供追溯建立、修改、發布與隱藏紀錄。
+model CaseAuditLog {
+  id         String   @id @default(cuid())
+  actor      String
+  action     String
+  targetType String
+  targetId   String
+  before     Json?
+  after      Json?
+  createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId, createdAt])
+  @@index([actor, createdAt])
+}

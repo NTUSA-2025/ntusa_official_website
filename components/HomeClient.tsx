@@ -46,12 +46,26 @@ export interface HomeMinuteItem {
   file: string;
 }
 
+export interface HomePublicCaseItem {
+  id: string;
+  publicCaseNo: string;
+  openedAt: string;
+  source: string;
+  currentStatus: string;
+  currentSituation: string;
+  publicSummary: string;
+  updatedAt: string;
+  timelineEvents: { id: string; occurredAt: string; status: string; publicNote: string }[];
+}
+
 export default function HomeClient({
   posts,
   initialMinutes,
+  initialPublicCases,
 }: {
   posts: PostType[];
   initialMinutes?: HomeMinuteItem[];
+  initialPublicCases?: HomePublicCaseItem[];
 }) {
   const { data: session } = useSession();
   // Match the server render first; the layout effect below applies a direct
@@ -59,9 +73,11 @@ export default function HomeClient({
   const [activeTab, setActiveTab] = useState("home");
   const [dataTab, setDataTab] = useState("minutes");
   const [expandedDepts, setExpandedDepts] = useState<Set<string>>(() => new Set());
+  const [expandedCases, setExpandedCases] = useState<Set<string>>(() => new Set());
   const [truncatedDepts, setTruncatedDepts] = useState<Set<string>>(() => new Set());
   const deptDescRefs = useRef(new Map<string, HTMLParagraphElement>());
   const minutesData = initialMinutes ?? [];
+  const publicCases = initialPublicCases ?? [];
   const locale = useLocale();
   const tNews = useTranslations("home.news");
   const tAbout = useTranslations("home.about");
@@ -69,6 +85,7 @@ export default function HomeClient({
   const tRights = useTranslations("home.rights");
   const tForms = useTranslations("home.forms");
   const tData = useTranslations("home.data");
+  const tCases = useTranslations("home.cases");
 
   const rawHistory = tAbout.raw("history");
   const historyParagraphs = Array.isArray(rawHistory) ? (rawHistory as string[]) : [];
@@ -175,6 +192,15 @@ export default function HomeClient({
   const navigateTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     window.location.hash = id;
+  };
+
+  const toggleCaseTimeline = (id: string) => {
+    setExpandedCases((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
 
   return (
@@ -300,6 +326,45 @@ export default function HomeClient({
           <div className="fade-up-target">
             <AlternatingPostList posts={posts} />
           </div>
+        </div>
+      </section>
+
+      {/* ── PAGE: 學權案件進度 ── */}
+      <section className={`page ${activeTab === "cases" ? "active" : ""}`} id="cases">
+        <div className="page-hero-mini">
+          <div className="page-hero-mini-content">
+            <h1 className="page-title">{tCases("title")}</h1>
+            <p className="page-desc">{tCases("desc")}</p>
+          </div>
+        </div>
+        <div className="section-wrap">
+          <p className="case-public-privacy fade-up-target">{tCases("privacy")}</p>
+          {publicCases.length === 0 ? (
+            <div className="case-empty fade-up-target">{tCases("empty")}</div>
+          ) : (
+            <div className="case-list">
+              {publicCases.map((caseRecord) => {
+                const expanded = expandedCases.has(caseRecord.id);
+                const openedAt = new Date(caseRecord.openedAt).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+                const updatedAt = new Date(caseRecord.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+                return <article className="case-card fade-up-target" key={caseRecord.id}>
+                  <div className="case-card-meta"><span>{caseRecord.publicCaseNo}</span><span>{caseRecord.source}</span></div>
+                  <h2>{caseRecord.currentStatus}</h2>
+                  <p>{caseRecord.publicSummary}</p>
+                  <p className="case-current-situation">{caseRecord.currentSituation}</p>
+                  <div className="case-card-footer">
+                    <span>{tCases("openedAt", { date: openedAt })} · {tCases("updatedAt", { date: updatedAt })}</span>
+                    <button type="button" className="case-link" aria-expanded={expanded} aria-controls={`case-timeline-${caseRecord.id}`} onClick={() => toggleCaseTimeline(caseRecord.id)}>
+                      {expanded ? tCases("hideTimeline") : tCases("showTimeline")} <span aria-hidden="true">{expanded ? "↑" : "→"}</span>
+                    </button>
+                  </div>
+                  {expanded && <div id={`case-timeline-${caseRecord.id}`} className="case-public-timeline">
+                    {caseRecord.timelineEvents.length ? <ol className="case-timeline">{caseRecord.timelineEvents.map((event) => <li key={event.id}><time dateTime={event.occurredAt}>{new Date(event.occurredAt).toLocaleString(locale, { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Taipei" })}</time><div><h3>{event.status}</h3><p>{event.publicNote}</p></div></li>)}</ol> : <p className="case-empty">{tCases("emptyTimeline")}</p>}
+                  </div>}
+                </article>;
+              })}
+            </div>
+          )}
         </div>
       </section>
 
