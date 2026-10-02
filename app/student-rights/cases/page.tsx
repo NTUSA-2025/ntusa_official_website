@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// Keep old links working while the public experience lives alongside #about on the home page.
+// Keep the former public cases route working.
 export default function PublicCasesPage() {
-  redirect("/#cases");
+  redirect("/cases");
 }
