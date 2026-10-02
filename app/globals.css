@@ -1479,19 +1479,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   font-size: 15px;
 }
 
-.representatives-privacy-note {
-  margin: 28px 0;
-  padding: 14px 18px;
-  color: var(--color-secondary);
-  background: var(--color-brand-light);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-}
-
 .representatives-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  margin-top: 28px;
 }
 
 .representative-card {
@@ -1636,6 +1628,7 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 }
 
 .representatives-state {
+  margin-top: 28px;
   padding: 56px 24px;
   text-align: center;
   background: var(--color-card-bg);
