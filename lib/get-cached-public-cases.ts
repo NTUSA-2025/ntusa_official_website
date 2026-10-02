@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import prisma from "./prisma";
+import { isPublicCaseTableMissing } from "./student-rights-cases";
 
 export interface HomePublicCase {
   id: string;
@@ -45,7 +46,7 @@ const getPublicCases = unstable_cache(
       }));
     } catch (error) {
       // Keep the public home page available while a newly deployed migration is pending.
-      if (typeof error === "object" && error !== null && "code" in error && error.code === "P2021") {
+      if (isPublicCaseTableMissing(error)) {
         return [];
       }
       console.error("無法讀取公開學權案件:", error);

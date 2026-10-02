@@ -72,3 +72,7 @@ export function publicCaseSort<T extends { occurredAt: Date; createdAt: Date }>(
 export function toAuditSnapshot(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
+
+export function isPublicCaseTableMissing(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "P2021";
+}
