@@ -41,12 +41,10 @@
     "title": "University Meeting Student Representatives",
     "description": "Student representatives bring student voices into university-level meetings. Find the NTUSA representative, contact details, remit, and governing rules for each meeting here.",
     "back": "← Back to public records",
-    "openSource": "View source list ↗",
     "listTitle": "Meetings and representatives",
     "count": "{count} meetings",
     "searchLabel": "Search meetings or representatives",
     "searchPlaceholder": "Search meetings, representatives, or topics",
-    "sourceNote": "This page syncs with NTUSA's public list once a day. If information changes, refer to the source spreadsheet.",
     "meetingLabel": "Meeting",
     "representativeLabel": "NTUSA representative",
     "pending": "Appointment pending",
@@ -59,9 +57,7 @@
     "note": "Notes",
     "regulationLink": "View governing rules ↗",
     "emptyTitle": "No matching meetings",
-    "emptyDescription": "Try a shorter keyword, meeting name, or representative name.",
-    "unavailableTitle": "The list is temporarily unavailable",
-    "unavailableDescription": "Please try again later or view the source spreadsheet for the latest list."
+    "emptyDescription": "Try a shorter keyword, meeting name, or representative name."
   },
   "home": {
     "hero": {

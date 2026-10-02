@@ -7,15 +7,9 @@ import type { UniversityMeeting } from "@/lib/university-meeting-representatives
 
 type Props = {
   meetings: UniversityMeeting[];
-  loadFailed: boolean;
-  sourceUrl: string;
 };
 
-export default function MeetingRepresentativesPageClient({
-  meetings,
-  loadFailed,
-  sourceUrl,
-}: Props) {
+export default function MeetingRepresentativesPageClient({ meetings }: Props) {
   const t = useTranslations("representatives");
   const [query, setQuery] = useState("");
 
@@ -53,9 +47,6 @@ export default function MeetingRepresentativesPageClient({
             <Link href="/data" className="representatives-back-link">
               {t("back")}
             </Link>
-            <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
-              {t("openSource")}
-            </a>
           </div>
         </div>
       </section>
@@ -80,17 +71,7 @@ export default function MeetingRepresentativesPageClient({
           </label>
         </div>
 
-        <p className="representatives-privacy-note">{t("sourceNote")}</p>
-
-        {loadFailed ? (
-          <div className="representatives-state" role="status">
-            <h2>{t("unavailableTitle")}</h2>
-            <p>{t("unavailableDescription")}</p>
-            <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="representatives-text-link">
-              {t("openSource")}
-            </a>
-          </div>
-        ) : filteredMeetings.length === 0 ? (
+        {filteredMeetings.length === 0 ? (
           <div className="representatives-state" role="status">
             <h2>{t("emptyTitle")}</h2>
             <p>{t("emptyDescription")}</p>
