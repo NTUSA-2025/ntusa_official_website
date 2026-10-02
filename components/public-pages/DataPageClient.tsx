@@ -31,6 +31,9 @@ export default function DataPageClient({ minutes }: { minutes: UnifiedMeetingMin
           <button className={`data-tab ${dataTab === "budget" ? "active" : ""}`} onClick={() => setDataTab("budget")}>
             {tData("tabBudget")}
           </button>
+          <button className={`data-tab ${dataTab === "representatives" ? "active" : ""}`} onClick={() => setDataTab("representatives")}>
+            {tData("tabRepresentatives")}
+          </button>
         </div>
 
         <div className={`data-panel ${dataTab === "minutes" ? "active" : ""}`}>
@@ -93,6 +96,21 @@ export default function DataPageClient({ minutes }: { minutes: UnifiedMeetingMin
             >
               {tData("budgetOpenDrive")}
             </a>
+          </div>
+        </div>
+
+        <div className={`data-panel ${dataTab === "representatives" ? "active" : ""}`}>
+          <div className="rights-placeholder-box fade-up-target">
+            <div className="placeholder-icon">🏛️</div>
+            <h3>{tData("representativesTitle")}</h3>
+            <p>{tData("representativesDesc")}</p>
+            <Link
+              href="/university-meeting-representatives"
+              className="btn btn-primary"
+              style={{ marginTop: "20px" }}
+            >
+              {tData("representativesOpen")}
+            </Link>
           </div>
         </div>
       </div>

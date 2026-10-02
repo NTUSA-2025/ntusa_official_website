@@ -55,11 +55,11 @@ export default function Footer() {
          <Link href="/forms" className={isActive("/forms") ? "active" : undefined}>
             {tNav("forms")}
           </Link>
-          <Link href="/data" className={isActive("/data") ? "active" : undefined}>
+          <Link
+            href="/data"
+            className={isActive("/data") || isActive("/university-meeting-representatives") ? "active" : undefined}
+          >
             {tNav("data")}
-          </Link>
-          <Link href="/university-meeting-representatives" className={pathname === "/university-meeting-representatives" ? "active" : undefined}>
-            {tNav("studentRepresentatives")}
           </Link>
         </div>
 
