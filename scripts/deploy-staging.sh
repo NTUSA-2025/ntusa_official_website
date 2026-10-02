@@ -28,6 +28,9 @@ git push origin "$EXPECTED_BRANCH"
 read -r remote_only local_only <<< "$(git rev-list --left-right --count "origin/${EXPECTED_BRANCH}...${EXPECTED_BRANCH}")"
 [[ "$remote_only" == "0" && "$local_only" == "0" ]] || fail "Push did not synchronize ${EXPECTED_BRANCH} with origin."
 
+echo "Applying pending PostgreSQL migrations to staging…"
+npm run db:migrate
+
 echo "Creating Vercel Preview…"
 deployment_url="$(npx --yes vercel deploy --yes --scope "$VERCEL_SCOPE" --no-color)"
 [[ "$deployment_url" =~ ^https://[A-Za-z0-9.-]+\.vercel\.app$ ]] || fail "Vercel did not return a valid Preview URL: ${deployment_url}"

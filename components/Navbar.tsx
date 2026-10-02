@@ -84,6 +84,7 @@ export default function Navbar() {
     { kind: "hash", id: "home", label: t("home") },
     { kind: "hash", id: "about", label: t("about") },
     { kind: "hash", id: "announcements", label: t("rights") },
+    { kind: "hash", id: "cases", label: t("caseProgress") },
     { kind: "hash", id: "forms", label: t("forms") },
     { kind: "hash", id: "data", label: t("data") },
   ];
