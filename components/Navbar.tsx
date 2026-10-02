@@ -140,6 +140,9 @@ export default function Navbar() {
                 <Link href="/minutes/upload" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
                   {t("uploadMinutes")}
                 </Link>
+                <Link href="/student-rights/cases/manage" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
+                  {t("caseManagement")}
+                </Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} className="nav-link" style={{ color: "#e53e3e" }}>
                   {t("signOut")}
                 </button>
@@ -205,6 +208,9 @@ export default function Navbar() {
               </Link>
               <Link href="/minutes/upload" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
                 {t("uploadMinutes")}
+              </Link>
+              <Link href="/student-rights/cases/manage" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
+                {t("caseManagement")}
               </Link>
               <button onClick={() => { closeDrawer(); signOut({ callbackUrl: '/' }); }} className="drawer-link" style={{ color: "#e53e3e", textAlign: "left" }}>
                 {t("signOut")}
