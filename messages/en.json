@@ -46,7 +46,7 @@
     "count": "{count} meetings",
     "searchLabel": "Search meetings or representatives",
     "searchPlaceholder": "Search meetings, representatives, or topics",
-    "sourceNote": "This page syncs with NTUSA's public list every hour. If information changes, refer to the source spreadsheet.",
+    "sourceNote": "This page syncs with NTUSA's public list once a day. If information changes, refer to the source spreadsheet.",
     "meetingLabel": "Meeting",
     "representativeLabel": "NTUSA representative",
     "pending": "Appointment pending",
