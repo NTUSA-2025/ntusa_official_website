@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CaseValidationError, isStudentRightsCaseManager, parseCaseInput, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { CaseValidationError, isPublicCaseTableMissing, isStudentRightsCaseManager, parseCaseInput, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -18,11 +18,17 @@ export async function GET() {
   if (!session?.user?.email) return NextResponse.json({ errorCode: "UNAUTHORIZED" }, { status: 401 });
   if (!isStudentRightsCaseManager(session)) return NextResponse.json({ errorCode: "FORBIDDEN" }, { status: 403 });
 
-  const cases = await prisma.publicCase.findMany({
-    include: { timelineEvents: { orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }] } },
-    orderBy: { updatedAt: "desc" },
-  });
-  return NextResponse.json(cases);
+  try {
+    const cases = await prisma.publicCase.findMany({
+      include: { timelineEvents: { orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }] } },
+      orderBy: { updatedAt: "desc" },
+    });
+    return NextResponse.json(cases);
+  } catch (error) {
+    if (isPublicCaseTableMissing(error)) return NextResponse.json({ errorCode: "MIGRATION_PENDING" }, { status: 503 });
+    console.error("讀取管理端學權案件失敗:", error);
+    return NextResponse.json({ errorCode: "INTERNAL_ERROR" }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {

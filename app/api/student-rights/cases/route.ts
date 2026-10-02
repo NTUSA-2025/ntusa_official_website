@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { isPublicCaseTableMissing } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,7 @@ export async function GET() {
     });
     return NextResponse.json(cases);
   } catch (error) {
+    if (isPublicCaseTableMissing(error)) return NextResponse.json([]);
     console.error("讀取公開學權案件失敗:", error);
     return NextResponse.json({ errorCode: "INTERNAL_ERROR" }, { status: 500 });
   }

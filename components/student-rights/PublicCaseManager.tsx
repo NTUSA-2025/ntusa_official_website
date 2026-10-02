@@ -19,7 +19,7 @@ function errorMessage(response: Response) {
   return response.json().then((body) => body.errorCode || "REQUEST_FAILED").catch(() => "REQUEST_FAILED");
 }
 
-export default function PublicCaseManager({ initialCases }: { initialCases: PublicCase[] }) {
+export default function PublicCaseManager({ initialCases, migrationPending }: { initialCases: PublicCase[]; migrationPending?: boolean }) {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState<CaseForm>(blankCase);
@@ -72,6 +72,7 @@ export default function PublicCaseManager({ initialCases }: { initialCases: Publ
 
   return <section className="case-manager">
     <header><p className="case-eyebrow">ADMINISTRATION</p><h1>學權部案件公開管理</h1><p>僅輸入已匿名化、已核可公開的內容。原始陳情、聯絡資訊與內部紀錄不得存入本系統。</p></header>
+    {migrationPending ? <p className="case-manager-message" role="alert">資料庫 migration 尚未完成；請在 staging 資料庫執行 <code>npm run db:migrate</code> 後重新整理。</p> : null}
     {message ? <p className="case-manager-message" role="status">{message}</p> : null}
     <div className="case-manager-grid">
       <form className="case-manager-panel" onSubmit={submitCase}>
