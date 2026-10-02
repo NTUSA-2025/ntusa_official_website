@@ -21,6 +21,7 @@ describe("tabFromHashFragment", () => {
   it("maps known sections", () => {
     expect(tabFromHashFragment("#data")).toBe("data");
     expect(tabFromHashFragment("forms")).toBe("forms");
+    expect(tabFromHashFragment("cases")).toBe("cases");
   });
 
   it("falls back to home for unknown fragments", () => {

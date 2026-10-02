@@ -15,6 +15,7 @@
     "home": "首頁",
     "about": "關於我們",
     "rights": "公告",
+    "caseProgress": "案件進度",
     "forms": "相關連結",
     "data": "公開資料",
     "newPost": "新增公告",
@@ -144,6 +145,17 @@
       "desc": "學生會關於學生權益之最新公告、聲明與說明。",
       "alternatingEmpty": "目前尚無公告",
       "alternatingNoImage": "尚無圖片"
+    },
+    "cases": {
+      "eyebrow": "Student Rights",
+      "title": "學權部案件處理進度",
+      "desc": "追蹤已匿名化並經核可公開的案件處理歷程。",
+      "privacy": "本頁僅刊載匿名化且核可公開的資訊，不包含原始陳情、個人資料或內部處理紀錄。",
+      "updatedAt": "最近更新：{date}",
+      "showTimeline": "查看處理歷程",
+      "hideTimeline": "收合處理歷程",
+      "empty": "目前沒有可公開的案件進度。",
+      "emptyTimeline": "此案件尚無可公開的進度事件。"
     },
     "forms": {
       "eyebrow": "Links",

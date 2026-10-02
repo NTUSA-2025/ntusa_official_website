@@ -15,6 +15,7 @@
     "home": "Home",
     "about": "About",
     "rights": "Announcements",
+    "caseProgress": "Case Progress",
     "forms": "Links",
     "data": "Records",
     "newPost": "New Post",
@@ -144,6 +145,17 @@
       "desc": "The latest announcements, statements, and explanations from the Student Association on student rights.",
       "alternatingEmpty": "No announcements yet",
       "alternatingNoImage": "No image"
+    },
+    "cases": {
+      "eyebrow": "Student Rights",
+      "title": "Student Rights Case Progress",
+      "desc": "Track the handling history of anonymized cases approved for publication.",
+      "privacy": "This page only contains anonymized, approved public information. It excludes original reports, personal data, and internal handling records.",
+      "updatedAt": "Last updated: {date}",
+      "showTimeline": "View timeline",
+      "hideTimeline": "Hide timeline",
+      "empty": "There are no public case updates at this time.",
+      "emptyTimeline": "There are no public progress events for this case yet."
     },
     "forms": {
       "eyebrow": "Links",

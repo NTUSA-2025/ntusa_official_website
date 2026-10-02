@@ -8,6 +8,7 @@ import { isStudentRightsCaseManager, toAuditSnapshot } from "@/lib/student-right
 export const dynamic = "force-dynamic";
 
 function revalidatePublicCases() {
+  revalidatePath("/");
   revalidatePath("/student-rights/cases");
   revalidatePath("/student-rights/cases/[publicCaseNo]", "page");
 }
