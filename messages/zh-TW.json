@@ -2,6 +2,8 @@
   "meta": {
     "siteTitle": "臺大學生會官網",
     "siteDescription": "國立臺灣大學學生會官方網站",
+    "representativesTitle": "校級會議學生代表｜臺大學生會",
+    "representativesDescription": "查詢臺大學生會參與校級會議的學生代表、聯絡方式、會議職掌與相關規範。",
     "campusToolsTitle": "校園工具｜臺大學生會",
     "campusToolsDescription": "由同學開發的應用與工具，讓校園生活更順手。臺大學生會彙整學生打造的數位服務。"
   },
@@ -18,6 +20,7 @@
     "caseProgress": "案件進度",
     "forms": "相關連結",
     "data": "公開資料",
+    "studentRepresentatives": "學生代表",
     "newPost": "新增公告",
     "review": "審核系統",
     "uploadMinutes": "上傳會議紀錄",
@@ -32,6 +35,32 @@
     "adminSignInAriaLabel": "管理員登入",
     "bugReportLabel": "（錯誤回報信箱）",
     "copyright": "© 2026 國立臺灣大學學生會資訊部"
+  },
+  "representatives": {
+    "eyebrow": "Campus Governance",
+    "title": "校級會議學生代表",
+    "description": "學生代表將同學的聲音帶進校級會議。你可以在這裡查詢各會議的學生會代表、聯絡方式、會議職掌與相關規範。",
+    "back": "← 返回公開資料",
+    "openSource": "查看原始名單 ↗",
+    "listTitle": "會議與代表名單",
+    "count": "共 {count} 項會議",
+    "searchLabel": "搜尋會議或代表",
+    "searchPlaceholder": "搜尋會議、代表或業務內容",
+    "privacyNote": "為兼顧資訊公開與個人資料保護，本頁不顯示代表學號；名單與聯絡資訊以學生會公開資料為準。",
+    "meetingLabel": "會議",
+    "representativeLabel": "學生會代表",
+    "pending": "尚待推派",
+    "showDetails": "查看會議資訊",
+    "appointmentMethod": "產生方式",
+    "reportStatus": "推派回報狀態",
+    "otherRepresentatives": "其他學生代表",
+    "office": "業務單位",
+    "note": "備註",
+    "regulationLink": "查看相關法規或設置辦法 ↗",
+    "emptyTitle": "找不到符合的會議",
+    "emptyDescription": "請試著縮短關鍵字，或改用會議名稱、代表姓名搜尋。",
+    "unavailableTitle": "名單暫時無法載入",
+    "unavailableDescription": "請稍後再試，或先前往原始試算表查看最新名單。"
   },
   "home": {
     "hero": {
