@@ -1571,6 +1571,14 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   color: var(--color-secondary);
 }
 
+.representative-student-ids {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .representatives-state {
   padding: 56px 24px;
   text-align: center;
