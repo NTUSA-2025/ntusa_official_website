@@ -10,6 +10,7 @@ type GvizRow = { c?: GvizCell[] };
 export type MeetingRepresentative = {
   name: string;
   email?: string;
+  studentId?: string;
 };
 
 export type UniversityMeeting = {
@@ -70,6 +71,7 @@ export function parseUniversityMeetings(payload: string): UniversityMeeting[] {
     const meetingName = cellText(cells, 0);
     const representativeName = optionalText(cellText(cells, 1));
     const representativeEmail = publicEmail(cellText(cells, 2));
+    const representativeStudentId = optionalText(cellText(cells, 3));
 
     if (!meetingName) {
       const previousMeeting = meetings.at(-1);
@@ -77,6 +79,7 @@ export function parseUniversityMeetings(payload: string): UniversityMeeting[] {
         previousMeeting.representatives.push({
           name: representativeName,
           email: representativeEmail,
+          studentId: representativeStudentId,
         });
       }
       continue;
@@ -86,7 +89,13 @@ export function parseUniversityMeetings(payload: string): UniversityMeeting[] {
       id: `meeting-${rowIndex + 1}`,
       name: meetingName,
       representatives: representativeName
-        ? [{ name: representativeName, email: representativeEmail }]
+        ? [
+            {
+              name: representativeName,
+              email: representativeEmail,
+              studentId: representativeStudentId,
+            },
+          ]
         : [],
       appointmentMethod: optionalText(cellText(cells, 4)),
       reportStatus: optionalText(cellText(cells, 5)),

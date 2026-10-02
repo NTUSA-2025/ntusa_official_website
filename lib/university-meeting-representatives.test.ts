@@ -8,7 +8,7 @@ function gviz(rows: unknown[][]): string {
 }
 
 describe("parseUniversityMeetings", () => {
-  it("maps public meeting information and omits student IDs", () => {
+  it("maps public meeting and representative information", () => {
     const meetings = parseUniversityMeetings(
       gviz([
         ["會議名稱", "學生會代表", "代表聯絡資訊", "代表學號"],
@@ -34,7 +34,11 @@ describe("parseUniversityMeetings", () => {
         id: "meeting-1",
         name: "校務會議",
         representatives: [
-          { name: "會長 社會科學院 王小明", email: "president@example.com" },
+          {
+            name: "會長 社會科學院 王小明",
+            email: "president@example.com",
+            studentId: "B00123456",
+          },
         ],
         appointmentMethod: "會長為當然代表",
         reportStatus: "不需要",
@@ -46,22 +50,21 @@ describe("parseUniversityMeetings", () => {
         note: "備註",
       },
     ]);
-    expect(JSON.stringify(meetings)).not.toContain("B00123456");
   });
 
   it("adds continuation-row representatives to the preceding meeting", () => {
     const meetings = parseUniversityMeetings(
       gviz([
-        ["會議名稱", "學生會代表", "代表聯絡資訊"],
-        ["行政會議", "資訊部部長 王小明", "a@example.com"],
-        ["", "資訊部副部長 陳小華", "b@example.com"],
+        ["會議名稱", "學生會代表", "代表聯絡資訊", "代表學號"],
+        ["行政會議", "資訊部部長 王小明", "a@example.com", "B001"],
+        ["", "資訊部副部長 陳小華", "b@example.com", "B002"],
       ]),
     );
 
     expect(meetings).toHaveLength(1);
     expect(meetings[0].representatives).toEqual([
-      { name: "資訊部部長 王小明", email: "a@example.com" },
-      { name: "資訊部副部長 陳小華", email: "b@example.com" },
+      { name: "資訊部部長 王小明", email: "a@example.com", studentId: "B001" },
+      { name: "資訊部副部長 陳小華", email: "b@example.com", studentId: "B002" },
     ]);
   });
 
@@ -73,7 +76,9 @@ describe("parseUniversityMeetings", () => {
       ]),
     );
 
-    expect(meetings[0].representatives).toEqual([{ name: "待推派", email: undefined }]);
+    expect(meetings[0].representatives).toEqual([
+      { name: "待推派", email: undefined, studentId: undefined },
+    ]);
     expect(meetings[0].regulationUrl).toBeUndefined();
   });
 });
