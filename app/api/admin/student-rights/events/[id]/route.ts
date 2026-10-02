@@ -30,7 +30,10 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
       orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
     });
     if (newestPublicEvent) {
-      await tx.publicCase.update({ where: { id: before.caseId }, data: { currentStatus: newestPublicEvent.status, updatedBy: actor } });
+      await tx.publicCase.update({
+        where: { id: before.caseId },
+        data: { currentStatus: newestPublicEvent.status, currentSituation: newestPublicEvent.publicNote, updatedBy: actor },
+      });
     }
     await tx.caseAuditLog.create({ data: { actor, action: "HIDE", targetType: "TIMELINE_EVENT", targetId: id, before: toAuditSnapshot(before), after: toAuditSnapshot(after) } });
     return after;

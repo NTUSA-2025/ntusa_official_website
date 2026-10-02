@@ -48,8 +48,22 @@ export async function POST(request: Request) {
           updatedBy: actor,
         },
       });
+      const initialEvent = await tx.caseTimelineEvent.create({
+        data: {
+          caseId: caseRecord.id,
+          occurredAt: input.openedAt,
+          status: input.currentStatus,
+          publicNote: input.currentSituation,
+          isPublic: input.isPublic ?? false,
+          createdBy: actor,
+          updatedBy: actor,
+        },
+      });
       await tx.caseAuditLog.create({
         data: { actor, action: "CREATE", targetType: "PUBLIC_CASE", targetId: caseRecord.id, after: toAuditSnapshot(caseRecord) },
+      });
+      await tx.caseAuditLog.create({
+        data: { actor, action: "CREATE", targetType: "TIMELINE_EVENT", targetId: initialEvent.id, after: toAuditSnapshot(initialEvent) },
       });
       return caseRecord;
     });

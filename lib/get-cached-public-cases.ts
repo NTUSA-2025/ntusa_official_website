@@ -5,8 +5,10 @@ import { isPublicCaseTableMissing } from "./student-rights-cases";
 export interface HomePublicCase {
   id: string;
   publicCaseNo: string;
-  category: string;
+  openedAt: string;
+  source: string;
   currentStatus: string;
+  currentSituation: string;
   publicSummary: string;
   updatedAt: string;
   timelineEvents: {
@@ -33,8 +35,10 @@ const getPublicCases = unstable_cache(
       return rows.map((caseRecord) => ({
         id: caseRecord.id,
         publicCaseNo: caseRecord.publicCaseNo,
-        category: caseRecord.category,
+        openedAt: caseRecord.openedAt.toISOString(),
+        source: caseRecord.source,
         currentStatus: caseRecord.currentStatus,
+        currentSituation: caseRecord.currentSituation,
         publicSummary: caseRecord.publicSummary,
         updatedAt: caseRecord.updatedAt.toISOString(),
         timelineEvents: caseRecord.timelineEvents.map((event) => ({

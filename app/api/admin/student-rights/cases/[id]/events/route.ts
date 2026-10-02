@@ -33,7 +33,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
       });
       if (newestPublicEvent) {
-        await tx.publicCase.update({ where: { id: caseId }, data: { currentStatus: newestPublicEvent.status, updatedBy: actor } });
+        await tx.publicCase.update({
+          where: { id: caseId },
+          data: { currentStatus: newestPublicEvent.status, currentSituation: newestPublicEvent.publicNote, updatedBy: actor },
+        });
       }
       await tx.caseAuditLog.create({
         data: { actor, action: "CREATE", targetType: "TIMELINE_EVENT", targetId: created.id, after: toAuditSnapshot(created) },
