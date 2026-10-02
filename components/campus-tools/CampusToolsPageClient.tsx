@@ -88,7 +88,7 @@ export default function CampusToolsPageClient({ grouped, featured }: Props) {
             {t("heroLead")}
           </p>
           <p className="campus-tools-hero-back">
-            <Link href="/#home" className="campus-tools-back-link">
+            <Link href="/" className="campus-tools-back-link">
               {t("heroBack")}
             </Link>
           </p>

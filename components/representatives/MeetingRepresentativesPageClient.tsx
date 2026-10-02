@@ -50,7 +50,7 @@ export default function MeetingRepresentativesPageClient({
           <h1>{t("title")}</h1>
           <p className="representatives-lead">{t("description")}</p>
           <div className="representatives-hero-actions">
-            <Link href="/#data" className="representatives-back-link">
+            <Link href="/data" className="representatives-back-link">
               {t("back")}
             </Link>
             <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">

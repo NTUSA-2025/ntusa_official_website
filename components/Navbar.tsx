@@ -3,27 +3,20 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { tabFromHashFragment } from "@/lib/home-active-tab";
 import LocaleSwitcher from "./LocaleSwitcher";
 
-type NavHashItem = { kind: "hash"; id: string; label: string };
-type NavRouteItem = { kind: "route"; href: string; label: string };
-type NavItem = NavHashItem | NavRouteItem;
+type NavItem = { href: string; label: string };
 
 export default function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
   const t = useTranslations("nav");
   const tFooter = useTranslations("footer");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  // Keep the first client render identical to the server render. The URL hash
-  // is applied after hydration by the effect below.
-  const [activeHash, setActiveHash] = useState("home");
 
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -37,27 +30,14 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 8);
-    const handleHash = () => {
-      setActiveHash(tabFromHashFragment(window.location.hash));
-    };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("hashchange", handleHash);
-    handleHash();
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("hashchange", handleHash);
     };
   }, []);
-
-  // Client navigations (e.g. router.push("/#about") from /campus-tools) often skip the native hashchange event.
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      setActiveHash(tabFromHashFragment(window.location.hash));
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [pathname]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -67,39 +47,23 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  const navigateTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    closeDrawer();
-    if (pathname === "/") {
-      // Assigning the fragment lets the browser emit the native hashchange
-      // event, which keeps every hash consumer in sync without a synthetic
-      // DOM event.
-      window.location.hash = id;
-    } else {
-      router.push(`/#${id}`);
-    }
-  };
-
   const navItems: NavItem[] = [
-    { kind: "hash", id: "home", label: t("home") },
-    { kind: "hash", id: "about", label: t("about") },
-    { kind: "hash", id: "announcements", label: t("rights") },
-    { kind: "hash", id: "cases", label: t("caseProgress") },
-    { kind: "hash", id: "forms", label: t("forms") },
-    { kind: "hash", id: "data", label: t("data") },
-    { kind: "route", href: "/university-meeting-representatives", label: t("studentRepresentatives") },
+    { href: "/", label: t("home") },
+    { href: "/about", label: t("about") },
+    { href: "/announcements", label: t("rights") },
+    { href: "/cases", label: t("caseProgress") },
+    { href: "/forms", label: t("forms") },
+    { href: "/data", label: t("data") },
+    { href: "/university-meeting-representatives", label: t("studentRepresentatives") },
   ];
 
-  const isNavActive = (item: NavItem) => {
-    if (item.kind === "route") return pathname === item.href;
-    return pathname === "/" && activeHash === item.id;
-  };
+  const isNavActive = (item: NavItem) => pathname === item.href;
 
   return (
     <>
       <header className={`navbar ${scrolled ? "scrolled" : ""}`} id="navbar">
         <div className="nav-inner">
-          <Link href="/#home" className="nav-logo" onClick={(e) => navigateTo(e, "home")}>
+          <Link href="/" className="nav-logo">
             <Image src="/NTUSA_Logo_1.png" alt={tFooter("orgName")} width={40} height={40} className="logo-mark" />
             <div className="logo-text">
               <span className="logo-title">{tFooter("orgName")}</span>
@@ -108,26 +72,15 @@ export default function Navbar() {
           </Link>
 
           <nav className="nav-links">
-            {navItems.map((item) =>
-              item.kind === "route" ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`nav-link ${isNavActive(item) ? "active" : ""}`}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <a
-                  key={item.id}
-                  href={`/#${item.id}`}
-                  onClick={(e) => navigateTo(e, item.id)}
-                  className={`nav-link ${isNavActive(item) ? "active" : ""}`}
-                >
-                  {item.label}
-                </a>
-              ),
-            )}
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`nav-link ${isNavActive(item) ? "active" : ""}`}
+              >
+                {item.label}
+              </Link>
+            ))}
 
             {/* 登入後才會顯示的按鈕 */}
             {session && (
@@ -176,27 +129,16 @@ export default function Navbar() {
           </div>
         </div>
         <nav className="drawer-nav">
-          {navItems.map((item) =>
-            item.kind === "route" ? (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={closeDrawer}
-                className={`drawer-link ${isNavActive(item) ? "active" : ""}`}
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <a
-                key={item.id}
-                href={`/#${item.id}`}
-                onClick={(e) => navigateTo(e, item.id)}
-                className={`drawer-link ${isNavActive(item) ? "active" : ""}`}
-              >
-                {item.label}
-              </a>
-            ),
-          )}
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={closeDrawer}
+              className={`drawer-link ${isNavActive(item) ? "active" : ""}`}
+            >
+              {item.label}
+            </Link>
+          ))}
 
           {/* 手機版：登入後按鈕 */}
           {session && (
