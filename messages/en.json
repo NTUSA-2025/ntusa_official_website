@@ -2,6 +2,8 @@
   "meta": {
     "siteTitle": "NTU Student Association",
     "siteDescription": "Official site of the National Taiwan University Student Association",
+    "representativesTitle": "University Meeting Representatives | NTUSA",
+    "representativesDescription": "Find NTUSA representatives serving on university-level meetings, along with contact details, responsibilities, and governing rules.",
     "campusToolsTitle": "Campus Tools | NTUSA",
     "campusToolsDescription": "Apps and tools built by students to make campus life easier. Curated by the NTU Student Association."
   },
@@ -18,6 +20,7 @@
     "caseProgress": "Case Progress",
     "forms": "Links",
     "data": "Records",
+    "studentRepresentatives": "Representatives",
     "newPost": "New Post",
     "review": "Review",
     "uploadMinutes": "Upload Minutes",
@@ -32,6 +35,32 @@
     "adminSignInAriaLabel": "Admin sign in",
     "bugReportLabel": "(Bug Report Email)",
     "copyright": "© 2026 NTU Student Association · IT Department"
+  },
+  "representatives": {
+    "eyebrow": "Campus Governance",
+    "title": "University Meeting Student Representatives",
+    "description": "Student representatives bring student voices into university-level meetings. Find the NTUSA representative, contact details, remit, and governing rules for each meeting here.",
+    "back": "← Back to public records",
+    "openSource": "View source list ↗",
+    "listTitle": "Meetings and representatives",
+    "count": "{count} meetings",
+    "searchLabel": "Search meetings or representatives",
+    "searchPlaceholder": "Search meetings, representatives, or topics",
+    "privacyNote": "To balance transparency and privacy, student IDs are not displayed. Names and contact details follow NTUSA's public source list.",
+    "meetingLabel": "Meeting",
+    "representativeLabel": "NTUSA representative",
+    "pending": "Appointment pending",
+    "showDetails": "View meeting details",
+    "appointmentMethod": "Selection method",
+    "reportStatus": "Nomination report status",
+    "otherRepresentatives": "Other student representatives",
+    "office": "Responsible office",
+    "note": "Notes",
+    "regulationLink": "View governing rules ↗",
+    "emptyTitle": "No matching meetings",
+    "emptyDescription": "Try a shorter keyword, meeting name, or representative name.",
+    "unavailableTitle": "The list is temporarily unavailable",
+    "unavailableDescription": "Please try again later or view the source spreadsheet for the latest list."
   },
   "home": {
     "hero": {

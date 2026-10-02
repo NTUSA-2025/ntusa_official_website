@@ -87,6 +87,7 @@ export default function Navbar() {
     { kind: "hash", id: "cases", label: t("caseProgress") },
     { kind: "hash", id: "forms", label: t("forms") },
     { kind: "hash", id: "data", label: t("data") },
+    { kind: "route", href: "/university-meeting-representatives", label: t("studentRepresentatives") },
   ];
 
   const isNavActive = (item: NavItem) => {

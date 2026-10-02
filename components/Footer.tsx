@@ -77,6 +77,9 @@ export default function Footer() {
           <Link href="/#data" onClick={(e) => handleHashNavigation(e, "data")} className={isActive("data") ? "active" : undefined}>
             {tNav("data")}
           </Link>
+          <Link href="/university-meeting-representatives" className={pathname === "/university-meeting-representatives" ? "active" : undefined}>
+            {tNav("studentRepresentatives")}
+          </Link>
         </div>
 
         <div className="footer-socials">
