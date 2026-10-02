@@ -46,7 +46,7 @@
     "count": "共 {count} 項會議",
     "searchLabel": "搜尋會議或代表",
     "searchPlaceholder": "搜尋會議、代表或業務內容",
-    "sourceNote": "本頁每小時同步學生會公開名單；若資訊有異動，請以原始試算表為準。",
+    "sourceNote": "本頁每日同步學生會公開名單；若資訊有異動，請以原始試算表為準。",
     "meetingLabel": "會議",
     "representativeLabel": "學生會代表",
     "pending": "尚待推派",

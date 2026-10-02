@@ -113,7 +113,7 @@ export function parseUniversityMeetings(payload: string): UniversityMeeting[] {
 
 export async function getUniversityMeetings(): Promise<UniversityMeeting[]> {
   const response = await fetch(REPRESENTATIVES_DATA_URL, {
-    next: { revalidate: 3600, tags: ["university-meeting-representatives"] },
+    next: { revalidate: 86_400, tags: ["university-meeting-representatives"] },
   });
 
   if (!response.ok) {
