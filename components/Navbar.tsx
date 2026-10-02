@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,9 @@ export default function Navbar() {
   const t = useTranslations("nav");
   const tFooter = useTranslations("footer");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const adminMenuRef = useRef<HTMLDivElement>(null);
 
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -41,11 +43,27 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeDrawer();
+      if (e.key === "Escape") {
+        closeDrawer();
+        setIsAdminMenuOpen(false);
+      }
     };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
+
+  useEffect(() => {
+    if (!isAdminMenuOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!adminMenuRef.current?.contains(event.target as Node)) {
+        setIsAdminMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [isAdminMenuOpen]);
 
   const navItems: NavItem[] = [
     { href: "/", label: t("home") },
@@ -58,6 +76,12 @@ export default function Navbar() {
   ];
 
   const isNavActive = (item: NavItem) => pathname === item.href;
+  const isAdminRouteActive = [
+    "/editor",
+    "/review",
+    "/minutes/upload",
+    "/student-rights/cases/manage",
+  ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
   return (
     <>
@@ -82,26 +106,48 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {/* 登入後才會顯示的按鈕 */}
+            {/* 登入後將管理功能收進選單，避免桌面導覽列超出畫面。 */}
             {session && (
-              <>
-                <div style={{ width: "1px", height: "20px", background: "var(--color-border)", margin: "0 8px", flexShrink: 0 }}></div>
-                <Link href="/editor" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                  {t("newPost")}
-                </Link>
-                <Link href="/review" className="nav-link" style={{ color: "var(--color-secondary)", fontWeight: "bold" }}>
-                  {t("review")}
-                </Link>
-                <Link href="/minutes/upload" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                  {t("uploadMinutes")}
-                </Link>
-                <Link href="/student-rights/cases/manage" className="nav-link" style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                  {t("caseManagement")}
-                </Link>
-                <button onClick={() => signOut({ callbackUrl: '/' })} className="nav-link" style={{ color: "#e53e3e" }}>
-                  {t("signOut")}
+              <div className="nav-admin-menu" ref={adminMenuRef}>
+                <button
+                  type="button"
+                  className={`nav-link nav-admin-trigger ${isAdminRouteActive ? "active" : ""}`}
+                  aria-haspopup="menu"
+                  aria-expanded={isAdminMenuOpen}
+                  aria-controls="desktop-admin-menu"
+                  onClick={() => setIsAdminMenuOpen((open) => !open)}
+                >
+                  {t("adminMenu")}
+                  <span className={`nav-admin-chevron ${isAdminMenuOpen ? "open" : ""}`} aria-hidden="true">⌄</span>
                 </button>
-              </>
+                {isAdminMenuOpen && (
+                  <div className="nav-admin-popover" id="desktop-admin-menu" role="menu">
+                    <Link href="/editor" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
+                      {t("newPost")}
+                    </Link>
+                    <Link href="/review" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
+                      {t("review")}
+                    </Link>
+                    <Link href="/minutes/upload" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
+                      {t("uploadMinutes")}
+                    </Link>
+                    <Link href="/student-rights/cases/manage" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
+                      {t("caseManagement")}
+                    </Link>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="nav-admin-item nav-admin-signout"
+                      onClick={() => {
+                        setIsAdminMenuOpen(false);
+                        signOut({ callbackUrl: "/" });
+                      }}
+                    >
+                      {t("signOut")}
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             <LocaleSwitcher variant="desktop" />
