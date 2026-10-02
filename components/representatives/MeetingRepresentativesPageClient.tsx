@@ -27,6 +27,7 @@ export default function MeetingRepresentativesPageClient({
       [
         meeting.name,
         meeting.representatives.map((representative) => representative.name).join(" "),
+        meeting.representatives.map((representative) => representative.studentId).join(" "),
         meeting.appointmentMethod,
         meeting.otherRepresentatives,
         meeting.office,
@@ -79,7 +80,7 @@ export default function MeetingRepresentativesPageClient({
           </label>
         </div>
 
-        <p className="representatives-privacy-note">{t("privacyNote")}</p>
+        <p className="representatives-privacy-note">{t("sourceNote")}</p>
 
         {loadFailed ? (
           <div className="representatives-state" role="status">
@@ -127,6 +128,22 @@ export default function MeetingRepresentativesPageClient({
                 <details className="representative-details">
                   <summary>{t("showDetails")}</summary>
                   <dl>
+                    {meeting.representatives.some((representative) => representative.studentId) ? (
+                      <>
+                        <dt>{t("studentIds")}</dt>
+                        <dd>
+                          <ul className="representative-student-ids">
+                            {meeting.representatives
+                              .filter((representative) => representative.studentId)
+                              .map((representative) => (
+                                <li key={`${representative.name}-${representative.studentId}`}>
+                                  {representative.name}：{representative.studentId}
+                                </li>
+                              ))}
+                          </ul>
+                        </dd>
+                      </>
+                    ) : null}
                     {meeting.appointmentMethod ? <><dt>{t("appointmentMethod")}</dt><dd>{meeting.appointmentMethod}</dd></> : null}
                     {meeting.reportStatus ? <><dt>{t("reportStatus")}</dt><dd>{meeting.reportStatus}</dd></> : null}
                     {meeting.otherRepresentatives ? <><dt>{t("otherRepresentatives")}</dt><dd>{meeting.otherRepresentatives}</dd></> : null}
