@@ -26,7 +26,7 @@ jobs:
       url: https://ntusa-website-staging-ntusa.vercel.app
     steps:
       - name: Checkout staging
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
