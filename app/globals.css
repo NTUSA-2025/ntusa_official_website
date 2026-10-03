@@ -231,6 +231,14 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-panel textarea { resize: vertical; }
 .case-checkbox { display: flex !important; align-items: center; gap: 8px; font-weight: 500 !important; }
 .case-checkbox input { width: 16px; height: 16px; }
+.case-manager-panel .case-switch { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+.case-switch input[type="checkbox"] { appearance: none; position: relative; width: 42px; height: 24px; flex: none; border-radius: 999px; background: #a4aab2; cursor: pointer; transition: background .2s; }
+.case-switch input[type="checkbox"]::before { content: ""; position: absolute; width: 18px; height: 18px; top: 3px; left: 3px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.case-switch input[type="checkbox"]:checked { background: var(--color-brand-dark); }
+.case-switch input[type="checkbox"]:checked::before { transform: translateX(18px); }
+.case-switch input[type="checkbox"]:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 3px; }
+.case-switch input[type="checkbox"]:disabled { opacity: .55; cursor: wait; }
+.case-switch-state { color: var(--color-text-secondary); font-size: 13px; font-weight: 500; }
 .case-manager-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .case-manager-message { padding: 12px 16px; border-radius: var(--radius-sm); background: var(--color-brand-light); color: var(--color-secondary); margin: 0 0 20px; }
 .case-manager-case-list { display: grid; gap: 8px; max-height: 500px; overflow-y: auto; }
@@ -238,19 +246,19 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-case-list button.selected { background: var(--color-brand-light); border-color: var(--color-brand); }
 .case-manager-case-list span { font-size: 13px; color: var(--color-text-secondary); }
 .case-event-panel { margin-top: 20px; }
-.case-event-form { display: grid; grid-template-columns: 180px 1fr; gap: 14px 18px; align-items: end; }
-.case-event-form .event-note, .case-event-form .case-checkbox { grid-column: 1 / -1; }
+.case-event-form { display: grid; gap: 14px; }
 .case-event-form .btn { width: fit-content; }
 .case-manager-events { margin: 28px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
 .case-manager-events li { border-top: 1px solid var(--color-border); padding-top: 12px; }
-.case-manager-events li span { color: var(--color-brand-dark); font-weight: 700; font-size: 14px; }
+.case-event-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.case-event-heading time { color: var(--color-brand-dark); font-weight: 700; font-size: 14px; }
+.case-manager-panel .case-event-heading .case-switch { margin: 0; }
 .case-manager-events li p { white-space: pre-wrap; margin: 4px 0 8px; }
-.case-manager-events li button { color: #b54444; font-size: 14px; font-weight: 700; }
 .case-audit-heading { margin-top: 32px !important; }
 .case-audit-list { list-style: none; padding: 0; display: grid; gap: 8px; }
 .case-audit-list li { display: flex; gap: 10px; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 8px; font-size: 14px; }
 .case-audit-list span { color: var(--color-text-secondary); }
-@media (max-width: 760px) { .case-manager-grid, .case-event-form { grid-template-columns: 1fr; } .case-event-form .event-note, .case-event-form .case-checkbox { grid-column: auto; } }
+@media (max-width: 760px) { .case-manager-grid { grid-template-columns: 1fr; } }
 
 /* =====================================================
    NAVBAR
@@ -1479,19 +1487,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   font-size: 15px;
 }
 
-.representatives-privacy-note {
-  margin: 28px 0;
-  padding: 14px 18px;
-  color: var(--color-secondary);
-  background: var(--color-brand-light);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-}
-
 .representatives-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  margin-top: 28px;
 }
 
 .representative-card {
@@ -1636,6 +1636,7 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
 }
 
 .representatives-state {
+  margin-top: 28px;
   padding: 56px 24px;
   text-align: center;
   background: var(--color-card-bg);

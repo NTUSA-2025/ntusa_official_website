@@ -72,10 +72,12 @@ export default function Navbar() {
     { href: "/cases", label: t("caseProgress") },
     { href: "/forms", label: t("forms") },
     { href: "/data", label: t("data") },
-    { href: "/university-meeting-representatives", label: t("studentRepresentatives") },
   ];
 
-  const isNavActive = (item: NavItem) => pathname === item.href;
+  const isNavActive = (item: NavItem) => (
+    pathname === item.href
+    || (item.href === "/data" && pathname === "/university-meeting-representatives")
+  );
   const isAdminRouteActive = [
     "/editor",
     "/review",

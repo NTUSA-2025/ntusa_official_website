@@ -20,7 +20,6 @@
     "caseProgress": "案件進度",
     "forms": "相關連結",
     "data": "公開資料",
-    "studentRepresentatives": "學生代表",
     "adminMenu": "管理",
     "newPost": "新增公告",
     "review": "審核系統",
@@ -42,12 +41,10 @@
     "title": "校級會議學生代表",
     "description": "學生代表將同學的聲音帶進校級會議。你可以在這裡查詢各會議的學生會代表、聯絡方式、會議職掌與相關規範。",
     "back": "← 返回公開資料",
-    "openSource": "查看原始名單 ↗",
     "listTitle": "會議與代表名單",
     "count": "共 {count} 項會議",
     "searchLabel": "搜尋會議或代表",
     "searchPlaceholder": "搜尋會議、代表或業務內容",
-    "sourceNote": "本頁每日同步學生會公開名單；若資訊有異動，請以原始試算表為準。",
     "meetingLabel": "會議",
     "representativeLabel": "學生會代表",
     "pending": "尚待推派",
@@ -60,9 +57,7 @@
     "note": "備註",
     "regulationLink": "查看相關法規或設置辦法 ↗",
     "emptyTitle": "找不到符合的會議",
-    "emptyDescription": "請試著縮短關鍵字，或改用會議名稱、代表姓名搜尋。",
-    "unavailableTitle": "名單暫時無法載入",
-    "unavailableDescription": "請稍後再試，或先前往原始試算表查看最新名單。"
+    "emptyDescription": "請試著縮短關鍵字，或改用會議名稱、代表姓名搜尋。"
   },
   "home": {
     "hero": {
@@ -210,6 +205,7 @@
       "desc": "學生會會議紀錄、預決算及其他公開文件。",
       "tabMinutes": "會議紀錄",
       "tabBudget": "預決算",
+      "tabRepresentatives": "學生代表",
       "tabOther": "其他文件",
       "minutesTitle": "會議紀錄",
       "minutesDesc": "學生會各次會議之公開紀錄，點擊即可檢視或下載 PDF。",
@@ -222,6 +218,9 @@
       "budgetTitle": "歷年預決算",
       "budgetDesc": "學生會歷年預算與決算資料",
       "budgetOpenDrive": "在 Google Drive 中開啟 →",
+      "representativesTitle": "校級會議學生代表",
+      "representativesDesc": "查詢學生會參與校級會議的學生代表、聯絡方式、會議職掌與相關規範。",
+      "representativesOpen": "查看學生代表名單 →",
       "otherTitle": "其他文件",
       "otherDesc": "其他公開資料將陸續更新於此。",
       "otherBadge": "文件嵌入區"

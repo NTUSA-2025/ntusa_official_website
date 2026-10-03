@@ -52,11 +52,9 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
               return (
                 <article className="case-card fade-up-target" key={caseRecord.id}>
                   <div className="case-card-meta">
-                    <span>{caseRecord.publicCaseNo}</span>
-                    <span>{caseRecord.source}</span>
+                    <span>#{caseRecord.number}</span>
                   </div>
-                  <h2>{caseRecord.currentStatus}</h2>
-                  <p>{caseRecord.publicSummary}</p>
+                  <h2>{caseRecord.publicSummary}</h2>
                   <p className="case-current-situation">{caseRecord.currentSituation}</p>
                   <div className="case-card-footer">
                     <span>
@@ -80,17 +78,14 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
                           {caseRecord.timelineEvents.map((event) => (
                             <li key={event.id}>
                               <time dateTime={event.occurredAt}>
-                                {new Date(event.occurredAt).toLocaleString(locale, {
+                                {new Date(event.occurredAt).toLocaleDateString(locale, {
                                   year: "numeric",
                                   month: "long",
                                   day: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  timeZone: "Asia/Taipei",
+                                  timeZone: "UTC",
                                 })}
                               </time>
                               <div>
-                                <h3>{event.status}</h3>
                                 <p>{event.publicNote}</p>
                               </div>
                             </li>

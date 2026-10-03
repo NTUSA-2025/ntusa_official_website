@@ -43,10 +43,8 @@ model MeetingMinute {
 // 已經過匿名化與公開核可的學權案件；不得存放原始陳情或任何個資。
 model PublicCase {
   id               String              @id @default(cuid())
-  publicCaseNo     String              @unique
+  number           Int                 @unique @default(autoincrement())
   openedAt         DateTime
-  source           String
-  currentStatus    String
   currentSituation String              @db.Text
   publicSummary    String              @db.Text
   isPublic         Boolean             @default(false)
@@ -56,7 +54,7 @@ model PublicCase {
   updatedBy        String
   timelineEvents   CaseTimelineEvent[]
 
-  @@index([isPublic, source])
+  @@index([isPublic])
   @@index([updatedAt])
 }
 
@@ -65,7 +63,6 @@ model CaseTimelineEvent {
   id         String     @id @default(cuid())
   caseId     String
   occurredAt DateTime
-  status     String
   publicNote String     @db.Text
   isPublic   Boolean    @default(false)
   createdAt  DateTime   @default(now())

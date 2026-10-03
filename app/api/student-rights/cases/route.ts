@@ -10,17 +10,15 @@ export async function GET() {
     const cases = await prisma.publicCase.findMany({
       where: { isPublic: true },
       select: {
-        publicCaseNo: true,
+        number: true,
         openedAt: true,
-        source: true,
-        currentStatus: true,
         currentSituation: true,
         publicSummary: true,
         createdAt: true,
         updatedAt: true,
         timelineEvents: {
           where: { isPublic: true },
-          select: { occurredAt: true, status: true, publicNote: true, createdAt: true, updatedAt: true },
+          select: { occurredAt: true, publicNote: true, createdAt: true, updatedAt: true },
           orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }],
         },
       },
