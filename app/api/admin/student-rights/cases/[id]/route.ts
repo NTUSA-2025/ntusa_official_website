@@ -9,8 +9,7 @@ export const dynamic = "force-dynamic";
 
 function revalidatePublicCases() {
   revalidatePath("/");
-  revalidatePath("/student-rights/cases");
-  revalidatePath("/student-rights/cases/[publicCaseNo]", "page");
+  revalidatePath("/cases");
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -37,11 +36,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       const after = await tx.publicCase.update({
         where: { id },
         data: {
-          publicCaseNo: input.publicCaseNo,
           openedAt: input.openedAt,
-          source: input.source,
           publicSummary: input.publicSummary,
-          currentStatus: publishEvent?.status ?? before.currentStatus,
           currentSituation: publishEvent?.publicNote ?? before.currentSituation,
           isPublic: input.isPublic ?? before.isPublic,
           updatedBy: actor,

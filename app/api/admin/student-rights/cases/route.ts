@@ -9,8 +9,7 @@ export const dynamic = "force-dynamic";
 
 function revalidatePublicCases() {
   revalidatePath("/");
-  revalidatePath("/student-rights/cases");
-  revalidatePath("/student-rights/cases/[publicCaseNo]", "page");
+  revalidatePath("/cases");
 }
 
 export async function GET() {
@@ -52,7 +51,6 @@ export async function POST(request: Request) {
         data: {
           caseId: caseRecord.id,
           occurredAt: input.openedAt,
-          status: input.currentStatus,
           publicNote: input.currentSituation,
           isPublic: input.isPublic ?? false,
           createdBy: actor,

@@ -9,8 +9,7 @@ export const dynamic = "force-dynamic";
 
 function revalidatePublicCases() {
   revalidatePath("/");
-  revalidatePath("/student-rights/cases");
-  revalidatePath("/student-rights/cases/[publicCaseNo]", "page");
+  revalidatePath("/cases");
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -35,7 +34,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       if (newestPublicEvent) {
         await tx.publicCase.update({
           where: { id: caseId },
-          data: { currentStatus: newestPublicEvent.status, currentSituation: newestPublicEvent.publicNote, updatedBy: actor },
+          data: { currentSituation: newestPublicEvent.publicNote, updatedBy: actor },
         });
       }
       await tx.caseAuditLog.create({
