@@ -1,8 +1,6 @@
 import type { Session } from "next-auth";
 import type { Prisma } from "@prisma/client";
 
-const CASE_NUMBER_PATTERN = /^[A-Za-z0-9][A-Za-z0-9-]{0,63}$/;
-
 export class CaseValidationError extends Error {}
 
 function requiredText(value: unknown, field: string, maxLength: number): string {
@@ -29,28 +27,11 @@ function requiredDate(value: unknown, field: string): Date {
   return date;
 }
 
-function requiredTimestamp(value: unknown, field: string): Date {
-  const timestamp = requiredText(value, field, 32);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(timestamp)) return requiredDate(timestamp, field);
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(timestamp)) {
-    throw new CaseValidationError(`${field}_INVALID`);
-  }
-  const date = new Date(`${timestamp}:00+08:00`);
-  if (Number.isNaN(date.getTime())) throw new CaseValidationError(`${field}_INVALID`);
-  return date;
-}
-
 export function parseCaseInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;
-  const publicCaseNo = requiredText(input.publicCaseNo, "PUBLIC_CASE_NO", 64).toUpperCase();
-  if (!CASE_NUMBER_PATTERN.test(publicCaseNo)) throw new CaseValidationError("PUBLIC_CASE_NO_INVALID");
-
   return {
-    publicCaseNo,
     openedAt: requiredDate(input.openedAt, "OPENED_AT"),
-    source: requiredText(input.source, "SOURCE", 64),
-    currentStatus: requiredText(input.currentStatus, "CURRENT_STATUS", 64),
     currentSituation: requiredText(input.currentSituation, "CURRENT_SITUATION", 4000),
     publicSummary: requiredText(input.publicSummary, "PUBLIC_SUMMARY", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
@@ -61,8 +42,7 @@ export function parseEventInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;
   return {
-    occurredAt: requiredTimestamp(input.occurredAt, "OCCURRED_AT"),
-    status: requiredText(input.status, "STATUS", 64),
+    occurredAt: requiredDate(input.occurredAt, "OCCURRED_AT"),
     publicNote: requiredText(input.publicNote, "PUBLIC_NOTE", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
   };
@@ -92,5 +72,5 @@ export function toAuditSnapshot(value: unknown): Prisma.InputJsonValue {
 }
 
 export function isPublicCaseTableMissing(error: unknown): boolean {
-  return typeof error === "object" && error !== null && "code" in error && error.code === "P2021";
+  return typeof error === "object" && error !== null && "code" in error && (error.code === "P2021" || error.code === "P2022");
 }
