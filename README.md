@@ -162,6 +162,12 @@ npm run build
 pm2 restart ntusa-website
 ```
 
+### 資料庫遷移
+
+部署請使用 `npm run db:migrate`（Prisma Migrate），不要使用 `prisma db push`。`staging` 的 Vercel GitHub Actions 會讀取該分支的 Preview `DATABASE_URL`，在發布前套用遷移；`main` 的自架部署會在建置及重啟 PM2 前，使用伺服器上的 `DATABASE_URL` 套用遷移。遷移失敗會停止部署，現有服務不會被重啟。
+
+首次讓既有正式資料庫使用 Prisma Migrate 時，先在正式伺服器執行 `npx prisma migrate status`。若資料表已存在但沒有遷移紀錄，須先依現有 schema 確認並 baseline；不可直接對既有資料庫重跑建表遷移。staging 與正式環境應設定各自的 `DATABASE_URL`。
+
 ### Caddy 注意事項
 
 - `NEXTAUTH_URL` 應設為正式站的 `https` 網址

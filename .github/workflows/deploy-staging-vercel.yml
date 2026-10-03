@@ -63,6 +63,17 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
+      - name: Apply staging database migrations
+        run: >-
+          npx --yes vercel@${VERCEL_CLI_VERSION} env run
+          --environment=preview
+          --git-branch=staging
+          --scope=${VERCEL_ORG_ID}
+          --token=${VERCEL_TOKEN}
+          -- npm run db:migrate
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
       - name: Update stable staging alias
         run: >-
           npx --yes vercel@${VERCEL_CLI_VERSION} alias set
