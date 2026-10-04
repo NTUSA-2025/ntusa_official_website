@@ -11,6 +11,7 @@
     "otherRepresentatives": "學代會、研協會",
     "subject": "校長與各級主管皆會到場，學生代表可於兩週前提案",
     "frequency": "每月1次",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -23,6 +24,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、院學會12、宿舍代表3",
+    "subject": "",
     "frequency": "每學期2次",
     "regulationUrl": "https://sec.ntu.edu.tw/News_n_1402_sms_9804.html",
     "minutesUrl": ""
@@ -95,6 +97,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "每月1次",
     "regulationUrl": "https://cpo.ntu.edu.tw/001/Upload/1513/relfile/101453/212357/85f1af51-6fc0-45bb-ae30-b9a5379c8736.pdf",
     "minutesUrl": ""
@@ -124,6 +127,7 @@
       }
     ],
     "otherRepresentatives": "宿舍代表或社團代表5",
+    "subject": "",
     "regulationUrl": "https://meals.ntu.edu.tw/filez/detail/filez_id/regulationNtu/category/4",
     "minutesUrl": ""
   },
@@ -151,6 +155,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "寒暑假各1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24634/1adc9904-f8ff-4479-9174-4ba64c671046.pdf",
     "minutesUrl": ""
@@ -165,6 +170,7 @@
       }
     ],
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每年1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24919/da82a5d9-ca39-4a58-8d01-30ca31e43577.pdf",
     "minutesUrl": ""
@@ -179,6 +185,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、院學會1",
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://www.aca.ntu.edu.tw/WebUPD/aca/CDRules/%E8%AA%B2%E7%A8%8B%E5%A7%94%E5%93%A1%E6%9C%83%E8%A8%AD%E7%BD%AE%E8%A6%81%E9%BB%9E.pdf",
     "minutesUrl": ""
@@ -192,6 +199,7 @@
         "email": "tang.hengchun@ntusa.ntu.edu.tw"
       }
     ],
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9761/24931/05-04.pdf",
     "minutesUrl": ""
   },
@@ -205,6 +213,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "每年1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/260060/ab818bea-6533-41af-98f9-648a6e299fc1.pdf",
     "minutesUrl": ""
@@ -234,6 +243,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9759/24788/03-017.pdf",
     "minutesUrl": ""
@@ -263,6 +273,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、社團代表4",
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24894/1900f9d5-4b94-4f86-b17e-f6c020429ab6.pdf",
     "minutesUrl": ""
@@ -277,6 +288,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、社團代表4",
+    "subject": "",
     "frequency": "每年1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9760/24898/04-041.pdf",
     "minutesUrl": ""
@@ -291,6 +303,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、社團代表4",
+    "subject": "",
     "frequency": "每年4次",
     "regulationUrl": "https://webpageprod-ws.ntu.edu.tw/Download.ashx?u=LzAwMS9VcGxvYWQvcmVsZmlsZS85NzYwLzI0OTA0LzA0LTA0Ny5wZGY%3d&n=MDQtMDQ3LnBkZg%3d%3d&icon=.pdf",
     "minutesUrl": ""
@@ -305,7 +318,9 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、生治會",
+    "subject": "",
     "frequency": "每學期1次",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -318,7 +333,9 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、生治會",
+    "subject": "",
     "frequency": "每學期1次",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -331,6 +348,8 @@
       }
     ],
     "otherRepresentatives": "研協會",
+    "subject": "",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -343,6 +362,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、身障生代表1、境外生代表1",
+    "subject": "",
     "frequency": "視議案數量而定",
     "regulationUrl": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://advisory.ntu.edu.tw/CMS/GetFile/1402&ved=2ahUKEwinsNDooraVAxWdjK8BHc4lBvQQFnoECCQQAQ&usg=AOvVaw0v5UmdXqJpJgb538SW2H7F",
     "minutesUrl": ""
@@ -357,6 +377,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "視議案數量而定",
     "regulationUrl": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://advisory.ntu.edu.tw/CMS/GetFile/1392&ved=2ahUKEwjj6-CHo7aVAxUkoa8BHQJ7FCcQFnoECCIQAQ&usg=AOvVaw3Pak3Vtb_8VFa9fULcWhC1",
     "minutesUrl": ""
@@ -370,7 +391,9 @@
         "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
+    "subject": "",
     "frequency": "每學期1次",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -383,6 +406,7 @@
       }
     ],
     "otherRepresentatives": "學代會",
+    "subject": "",
     "frequency": "每學期2至3次",
     "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/3d2c3cd0-4649-445a-b064-9c5eeb7e74f2.pdf",
     "minutesUrl": ""
@@ -396,6 +420,7 @@
         "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/de82050f-3120-4c91-b06f-3a4ad1afcbf2.pdf",
     "minutesUrl": ""
@@ -409,6 +434,7 @@
         "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/359f1d07-e54a-4782-bf44-9d0ea0babf11.pdf",
     "minutesUrl": ""
@@ -423,6 +449,7 @@
       }
     ],
     "otherRepresentatives": "學代會",
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9783/25310/b6082474-d3b4-4dd4-9bda-eb117e3a0814.pdf",
     "minutesUrl": ""
@@ -437,7 +464,9 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "每學期1次，寒暑假期間",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -450,6 +479,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、社團代表1",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24927/c398069e-c8ee-4615-bba2-968ffac7c8de.pdf",
     "minutesUrl": ""
   },
@@ -463,7 +493,9 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會、社團代表1",
+    "subject": "",
     "frequency": "每學期1次",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -476,6 +508,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/News_Content_n_170880_sms_104267_s_222578.html",
     "minutesUrl": ""
   },
@@ -489,6 +522,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "每年1次，下學期",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24648/db46987b-e62a-413e-9a15-65de98c348a9.pdf",
     "minutesUrl": ""
@@ -498,6 +532,7 @@
     "name": "個人資料運用審議小組",
     "representatives": [],
     "subject": "學務教務資料共享平台申請的審議",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -524,6 +559,7 @@
         "email": "mutianfromtw@gmail.com"
       }
     ],
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://sustainable.ntu.edu.tw/uploads/files/shares/about/%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%A4%A7%E5%AD%B8%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E6%8E%A8%E5%8B%95%E5%A7%94%E5%93%A1%E6%9C%83%E8%A8%AD%E7%BD%AE%E8%BE%A6%E6%B3%95112.03.21.pdf",
     "minutesUrl": ""
@@ -537,6 +573,7 @@
         "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9757/24620/01-19.pdf",
     "minutesUrl": ""
   },
@@ -550,6 +587,7 @@
       }
     ],
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每學期2次",
     "regulationUrl": "https://gsat.ntu.edu.tw/media/f/8a444d63b0339517f4e7d49d0deb366c.pdf",
     "minutesUrl": ""
@@ -564,6 +602,7 @@
       }
     ],
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://ord.ntu.edu.tw/WebUPD/ordntu/Related_legislation/%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%A4%A7%E5%AD%B8%E7%A0%94%E7%A9%B6%E7%8D%8E%E5%8A%A9%E7%94%9F%E6%96%BD%E8%A1%8C%E8%A6%81%E9%BB%9E_1080412.pdf",
     "minutesUrl": ""
@@ -582,6 +621,7 @@
       }
     ],
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每學期1次",
     "regulationUrl": "https://sec.ntu.edu.tw/egroup.html",
     "minutesUrl": ""
@@ -620,6 +660,7 @@
     "id": "meeting-47",
     "name": "校園霸凌防制委員會",
     "representatives": [],
+    "subject": "",
     "frequency": "視議案數量而定",
     "regulationUrl": "https://pcbcc.ntu.edu.tw/001/Upload/1979/relfile/123669/250589/e32de929-6056-4802-b1fa-a438305d77bf.pdf",
     "minutesUrl": ""
@@ -636,6 +677,7 @@
     "otherRepresentatives": "學代會、研協會",
     "subject": "審查合作社是否僅將商品賣予教職員生",
     "frequency": "每年1次，下學期",
+    "regulationUrl": "",
     "minutesUrl": ""
   },
   {
@@ -663,6 +705,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/120284/243339/7929cfdb-a3ee-4480-80d1-d9ac523fd079.pdf",
     "minutesUrl": ""
   },
@@ -676,6 +719,7 @@
       }
     ],
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/cp_n_887.html",
     "minutesUrl": ""
   }
