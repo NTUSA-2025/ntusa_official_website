@@ -28,7 +28,7 @@
     "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會、院學會12、宿舍代表3",
     "office": "秘書室 secretariat@ntu.edu.tw；陳雅薰 yhchen33@ntu.edu.tw",
-    "frequency": "每學期2次，週六早上",
+    "frequency": "每學期2次",
     "regulationUrl": "https://sec.ntu.edu.tw/News_n_1402_sms_9804.html"
   },
   {
@@ -46,7 +46,7 @@
     "otherRepresentatives": "學代會、研協會、院學會13",
     "office": "教務處秘書室 pwhsieh@ntu.edu.tw",
     "subject": "教務處主管事務",
-    "frequency": "每學期2次，週五早上",
+    "frequency": "每學期2次",
     "regulationUrl": "https://www.aca.ntu.edu.tw/w/aca/SecretariatService_21070611484438018"
   },
   {
@@ -64,7 +64,7 @@
     "otherRepresentatives": "學代會、研協會、院學會13",
     "office": "學生事務處 studenta@ntu.edu.tw；陳瀅年 yinnienchen@ntu.edu.tw",
     "subject": "學務處主管事務",
-    "frequency": "每學期1次，期末考週後",
+    "frequency": "每學期1次",
     "regulationUrl": "https://osa.ntu.edu.tw/regulation_osa_5"
   },
   {
@@ -80,7 +80,7 @@
     "appointmentMethod": "18校務會議學生代表共推1人",
     "reportStatus": "是",
     "subject": "校園重大建設",
-    "frequency": "每學期2次，校務會議前",
+    "frequency": "每學期2次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9757/24617/01-015.pdf"
   },
   {
@@ -95,7 +95,7 @@
     "appointmentMethod": "18校務會議學生代表共推1人",
     "reportStatus": "是",
     "subject": "校務會議排案",
-    "frequency": "每學期2次，校務會議前",
+    "frequency": "每學期2次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24616/2062e57d-e2a5-4227-9f2b-5a14d0de10a0.pdf"
   },
   {
@@ -112,7 +112,7 @@
     "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
     "office": "校園規劃小組 cpo@ntu.edu.tw",
-    "frequency": "每月1次，如無議案則取消",
+    "frequency": "每月1次",
     "regulationUrl": "https://cpo.ntu.edu.tw/001/Upload/1513/relfile/101453/212357/85f1af51-6fc0-45bb-ae30-b9a5379c8736.pdf"
   },
   {
@@ -179,7 +179,7 @@
     "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會",
     "office": "校安中心 ntumilitary@ntu.edu.tw",
-    "frequency": "每學期1次，寒暑假期間",
+    "frequency": "寒暑假各1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24634/1adc9904-f8ff-4479-9174-4ba64c671046.pdf"
   },
   {
@@ -195,7 +195,7 @@
     "appointmentMethod": "會長為當然代表",
     "reportStatus": "不需要",
     "otherRepresentatives": "研協會",
-    "frequency": "每年1次，10月前後",
+    "frequency": "每年1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24919/da82a5d9-ca39-4a58-8d01-30ca31e43577.pdf"
   },
   {
@@ -244,7 +244,7 @@
     "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
     "office": "職涯中心 career@ntu.edu.tw；廖千淳 ccheinliao@ntu.edu.tw",
-    "frequency": "每年1次，4-5月",
+    "frequency": "每年1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/260060/ab818bea-6533-41af-98f9-648a6e299fc1.pdf"
   },
   {
@@ -297,7 +297,7 @@
     "otherRepresentatives": "學代會、研協會",
     "office": "學生事務處 studenta@ntu.edu.tw；陳瀅年 yinnienchen@ntu.edu.tw",
     "subject": "法規修訂送至學輔會前皆需於此會審查",
-    "frequency": "每學期1次，學輔會前",
+    "frequency": "每學期1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24859/6a1e071e-94a7-44fb-9d20-6982c006a33b.pdf"
   },
   {
@@ -410,7 +410,7 @@
     "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會、身障生代表1、境外生代表1",
     "office": "生輔組 advisory@ntu.edu.tw；林志為 linwei@ntu.edu.tw",
-    "frequency": "有議案才開",
+    "frequency": "視議案數量而定",
     "regulationUrl": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://advisory.ntu.edu.tw/CMS/GetFile/1402&ved=2ahUKEwinsNDooraVAxWdjK8BHc4lBvQQFnoECCQQAQ&usg=AOvVaw0v5UmdXqJpJgb538SW2H7F",
     "note": "候補：唐珩鈞"
   },
@@ -427,7 +427,7 @@
     "appointmentMethod": "學生會內部推派",
     "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
-    "frequency": "有議案才開",
+    "frequency": "視議案數量而定",
     "regulationUrl": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://advisory.ntu.edu.tw/CMS/GetFile/1392&ved=2ahUKEwjj6-CHo7aVAxUkoa8BHQJ7FCcQFnoECCIQAQ&usg=AOvVaw3Pak3Vtb_8VFa9fULcWhC1",
     "note": "候補：黃筠鈞"
   },
@@ -739,7 +739,7 @@
     "representatives": [],
     "appointmentMethod": "三會共推1人",
     "reportStatus": "否",
-    "frequency": "有議案才開",
+    "frequency": "視議案數量而定",
     "regulationUrl": "https://pcbcc.ntu.edu.tw/001/Upload/1979/relfile/123669/250589/e32de929-6056-4802-b1fa-a438305d77bf.pdf"
   },
   {
