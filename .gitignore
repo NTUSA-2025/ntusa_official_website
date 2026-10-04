@@ -17,6 +17,7 @@
 /blob-report
 /.playwright
 /test.sh
+/tmp/
 
 # next.js
 /.next/
