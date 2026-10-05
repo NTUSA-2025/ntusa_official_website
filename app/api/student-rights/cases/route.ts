@@ -19,7 +19,7 @@ export async function GET() {
         timelineEvents: {
           where: { isPublic: true },
           select: { occurredAt: true, publicNote: true, createdAt: true, updatedAt: true },
-          orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }],
+          orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
         },
       },
       orderBy: { updatedAt: "desc" },

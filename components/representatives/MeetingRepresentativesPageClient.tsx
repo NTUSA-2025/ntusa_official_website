@@ -7,9 +7,10 @@ import type { UniversityMeeting } from "@/lib/university-meeting-representatives
 
 type Props = {
   meetings: UniversityMeeting[];
+  embedded?: boolean;
 };
 
-export default function MeetingRepresentativesPageClient({ meetings }: Props) {
+export default function MeetingRepresentativesPageClient({ meetings, embedded = false }: Props) {
   const t = useTranslations("representatives");
   const [query, setQuery] = useState("");
 
@@ -37,21 +38,23 @@ export default function MeetingRepresentativesPageClient({ meetings }: Props) {
   }, [meetings, query]);
 
   return (
-    <div className="representatives-page">
-      <section className="representatives-hero">
-        <div className="representatives-hero-inner">
-          <p className="representatives-eyebrow">{t("eyebrow")}</p>
-          <h1>{t("title")}</h1>
-          <p className="representatives-lead">{t("description")}</p>
-          <div className="representatives-hero-actions">
-            <Link href="/data" className="representatives-back-link">
-              {t("back")}
-            </Link>
+    <div className={embedded ? undefined : "representatives-page"}>
+      {!embedded && (
+        <section className="representatives-hero">
+          <div className="representatives-hero-inner">
+            <p className="representatives-eyebrow">{t("eyebrow")}</p>
+            <h1>{t("title")}</h1>
+            <p className="representatives-lead">{t("description")}</p>
+            <div className="representatives-hero-actions">
+              <Link href="/data" className="representatives-back-link">
+                {t("back")}
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="representatives-content" aria-labelledby="representatives-list-title">
+      <section className={`representatives-content${embedded ? " representatives-content-embedded" : ""}`} aria-labelledby="representatives-list-title">
         <div className="representatives-toolbar">
           <div>
             <h2 id="representatives-list-title">{t("listTitle")}</h2>

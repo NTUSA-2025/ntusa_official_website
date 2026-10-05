@@ -29,7 +29,6 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
         </div>
       </div>
       <div className="section-wrap">
-        <p className="case-public-privacy fade-up-target">{tCases("privacy")}</p>
         {publicCases.length === 0 ? (
           <div className="case-empty fade-up-target">{tCases("empty")}</div>
         ) : (

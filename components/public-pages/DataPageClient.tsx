@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import type { UnifiedMeetingMinute } from "@/lib/get-cached-meeting-minutes";
+import type { UniversityMeeting } from "@/lib/university-meeting-representatives";
+import MeetingRepresentativesPageClient from "@/components/representatives/MeetingRepresentativesPageClient";
 import { useFadeUp } from "./useFadeUp";
 
-export default function DataPageClient({ minutes }: { minutes: UnifiedMeetingMinute[] }) {
+export default function DataPageClient({ minutes, meetings }: { minutes: UnifiedMeetingMinute[]; meetings: UniversityMeeting[] }) {
   const { data: session } = useSession();
   const [dataTab, setDataTab] = useState("minutes");
   const locale = useLocale();
@@ -98,20 +100,8 @@ export default function DataPageClient({ minutes }: { minutes: UnifiedMeetingMin
             </a>
           </div>
         </div>
-
         <div className={`data-panel ${dataTab === "representatives" ? "active" : ""}`}>
-          <div className="rights-placeholder-box fade-up-target">
-            <div className="placeholder-icon">🏛️</div>
-            <h3>{tData("representativesTitle")}</h3>
-            <p>{tData("representativesDesc")}</p>
-            <Link
-              href="/university-meeting-representatives"
-              className="btn btn-primary"
-              style={{ marginTop: "20px" }}
-            >
-              {tData("representativesOpen")}
-            </Link>
-          </div>
+          <MeetingRepresentativesPageClient meetings={meetings} embedded />
         </div>
       </div>
     </section>

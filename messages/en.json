@@ -176,7 +176,6 @@
       "eyebrow": "Student Rights",
       "title": "Student Rights Case Progress",
       "desc": "Track the handling history of anonymized cases approved for publication.",
-      "privacy": "This page only contains anonymized, approved public information. It excludes original reports, personal data, and internal handling records.",
       "openedAt": "Opened: {date}",
       "updatedAt": "Last updated: {date}",
       "showTimeline": "View timeline",
@@ -218,9 +217,6 @@
       "budgetTitle": "Historical Budgets and Final Accounts",
       "budgetDesc": "Past budgets and final accounts of the Student Association.",
       "budgetOpenDrive": "Open in Google Drive →",
-      "representativesTitle": "University Meeting Student Representatives",
-      "representativesDesc": "Find NTUSA representatives serving on university-level meetings, along with contact details, responsibilities, and governing rules.",
-      "representativesOpen": "View representatives →",
       "otherTitle": "Other Documents",
       "otherDesc": "Additional public records will be added here over time.",
       "otherBadge": "Document embed"
