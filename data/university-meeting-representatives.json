@@ -4,15 +4,15 @@
     "name": "校長月會",
     "representatives": [
       {
-        "name": "（不限人數，有提案即可與會）"
+        "name": "會長 社會科學院 孫傳哲",
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會",
-    "office": "課外組美美姊",
     "subject": "校長與各級主管皆會到場，學生代表可於兩週前提案",
-    "frequency": "每月1次"
+    "frequency": "每月1次",
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-2",
@@ -20,16 +20,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會、院學會12、宿舍代表3",
-    "office": "秘書室 secretariat@ntu.edu.tw；陳雅薰 yhchen33@ntu.edu.tw",
-    "frequency": "每學期2次，週六早上",
-    "regulationUrl": "https://sec.ntu.edu.tw/News_n_1402_sms_9804.html"
+    "subject": "",
+    "frequency": "每學期2次",
+    "regulationUrl": "https://sec.ntu.edu.tw/News_n_1402_sms_9804.html",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-3",
@@ -37,17 +35,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會、院學會13",
-    "office": "教務處秘書室 pwhsieh@ntu.edu.tw",
     "subject": "教務處主管事務",
-    "frequency": "每學期2次，週五早上",
-    "regulationUrl": "https://www.aca.ntu.edu.tw/w/aca/SecretariatService_21070611484438018"
+    "frequency": "每學期2次",
+    "regulationUrl": "https://www.aca.ntu.edu.tw/w/aca/SecretariatService_21070611484438018",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-4",
@@ -55,17 +50,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會、院學會13",
-    "office": "學生事務處 studenta@ntu.edu.tw；陳瀅年 yinnienchen@ntu.edu.tw",
     "subject": "學務處主管事務",
-    "frequency": "每學期1次，期末考週後",
-    "regulationUrl": "https://osa.ntu.edu.tw/regulation_osa_5"
+    "frequency": "每學期1次",
+    "regulationUrl": "https://osa.ntu.edu.tw/regulation_osa_5",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-5",
@@ -73,15 +65,13 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "18校務會議學生代表共推1人",
-    "reportStatus": "是",
     "subject": "校園重大建設",
-    "frequency": "每學期2次，校務會議前",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9757/24617/01-015.pdf"
+    "frequency": "每學期2次",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9757/24617/01-015.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-6",
@@ -92,11 +82,10 @@
         "email": "aries09157420@gmail.com"
       }
     ],
-    "appointmentMethod": "18校務會議學生代表共推1人",
-    "reportStatus": "是",
     "subject": "校務會議排案",
-    "frequency": "每學期2次，校務會議前",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24616/2062e57d-e2a5-4227-9f2b-5a14d0de10a0.pdf"
+    "frequency": "每學期2次",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24616/2062e57d-e2a5-4227-9f2b-5a14d0de10a0.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-7",
@@ -104,16 +93,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
-    "office": "校園規劃小組 cpo@ntu.edu.tw",
-    "frequency": "每月1次，如無議案則取消",
-    "regulationUrl": "https://cpo.ntu.edu.tw/001/Upload/1513/relfile/101453/212357/85f1af51-6fc0-45bb-ae30-b9a5379c8736.pdf"
+    "subject": "",
+    "frequency": "每月1次",
+    "regulationUrl": "https://cpo.ntu.edu.tw/001/Upload/1513/relfile/101453/212357/85f1af51-6fc0-45bb-ae30-b9a5379c8736.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-8",
@@ -121,17 +108,14 @@
     "representatives": [
       {
         "name": "內務副會長 法學院 唐珩鈞",
-        "email": "tang.hengchun@ntusa.ntu.edu.tw",
-        "studentId": "B12A01343"
+        "email": "tang.hengchun@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
-    "office": "環安衛中心 epc@ntu.edu.tw；陳君如 chencj@ntu.edu.tw",
     "subject": "實驗室安全、駐警隊",
     "frequency": "每學期2次",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9771/25361/5aeaa6e1-2aca-489b-b5e0-52fceb456cb6.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9771/25361/5aeaa6e1-2aca-489b-b5e0-52fceb456cb6.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-9",
@@ -139,14 +123,13 @@
     "representatives": [
       {
         "name": "學權部部長 法學院 陳昆泰",
-        "email": "kuntai4332778@gmail.com",
-        "studentId": "B14A01144"
+        "email": "kuntai4332778@gmail.com"
       }
     ],
-    "appointmentMethod": "學權部部長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "宿舍代表或社團代表5",
-    "regulationUrl": "https://meals.ntu.edu.tw/filez/detail/filez_id/regulationNtu/category/4"
+    "subject": "",
+    "regulationUrl": "https://meals.ntu.edu.tw/filez/detail/filez_id/regulationNtu/category/4",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-10",
@@ -154,16 +137,13 @@
     "representatives": [
       {
         "name": "學權部部長 法學院 陳昆泰",
-        "email": "kuntai4332778@gmail.com",
-        "studentId": "B14A01144"
+        "email": "kuntai4332778@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
-    "office": "學生活動中心管理組 acenter@ntu.edu.tw",
     "subject": "督導學生餐廳及褔利社之招標、簽約、膳食管理、衛生、安全",
-    "regulationUrl": "https://www.active.ntu.edu.tw/Regulation_Restaurant"
+    "regulationUrl": "https://www.active.ntu.edu.tw/Regulation_Restaurant",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-11",
@@ -171,16 +151,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會",
-    "office": "校安中心 ntumilitary@ntu.edu.tw",
-    "frequency": "每學期1次，寒暑假期間",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24634/1adc9904-f8ff-4479-9174-4ba64c671046.pdf"
+    "subject": "",
+    "frequency": "寒暑假各1次",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24634/1adc9904-f8ff-4479-9174-4ba64c671046.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-12",
@@ -188,15 +166,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "研協會",
-    "frequency": "每年1次，10月前後",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24919/da82a5d9-ca39-4a58-8d01-30ca31e43577.pdf"
+    "subject": "",
+    "frequency": "每年1次",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24919/da82a5d9-ca39-4a58-8d01-30ca31e43577.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-13",
@@ -204,16 +181,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會、院學會1",
-    "office": "課務組 curri@ntu.edu.tw",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://www.aca.ntu.edu.tw/WebUPD/aca/CDRules/%E8%AA%B2%E7%A8%8B%E5%A7%94%E5%93%A1%E6%9C%83%E8%A8%AD%E7%BD%AE%E8%A6%81%E9%BB%9E.pdf"
+    "regulationUrl": "https://www.aca.ntu.edu.tw/WebUPD/aca/CDRules/%E8%AA%B2%E7%A8%8B%E5%A7%94%E5%93%A1%E6%9C%83%E8%A8%AD%E7%BD%AE%E8%A6%81%E9%BB%9E.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-14",
@@ -221,14 +196,12 @@
     "representatives": [
       {
         "name": "內務副會長 法學院 唐珩鈞",
-        "email": "tang.hengchun@ntusa.ntu.edu.tw",
-        "studentId": "B12A01343"
+        "email": "tang.hengchun@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "三會共推1人",
-    "reportStatus": "是",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9761/24931/05-04.pdf",
-    "note": "任期2年"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-15",
@@ -236,16 +209,14 @@
     "representatives": [
       {
         "name": "學術部部長 理學院 呂沐田",
-        "email": "mutianfromtw@gmail.com",
-        "studentId": "B12208001"
+        "email": "mutianfromtw@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
-    "office": "職涯中心 career@ntu.edu.tw；廖千淳 ccheinliao@ntu.edu.tw",
-    "frequency": "每年1次，4-5月",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/260060/ab818bea-6533-41af-98f9-648a6e299fc1.pdf"
+    "subject": "",
+    "frequency": "每年1次",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/260060/ab818bea-6533-41af-98f9-648a6e299fc1.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-16",
@@ -253,17 +224,14 @@
     "representatives": [
       {
         "name": "會長秘書 社科院 陳欣怡",
-        "email": "csyyy2004.12@gmail.com",
-        "studentId": "B12302103"
+        "email": "csyyy2004.12@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
-    "office": "稽核室 ntuauditing@ntu.edu.tw",
     "subject": "各單位收支平衡報告",
     "frequency": "每年1次",
-    "regulationUrl": "https://ntuauditing.ntu.edu.tw/001/Upload/2020/relfile/125290/254627/c0626980-203b-49d9-bf25-0b9924bbdbfe.pdf"
+    "regulationUrl": "https://ntuauditing.ntu.edu.tw/001/Upload/2020/relfile/125290/254627/c0626980-203b-49d9-bf25-0b9924bbdbfe.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-17",
@@ -271,16 +239,14 @@
     "representatives": [
       {
         "name": "學權部副部長 文學院 柯信宇",
-        "email": "xinplayer33888@gmail.com",
-        "studentId": "B14107031"
+        "email": "xinplayer33888@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
-    "office": "事務組 axzy@ntu.edu.tw",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9759/24788/03-017.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9759/24788/03-017.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-18",
@@ -288,17 +254,14 @@
     "representatives": [
       {
         "name": "學權部部長 法學院 陳昆泰",
-        "email": "kuntai4332778@gmail.com",
-        "studentId": "B14A01144"
+        "email": "kuntai4332778@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
-    "office": "學生事務處 studenta@ntu.edu.tw；陳瀅年 yinnienchen@ntu.edu.tw",
     "subject": "法規修訂送至學輔會前皆需於此會審查",
-    "frequency": "每學期1次，學輔會前",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24859/6a1e071e-94a7-44fb-9d20-6982c006a33b.pdf"
+    "frequency": "每學期1次",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24859/6a1e071e-94a7-44fb-9d20-6982c006a33b.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-19",
@@ -306,16 +269,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、社團代表4",
-    "office": "課外組 activity@ntu.edu.tw",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24894/1900f9d5-4b94-4f86-b17e-f6c020429ab6.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24894/1900f9d5-4b94-4f86-b17e-f6c020429ab6.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-20",
@@ -323,15 +284,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、社團代表4",
+    "subject": "",
     "frequency": "每年1次",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9760/24898/04-041.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9760/24898/04-041.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-21",
@@ -339,15 +299,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、社團代表4",
+    "subject": "",
     "frequency": "每年4次",
-    "regulationUrl": "https://webpageprod-ws.ntu.edu.tw/Download.ashx?u=LzAwMS9VcGxvYWQvcmVsZmlsZS85NzYwLzI0OTA0LzA0LTA0Ny5wZGY%3d&n=MDQtMDQ3LnBkZg%3d%3d&icon=.pdf"
+    "regulationUrl": "https://webpageprod-ws.ntu.edu.tw/Download.ashx?u=LzAwMS9VcGxvYWQvcmVsZmlsZS85NzYwLzI0OTA0LzA0LTA0Ny5wZGY%3d&n=MDQtMDQ3LnBkZg%3d%3d&icon=.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-22",
@@ -355,15 +314,14 @@
     "representatives": [
       {
         "name": "內務副會長 法學院 唐珩鈞",
-        "email": "tang.hengchun@ntusa.ntu.edu.tw",
-        "studentId": "B12A01343"
+        "email": "tang.hengchun@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、生治會",
-    "office": "住宿組 admdorm@ntu.edu.tw；林宜均 yijun@ntu.edu.tw",
-    "frequency": "每學期1次"
+    "subject": "",
+    "frequency": "每學期1次",
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-23",
@@ -371,15 +329,14 @@
     "representatives": [
       {
         "name": "內務副會長 法學院 唐珩鈞",
-        "email": "tang.hengchun@ntusa.ntu.edu.tw",
-        "studentId": "B12A01343"
+        "email": "tang.hengchun@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、生治會",
-    "office": "住宿組林詩梅 shihmei1206@ntu.edu.tw",
-    "frequency": "每學期1次"
+    "subject": "",
+    "frequency": "每學期1次",
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-24",
@@ -387,14 +344,13 @@
     "representatives": [
       {
         "name": "內務副會長 法學院 唐珩鈞",
-        "email": "tang.hengchun@ntusa.ntu.edu.tw",
-        "studentId": "B12A01343"
+        "email": "tang.hengchun@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "研協會",
-    "office": "校安中心 ntumilitary@ntu.edu.tw；葉書豪 yehsh@ntu.edu.tw"
+    "subject": "",
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-25",
@@ -402,17 +358,14 @@
     "representatives": [
       {
         "name": "學權部副部長 文學院 柯信宇",
-        "email": "xinplayer33888@gmail.com",
-        "studentId": "B14107031"
+        "email": "xinplayer33888@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會、身障生代表1、境外生代表1",
-    "office": "生輔組 advisory@ntu.edu.tw；林志為 linwei@ntu.edu.tw",
-    "frequency": "有議案才開",
+    "subject": "",
+    "frequency": "視議案數量而定",
     "regulationUrl": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://advisory.ntu.edu.tw/CMS/GetFile/1402&ved=2ahUKEwinsNDooraVAxWdjK8BHc4lBvQQFnoECCQQAQ&usg=AOvVaw0v5UmdXqJpJgb538SW2H7F",
-    "note": "候補：唐珩鈞"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-26",
@@ -420,16 +373,14 @@
     "representatives": [
       {
         "name": "學權部部長 法學院 陳昆泰",
-        "email": "kuntai4332778@gmail.com",
-        "studentId": "B14A01144"
+        "email": "kuntai4332778@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
-    "frequency": "有議案才開",
+    "subject": "",
+    "frequency": "視議案數量而定",
     "regulationUrl": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://advisory.ntu.edu.tw/CMS/GetFile/1392&ved=2ahUKEwjj6-CHo7aVAxUkoa8BHQJ7FCcQFnoECCIQAQ&usg=AOvVaw3Pak3Vtb_8VFa9fULcWhC1",
-    "note": "候補：黃筠鈞"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-27",
@@ -437,14 +388,13 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
+    "subject": "",
     "frequency": "每學期1次",
-    "note": "共教中心層級最高之會議"
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-28",
@@ -452,16 +402,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會",
-    "office": "共教中心 cge@ntu.edu.tw",
+    "subject": "",
     "frequency": "每學期2至3次",
-    "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/3d2c3cd0-4649-445a-b064-9c5eeb7e74f2.pdf"
+    "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/3d2c3cd0-4649-445a-b064-9c5eeb7e74f2.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-29",
@@ -469,14 +417,13 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/de82050f-3120-4c91-b06f-3a4ad1afcbf2.pdf"
+    "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/de82050f-3120-4c91-b06f-3a4ad1afcbf2.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-30",
@@ -484,14 +431,13 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/359f1d07-e54a-4782-bf44-9d0ea0babf11.pdf"
+    "regulationUrl": "https://cge.ntu.edu.tw/001/Upload/1022/ckfile/359f1d07-e54a-4782-bf44-9d0ea0babf11.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-31",
@@ -499,16 +445,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會",
-    "office": "體育室 ntupe@ntu.edu.tw",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9783/25310/b6082474-d3b4-4dd4-9bda-eb117e3a0814.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9783/25310/b6082474-d3b4-4dd4-9bda-eb117e3a0814.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-32",
@@ -516,14 +460,14 @@
     "representatives": [
       {
         "name": "外務副會長 社會科學院 黃筠鈞",
-        "email": "hu.yunc@ntusa.ntu.edu.tw",
-        "studentId": "B12302301"
+        "email": "hu.yunc@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
-    "frequency": "每學期1次，寒暑假期間"
+    "subject": "",
+    "frequency": "每學期1次，寒暑假期間",
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-33",
@@ -531,16 +475,13 @@
     "representatives": [
       {
         "name": "學權部副部長 文學院 柯信宇",
-        "email": "xinplayer33888@gmail.com",
-        "studentId": "B14107031"
+        "email": "xinplayer33888@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、社團代表1",
-    "office": "課外組 activity@ntu.edu.tw",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24927/c398069e-c8ee-4615-bba2-968ffac7c8de.pdf",
-    "note": "功能廢弛"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-34",
@@ -548,16 +489,14 @@
     "representatives": [
       {
         "name": "學權部副部長 文學院 柯信宇",
-        "email": "xinplayer33888@gmail.com",
-        "studentId": "B14107031"
+        "email": "xinplayer33888@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會、社團代表1",
-    "office": "課外組 activity@ntu.edu.tw",
+    "subject": "",
     "frequency": "每學期1次",
-    "note": "採通訊審查"
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-35",
@@ -565,14 +504,13 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會",
-    "regulationUrl": "https://sec.ntu.edu.tw/News_Content_n_170880_sms_104267_s_222578.html"
+    "subject": "",
+    "regulationUrl": "https://sec.ntu.edu.tw/News_Content_n_170880_sms_104267_s_222578.html",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-36",
@@ -580,23 +518,22 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "frequency": "每年1次，下學期",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24648/db46987b-e62a-413e-9a15-65de98c348a9.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9757/24648/db46987b-e62a-413e-9a15-65de98c348a9.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-37",
     "name": "個人資料運用審議小組",
     "representatives": [],
-    "appointmentMethod": "三會共推2人（資訊部部長應優先）",
-    "reportStatus": "否",
-    "subject": "學務教務資料共享平台申請的審議"
+    "subject": "學務教務資料共享平台申請的審議",
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-38",
@@ -604,16 +541,14 @@
     "representatives": [
       {
         "name": "學術部副部長 文學院 黃筱彤",
-        "email": "sotinakim950829@gmail.com",
-        "studentId": "B13106020"
+        "email": "sotinakim950829@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "學代會、研協會",
     "subject": "所有圖書館業務",
     "frequency": "每學期1次",
-    "regulationUrl": "https://www.lib.ntu.edu.tw/node/49"
+    "regulationUrl": "https://www.lib.ntu.edu.tw/node/49",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-39",
@@ -621,14 +556,13 @@
     "representatives": [
       {
         "name": "學術部部長 理學院 呂沐田",
-        "email": "mutianfromtw@gmail.com",
-        "studentId": "B12208001"
+        "email": "mutianfromtw@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://sustainable.ntu.edu.tw/uploads/files/shares/about/%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%A4%A7%E5%AD%B8%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E6%8E%A8%E5%8B%95%E5%A7%94%E5%93%A1%E6%9C%83%E8%A8%AD%E7%BD%AE%E8%BE%A6%E6%B3%95112.03.21.pdf"
+    "regulationUrl": "https://sustainable.ntu.edu.tw/uploads/files/shares/about/%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%A4%A7%E5%AD%B8%E6%B0%B8%E7%BA%8C%E7%99%BC%E5%B1%95%E6%8E%A8%E5%8B%95%E5%A7%94%E5%93%A1%E6%9C%83%E8%A8%AD%E7%BD%AE%E8%BE%A6%E6%B3%95112.03.21.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-40",
@@ -636,14 +570,12 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/relfile/9757/24620/01-19.pdf",
-    "note": "尚未開過會"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-41",
@@ -651,15 +583,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "是",
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每學期2次",
-    "regulationUrl": "https://gsat.ntu.edu.tw/media/f/8a444d63b0339517f4e7d49d0deb366c.pdf"
+    "regulationUrl": "https://gsat.ntu.edu.tw/media/f/8a444d63b0339517f4e7d49d0deb366c.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-42",
@@ -667,15 +598,14 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://ord.ntu.edu.tw/WebUPD/ordntu/Related_legislation/%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%A4%A7%E5%AD%B8%E7%A0%94%E7%A9%B6%E7%8D%8E%E5%8A%A9%E7%94%9F%E6%96%BD%E8%A1%8C%E8%A6%81%E9%BB%9E_1080412.pdf"
+    "regulationUrl": "https://ord.ntu.edu.tw/WebUPD/ordntu/Related_legislation/%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%A4%A7%E5%AD%B8%E7%A0%94%E7%A9%B6%E7%8D%8E%E5%8A%A9%E7%94%9F%E6%96%BD%E8%A1%8C%E8%A6%81%E9%BB%9E_1080412.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-43",
@@ -683,20 +613,18 @@
     "representatives": [
       {
         "name": "資訊部部長 管理學院 邱浚祐",
-        "email": "eric.chiu@ntusa.ntu.edu.tw",
-        "studentId": "B13705017"
+        "email": "eric.chiu@ntusa.ntu.edu.tw"
       },
       {
         "name": "資訊部副部長 管理學院 許晉誠",
-        "email": "shippo.hsu@ntusa.ntu.edu.tw",
-        "studentId": "B13705053"
+        "email": "shippo.hsu@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "研協會",
+    "subject": "",
     "frequency": "每學期1次",
-    "regulationUrl": "https://sec.ntu.edu.tw/egroup.html"
+    "regulationUrl": "https://sec.ntu.edu.tw/egroup.html",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-45",
@@ -704,17 +632,14 @@
     "representatives": [
       {
         "name": "國際部部長 社會科學院 張英咪",
-        "email": "amy.zhang@ntusa.ntu.edu.tw",
-        "studentId": "B13303105"
+        "email": "amy.zhang@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "研協會",
     "subject": "審查交換生簡章",
     "frequency": "每學期1次",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9763/25010/1763e16f-b00d-4f07-bde2-d3ee504344e8.pdf",
-    "note": "有學生相關案件方列席"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-46",
@@ -722,25 +647,23 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "研協會",
     "subject": "保健中心相關",
     "frequency": "每年1次，下學期",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24890/e5635114-fcec-433d-8fad-1ca773562aaf.pdf"
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24890/e5635114-fcec-433d-8fad-1ca773562aaf.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-47",
     "name": "校園霸凌防制委員會",
     "representatives": [],
-    "appointmentMethod": "三會共推1人",
-    "reportStatus": "否",
-    "frequency": "有議案才開",
-    "regulationUrl": "https://pcbcc.ntu.edu.tw/001/Upload/1979/relfile/123669/250589/e32de929-6056-4802-b1fa-a438305d77bf.pdf"
+    "subject": "",
+    "frequency": "視議案數量而定",
+    "regulationUrl": "https://pcbcc.ntu.edu.tw/001/Upload/1979/relfile/123669/250589/e32de929-6056-4802-b1fa-a438305d77bf.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-48",
@@ -748,16 +671,14 @@
     "representatives": [
       {
         "name": "會長秘書 文學院 林智穎",
-        "email": "linzhi0616@gmail.com",
-        "studentId": "B13103024"
+        "email": "linzhi0616@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
     "subject": "審查合作社是否僅將商品賣予教職員生",
     "frequency": "每年1次，下學期",
-    "note": "採書面審查，將單子交回人事室即可"
+    "regulationUrl": "",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-49",
@@ -765,17 +686,14 @@
     "representatives": [
       {
         "name": "會長秘書 社科院 陳欣怡",
-        "email": "csyyy2004.12@gmail.com",
-        "studentId": "B12302103"
+        "email": "csyyy2004.12@gmail.com"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
     "subject": "同學亡故則予以補償5萬元（通常皆會審查通過）",
     "frequency": "每年1次，上學期",
     "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/9760/24872/e044cab6-d432-4b44-b7ab-6716ab47a325.pdf",
-    "note": "採通訊審查"
+    "minutesUrl": ""
   },
   {
     "id": "meeting-50",
@@ -783,14 +701,13 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "會長為當然代表",
-    "reportStatus": "不需要",
     "otherRepresentatives": "學代會、研協會",
-    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/120284/243339/7929cfdb-a3ee-4480-80d1-d9ac523fd079.pdf"
+    "subject": "",
+    "regulationUrl": "https://sec.ntu.edu.tw/001/Upload/18/relfile/120284/243339/7929cfdb-a3ee-4480-80d1-d9ac523fd079.pdf",
+    "minutesUrl": ""
   },
   {
     "id": "meeting-51",
@@ -798,14 +715,12 @@
     "representatives": [
       {
         "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw",
-        "studentId": "B12302133"
+        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
       }
     ],
-    "appointmentMethod": "學生會內部推派",
-    "reportStatus": "否",
     "otherRepresentatives": "學代會、研協會",
+    "subject": "",
     "regulationUrl": "https://sec.ntu.edu.tw/cp_n_887.html",
-    "note": "有學生相關案件方列席"
+    "minutesUrl": ""
   }
 ]
