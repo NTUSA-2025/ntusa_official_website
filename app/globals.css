@@ -1438,6 +1438,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   padding: 56px 24px 88px;
 }
 
+.representatives-content.representatives-content-embedded {
+  width: 100%;
+  padding: 0;
+}
+
 .representatives-toolbar {
   display: flex;
   align-items: flex-end;
