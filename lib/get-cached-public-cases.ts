@@ -24,7 +24,7 @@ const getPublicCases = unstable_cache(
         include: {
           timelineEvents: {
             where: { isPublic: true },
-            orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }],
+            orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
           },
         },
         orderBy: { updatedAt: "desc" },

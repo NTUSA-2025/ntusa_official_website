@@ -176,7 +176,6 @@
       "eyebrow": "Student Rights",
       "title": "Student Rights Case Progress",
       "desc": "Track the handling history of anonymized cases approved for publication.",
-      "privacy": "This page only contains anonymized, approved public information. It excludes original reports, personal data, and internal handling records.",
       "openedAt": "Opened: {date}",
       "updatedAt": "Last updated: {date}",
       "showTimeline": "View timeline",
