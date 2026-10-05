@@ -85,14 +85,12 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
               <article className="representative-card" key={meeting.id}>
                 <header>
                   <div>
-                    <p className="representative-card-label">{t("meetingLabel")}</p>
                     <h2>{meeting.name}</h2>
                   </div>
                   {meeting.frequency ? <span className="representative-frequency">{meeting.frequency}</span> : null}
                 </header>
 
                 <div className="representative-primary">
-                  <p className="representative-card-label">{t("representativeLabel")}</p>
                   {meeting.representatives.length > 0 ? (
                     <ul>
                       {meeting.representatives.map((representative, index) => (

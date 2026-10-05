@@ -45,8 +45,6 @@
     "count": "共 {count} 項會議",
     "searchLabel": "搜尋會議或代表",
     "searchPlaceholder": "搜尋會議、代表或業務內容",
-    "meetingLabel": "會議",
-    "representativeLabel": "學生會代表",
     "pending": "尚待推派",
     "showDetails": "查看會議資訊",
     "studentIds": "代表學號",
