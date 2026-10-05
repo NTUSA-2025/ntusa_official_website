@@ -45,8 +45,6 @@
     "count": "{count} meetings",
     "searchLabel": "Search meetings or representatives",
     "searchPlaceholder": "Search meetings, representatives, or topics",
-    "meetingLabel": "Meeting",
-    "representativeLabel": "NTUSA representative",
     "pending": "Appointment pending",
     "showDetails": "View meeting details",
     "studentIds": "Representative student IDs",

@@ -1397,8 +1397,7 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   text-align: center;
 }
 
-.representatives-eyebrow,
-.representative-card-label {
+.representatives-eyebrow {
   color: var(--color-brand-dark);
   font-size: 12px;
   font-weight: 700;
@@ -1526,10 +1525,6 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-}
-
-.representative-card-label {
-  margin: 0 0 5px;
 }
 
 .representative-card h2 {
