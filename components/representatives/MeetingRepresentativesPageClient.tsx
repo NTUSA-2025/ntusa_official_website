@@ -132,11 +132,6 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
                     {meeting.note ? <><dt>{t("note")}</dt><dd>{meeting.note}</dd></> : null}
                   </dl>
                   <div className="representative-links">
-                    {meeting.regulationUrl ? (
-                      <a href={meeting.regulationUrl} target="_blank" rel="noopener noreferrer" className="representatives-text-link">
-                        {t("regulationLink")}
-                      </a>
-                    ) : null}
                     <a
                       href={meeting.minutesUrl || "#"}
                       target={meeting.minutesUrl ? "_blank" : undefined}
@@ -145,6 +140,11 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
                     >
                       {t("minutesLink")}
                     </a>
+                    {meeting.regulationUrl ? (
+                      <a href={meeting.regulationUrl} target="_blank" rel="noopener noreferrer" className="representatives-text-link">
+                        {t("regulationLink")}
+                      </a>
+                    ) : null}
                   </div>
                 </div>
               </article>
