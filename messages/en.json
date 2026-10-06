@@ -46,7 +46,6 @@
     "searchLabel": "Search meetings or representatives",
     "searchPlaceholder": "Search meetings, representatives, or topics",
     "pending": "Appointment pending",
-    "showDetails": "View meeting details",
     "studentIds": "Representative student IDs",
     "appointmentMethod": "Selection method",
     "reportStatus": "Nomination report status",
@@ -54,6 +53,7 @@
     "office": "Responsible office",
     "note": "Notes",
     "regulationLink": "View governing rules ↗",
+    "minutesLink": "View meeting minutes ↗",
     "emptyTitle": "No matching meetings",
     "emptyDescription": "Try a shorter keyword, meeting name, or representative name."
   },

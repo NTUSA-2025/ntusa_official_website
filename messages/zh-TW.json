@@ -46,7 +46,6 @@
     "searchLabel": "搜尋會議或代表",
     "searchPlaceholder": "搜尋會議、代表或業務內容",
     "pending": "尚待推派",
-    "showDetails": "查看會議資訊",
     "studentIds": "代表學號",
     "appointmentMethod": "產生方式",
     "reportStatus": "推派回報狀態",
@@ -54,6 +53,7 @@
     "office": "業務單位",
     "note": "備註",
     "regulationLink": "查看相關法規或設置辦法 ↗",
+    "minutesLink": "查看會議紀錄 ↗",
     "emptyTitle": "找不到符合的會議",
     "emptyDescription": "請試著縮短關鍵字，或改用會議名稱、代表姓名搜尋。"
   },

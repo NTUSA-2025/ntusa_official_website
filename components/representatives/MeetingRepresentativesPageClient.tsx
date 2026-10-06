@@ -107,8 +107,7 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
 
                 {meeting.subject ? <p className="representative-subject">{meeting.subject}</p> : null}
 
-                <details className="representative-details">
-                  <summary>{t("showDetails")}</summary>
+                <div className="representative-details">
                   <dl>
                     {meeting.representatives.some((representative) => representative.studentId) ? (
                       <>
@@ -132,12 +131,22 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
                     {meeting.office ? <><dt>{t("office")}</dt><dd>{meeting.office}</dd></> : null}
                     {meeting.note ? <><dt>{t("note")}</dt><dd>{meeting.note}</dd></> : null}
                   </dl>
-                  {meeting.regulationUrl ? (
-                    <a href={meeting.regulationUrl} target="_blank" rel="noopener noreferrer" className="representatives-text-link">
-                      {t("regulationLink")}
+                  <div className="representative-links">
+                    <a
+                      href={meeting.minutesUrl || "#"}
+                      target={meeting.minutesUrl ? "_blank" : undefined}
+                      rel={meeting.minutesUrl ? "noopener noreferrer" : undefined}
+                      className="representatives-text-link"
+                    >
+                      {t("minutesLink")}
                     </a>
-                  ) : null}
-                </details>
+                    {meeting.regulationUrl ? (
+                      <a href={meeting.regulationUrl} target="_blank" rel="noopener noreferrer" className="representatives-text-link">
+                        {t("regulationLink")}
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
               </article>
             ))}
           </div>
