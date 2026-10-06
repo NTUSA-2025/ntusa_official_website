@@ -107,8 +107,7 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
 
                 {meeting.subject ? <p className="representative-subject">{meeting.subject}</p> : null}
 
-                <details className="representative-details">
-                  <summary>{t("showDetails")}</summary>
+                <div className="representative-details">
                   <dl>
                     {meeting.representatives.some((representative) => representative.studentId) ? (
                       <>
@@ -137,7 +136,7 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
                       {t("regulationLink")}
                     </a>
                   ) : null}
-                </details>
+                </div>
               </article>
             ))}
           </div>
