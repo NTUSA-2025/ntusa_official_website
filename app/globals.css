@@ -1622,6 +1622,19 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   color: var(--color-secondary);
 }
 
+.representative-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.representative-link-placeholder {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .representative-student-ids {
   display: grid;
   gap: 4px;

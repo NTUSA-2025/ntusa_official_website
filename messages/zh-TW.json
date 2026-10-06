@@ -53,6 +53,8 @@
     "office": "業務單位",
     "note": "備註",
     "regulationLink": "查看相關法規或設置辦法 ↗",
+    "minutesLink": "查看會議紀錄 ↗",
+    "minutesPending": "會議紀錄（尚未提供）",
     "emptyTitle": "找不到符合的會議",
     "emptyDescription": "請試著縮短關鍵字，或改用會議名稱、代表姓名搜尋。"
   },

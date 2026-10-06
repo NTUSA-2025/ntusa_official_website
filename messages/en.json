@@ -53,6 +53,8 @@
     "office": "Responsible office",
     "note": "Notes",
     "regulationLink": "View governing rules ↗",
+    "minutesLink": "View meeting minutes ↗",
+    "minutesPending": "Meeting minutes (not yet available)",
     "emptyTitle": "No matching meetings",
     "emptyDescription": "Try a shorter keyword, meeting name, or representative name."
   },

@@ -17,6 +17,7 @@ export type UniversityMeeting = {
   subject?: string;
   frequency?: string;
   regulationUrl?: string;
+  minutesUrl?: string;
   note?: string;
 };
 
