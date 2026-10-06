@@ -150,7 +150,11 @@ export default function MeetingRepresentativesPageClient({ meetings, embedded = 
                       <a href={meeting.regulationUrl} target="_blank" rel="noopener noreferrer" className="representatives-text-link">
                         {t("regulationLink")}
                       </a>
-                    ) : null}
+                    ) : (
+                      <span className="representatives-text-link representatives-text-link-unavailable">
+                        {t("regulationLinkUnavailable")}
+                      </span>
+                    )}
                   </div>
                 </div>
               </article>
