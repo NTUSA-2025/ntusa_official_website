@@ -1,10 +1,16 @@
-import { createElement } from "react";
+import { createElement, type ComponentProps, type ComponentType, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import { describe, expect, it } from "vitest";
 import zhTW from "@/messages/zh-TW.json";
 import type { UniversityMeeting } from "@/lib/university-meeting-representatives";
 import MeetingRepresentativesPageClient from "./MeetingRepresentativesPageClient";
+
+type TestIntlProviderProps = Omit<ComponentProps<typeof NextIntlClientProvider>, "children"> & {
+  children?: ReactNode;
+};
+
+const TestIntlProvider = NextIntlClientProvider as ComponentType<TestIntlProviderProps>;
 
 function renderMeeting(overrides: Partial<UniversityMeeting> = {}) {
   const meeting: UniversityMeeting = {
@@ -16,7 +22,7 @@ function renderMeeting(overrides: Partial<UniversityMeeting> = {}) {
 
   return renderToStaticMarkup(
     createElement(
-      NextIntlClientProvider,
+      TestIntlProvider,
       { locale: "zh-TW", messages: zhTW, timeZone: "Asia/Taipei" },
       createElement(MeetingRepresentativesPageClient, { meetings: [meeting], embedded: true }),
     ),
