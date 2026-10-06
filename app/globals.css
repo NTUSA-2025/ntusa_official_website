@@ -1438,6 +1438,11 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   text-underline-offset: 4px;
 }
 
+.representatives-text-link-unavailable {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
 .representatives-content {
   padding: 56px 24px 88px;
 }

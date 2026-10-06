@@ -54,6 +54,7 @@
     "note": "Notes",
     "regulationLink": "View governing rules ↗",
     "minutesLink": "View meeting minutes ↗",
+    "minutesLinkUnavailable": "View meeting minutes (link unavailable)",
     "emptyTitle": "No matching meetings",
     "emptyDescription": "Try a shorter keyword, meeting name, or representative name."
   },
