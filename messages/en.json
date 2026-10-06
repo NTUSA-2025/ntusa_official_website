@@ -53,7 +53,9 @@
     "office": "Responsible office",
     "note": "Notes",
     "regulationLink": "View governing rules ↗",
+    "regulationLinkUnavailable": "View governing rules (link unavailable)",
     "minutesLink": "View meeting minutes ↗",
+    "minutesLinkUnavailable": "View meeting minutes (link unavailable)",
     "emptyTitle": "No matching meetings",
     "emptyDescription": "Try a shorter keyword, meeting name, or representative name."
   },
