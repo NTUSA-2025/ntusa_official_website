@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Session } from "next-auth";
-import { canViewStudentRightsCaseAudit, CaseValidationError, parseCaseInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
+import { canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, parseCaseInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
 
 function sessionFor(role: Session["user"]["role"], department: string): Session {
   return {
@@ -38,5 +38,13 @@ describe("student-rights public case input", () => {
     expect(canViewStudentRightsCaseAudit(sessionFor("editor", "學術部"))).toBe(false);
     expect(canViewStudentRightsCaseAudit(sessionFor("admin", "學術部"))).toBe(false);
     expect(canViewStudentRightsCaseAudit(null)).toBe(false);
+  });
+
+  it("only allows the student rights and information departments to manage cases", () => {
+    expect(isStudentRightsCaseManager(sessionFor("editor", "學權部"))).toBe(true);
+    expect(isStudentRightsCaseManager(sessionFor("admin", "資訊部"))).toBe(true);
+    expect(isStudentRightsCaseManager(sessionFor("editor", "學術部"))).toBe(false);
+    expect(isStudentRightsCaseManager(sessionFor("admin", "學術部"))).toBe(false);
+    expect(isStudentRightsCaseManager(null)).toBe(false);
   });
 });
