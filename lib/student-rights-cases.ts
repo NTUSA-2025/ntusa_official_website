@@ -49,19 +49,14 @@ export function parseEventInput(body: unknown) {
 }
 
 export function isStudentRightsCaseManager(session: Session | null): boolean {
-  const user = session?.user;
-  const email = user?.email?.toLowerCase().trim();
-  if (!email || !user) return false;
-  if (user.role === "admin") return true;
-
-  const managers = (process.env.STUDENT_RIGHTS_CASE_ADMIN_EMAILS || "")
-    .split(",")
-    .map((manager) => manager.toLowerCase().trim())
-    .filter(Boolean);
-  return managers.includes(email);
+  return isStudentRightsOrInformationDepartment(session);
 }
 
 export function canViewStudentRightsCaseAudit(session: Session | null): boolean {
+  return isStudentRightsOrInformationDepartment(session);
+}
+
+function isStudentRightsOrInformationDepartment(session: Session | null): boolean {
   const user = session?.user;
   if (!user?.email) return false;
 
