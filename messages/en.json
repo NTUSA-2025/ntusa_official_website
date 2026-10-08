@@ -176,7 +176,10 @@
     "cases": {
       "eyebrow": "Student Rights",
       "title": "Student Rights Case Progress",
-      "desc": "Track the handling history of anonymized cases approved for publication.",
+      "desc": "Track case handling progress.",
+      "contactLabel": "Student Rights Department contact:",
+      "emailLabel": "Email",
+      "lineLabel": "LINE",
       "openedAt": "Opened: {date}",
       "updatedAt": "Last updated: {date}",
       "showTimeline": "View timeline",
