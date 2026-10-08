@@ -198,10 +198,10 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-page-heading h1, .case-detail-heading h1 { color: var(--color-secondary); margin: 8px 0 12px; }
 .case-page-heading p, .case-detail-heading > p { color: var(--color-text-secondary); }
 .case-eyebrow { color: var(--color-brand-dark) !important; font-size: 13px; font-weight: 700; letter-spacing: .12em; }
-.case-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; font-style: normal; }
-.case-contact-label { width: 100%; color: rgba(255,255,255,.72); font-size: 14px; font-weight: 700; }
-.case-contact a { display: inline-flex; align-items: center; min-height: 36px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 7px 13px; color: var(--color-text-invert); font-size: 14px; transition: background var(--transition), border-color var(--transition); }
-.case-contact a:hover { border-color: rgba(255,255,255,.56); background: rgba(255,255,255,.1); }
+.case-contact { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 18px; font-style: normal; font-size: 14px; }
+.case-contact-label { color: rgba(255,255,255,.72); font-weight: 700; }
+.case-contact a { color: var(--color-text-invert); text-decoration: underline; text-underline-offset: 3px; transition: opacity var(--transition); }
+.case-contact a:hover { opacity: .75; }
 .case-contact a:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 3px; }
 .case-list { display: grid; gap: 16px; }
 .case-card, .case-empty { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 24px; }
