@@ -41,10 +41,10 @@ export default async function StudentRightsCaseAuditPage() {
   if (!canViewStudentRightsCaseAudit(session)) redirect("/");
 
   let migrationPending = false;
-  let records: Awaited<ReturnType<typeof getAuditRecords>> = [];
+  let auditGroups: Awaited<ReturnType<typeof getAuditGroups>> = [];
 
   try {
-    records = await getAuditRecords();
+    auditGroups = await getAuditGroups();
   } catch (error) {
     if (!isPublicCaseTableMissing(error)) throw error;
     migrationPending = true;
@@ -71,32 +71,45 @@ export default async function StudentRightsCaseAuditPage() {
       <section className="case-manager-panel">
         <div className="case-manager-section-heading">
           <h2>全部紀錄</h2>
-          <span>{records.length} 筆</span>
+          <span>
+            {auditGroups.length} 件案件 · {auditGroups.reduce((total, group) => total + group.records.length, 0)} 筆
+          </span>
         </div>
 
-        {records.length ? (
-          <ol className="case-audit-list case-audit-page-list">
-            {records.map((record) => (
-              <li key={record.id}>
-                <div className="case-audit-primary">
-                  <strong>{actionLabels[record.action] || record.action}</strong>
-                  <span className="case-audit-target">
-                    {record.caseTarget ? (
-                      <Link href={`/student-rights/cases/manage/${record.caseTarget.id}`}>
-                        案件 #{record.caseTarget.number}
-                      </Link>
-                    ) : (
-                      "無法對應案件"
-                    )}
-                    {` · ${targetTypeLabel(record.targetType)}`}
+        {auditGroups.length ? (
+          <div className="case-audit-groups">
+            {auditGroups.map((group, index) => (
+              <details className="case-audit-group" key={group.key} open={index === 0}>
+                <summary>
+                  <span className="case-audit-group-heading">
+                    <strong>{group.caseTarget ? `案件 #${group.caseTarget.number}` : "無法對應案件"}</strong>
+                    <span>{group.records.length} 筆 · 最近操作 {displayDateTime(group.records[0].createdAt)}</span>
                   </span>
+                  <span className="case-audit-expand" aria-hidden="true" />
+                </summary>
+                <div className="case-audit-group-content">
+                  {group.caseTarget ? (
+                    <Link className="case-audit-case-link" href={`/student-rights/cases/manage/${group.caseTarget.id}`}>
+                      開啟案件 →
+                    </Link>
+                  ) : null}
+                  <ol className="case-audit-list case-audit-page-list">
+                    {group.records.map((record) => (
+                      <li key={record.id}>
+                        <div className="case-audit-primary">
+                          <strong>{actionLabels[record.action] || record.action}</strong>
+                          <span className="case-audit-target">{targetTypeLabel(record.targetType)}</span>
+                        </div>
+                        <span className="case-audit-meta">
+                          {displayDateTime(record.createdAt)} · {record.actor}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <span className="case-audit-meta">
-                  {displayDateTime(record.createdAt)} · {record.actor}
-                </span>
-              </li>
+              </details>
             ))}
-          </ol>
+          </div>
         ) : (
           <p className="caption">尚無稽核紀錄。</p>
         )}
@@ -105,7 +118,7 @@ export default async function StudentRightsCaseAuditPage() {
   );
 }
 
-async function getAuditRecords() {
+async function getAuditGroups() {
   const [logs, cases] = await Promise.all([
     prisma.caseAuditLog.findMany({ orderBy: { createdAt: "desc" } }),
     prisma.publicCase.findMany({
@@ -126,8 +139,23 @@ async function getAuditRecords() {
     }
   }
 
-  return logs.map((log) => ({
-    ...log,
-    caseTarget: targetMap.get(log.targetId) || null,
-  }));
+  const groups = new Map<string, {
+    key: string;
+    caseTarget: { id: string; number: number } | null;
+    records: typeof logs;
+  }>();
+
+  for (const log of logs) {
+    const caseTarget = targetMap.get(log.targetId) || null;
+    const key = caseTarget?.id || "unmatched";
+    const existingGroup = groups.get(key);
+
+    if (existingGroup) {
+      existingGroup.records.push(log);
+    } else {
+      groups.set(key, { key, caseTarget, records: [log] });
+    }
+  }
+
+  return Array.from(groups.values());
 }
