@@ -49,11 +49,12 @@ test.describe("LocaleSwitcher E2E", () => {
     await adminTrigger.click();
     const adminMenu = page.locator("#desktop-admin-menu");
     await expect(adminMenu).toBeVisible();
-    await expect(adminMenu.locator('[role="menuitem"]')).toHaveCount(5);
+    await expect(adminMenu.locator('[role="menuitem"]')).toHaveCount(6);
     await expect(adminMenu.locator('a[href="/editor"]')).toHaveCount(1);
     await expect(adminMenu.locator('a[href="/review"]')).toHaveCount(1);
     await expect(adminMenu.locator('a[href="/minutes/upload"]')).toHaveCount(1);
     await expect(adminMenu.locator('a[href="/student-rights/cases/manage"]')).toHaveCount(1);
+    await expect(adminMenu.locator('a[href="/student-rights/cases/audit"]')).toHaveCount(1);
   });
 
   test("legacy hash redirects and navbar uses path routes", async ({ page }) => {
