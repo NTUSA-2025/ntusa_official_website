@@ -247,15 +247,16 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                     <div className="case-event-heading">
                       <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt)}</time>
                       <label className="case-switch">
-                        <span>公開</span>
+                        <span>不公開</span>
                         <input
                           type="checkbox"
                           role="switch"
+                          aria-label="是否公開此筆進度"
                           checked={timelineEvent.isPublic}
                           disabled={submitting}
                           onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)}
                         />
-                        <span className="case-switch-state">{timelineEvent.isPublic ? "公開" : "未公開"}</span>
+                        <span className="case-switch-state">公開</span>
                       </label>
                     </div>
                     <p>{timelineEvent.publicNote}</p>
