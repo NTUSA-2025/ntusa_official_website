@@ -26,6 +26,15 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
         <div className="page-hero-mini-content">
           <h1 className="page-title">{tCases("title")}</h1>
           <p className="page-desc">{tCases("desc")}</p>
+          <address className="case-contact">
+            <span className="case-contact-label">{tCases("contactLabel")}</span>
+            <a href="mailto:studentrights@ntusa.ntu.edu.tw">
+              {tCases("emailLabel")}：studentrights@ntusa.ntu.edu.tw
+            </a>
+            <a href="https://line.me/R/ti/p/%40ntusa" target="_blank" rel="noopener noreferrer">
+              {tCases("lineLabel")}：@ntusa
+            </a>
+          </address>
         </div>
       </div>
       <div className="section-wrap">
