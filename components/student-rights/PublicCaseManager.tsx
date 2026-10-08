@@ -23,14 +23,6 @@ export type ManagedPublicCase = {
   createdAt: string;
   updatedAt: string;
   timelineEvents: TimelineEvent[];
-  auditLogs: {
-    id: string;
-    actor: string;
-    action: string;
-    targetType: string;
-    targetId: string;
-    createdAt: string;
-  }[];
 };
 
 type CaseForm = {
@@ -60,22 +52,6 @@ function displayDate(value: string) {
     day: "numeric",
     timeZone: "UTC",
   });
-}
-
-function displayDateTime(value: string) {
-  const parts = new Intl.DateTimeFormat("zh-TW", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-    timeZone: "Asia/Taipei",
-  }).formatToParts(new Date(value));
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value || "";
-
-  return `${part("year")}/${part("month")}/${part("day")} ${part("hour")}:${part("minute")}:${part("second")}`;
 }
 
 export default function PublicCaseManager({ caseRecord }: { caseRecord?: ManagedPublicCase }) {
@@ -319,26 +295,6 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
           </div>
         </form>
 
-        {caseRecord ? (
-          <section className="case-manager-panel">
-            <div className="case-manager-section-heading">
-              <h2>稽核歷程</h2>
-              <span>{caseRecord.auditLogs.length} 筆</span>
-            </div>
-            {caseRecord.auditLogs.length ? (
-              <ol className="case-audit-list">
-                {caseRecord.auditLogs.map((log) => (
-                  <li key={log.id}>
-                    <strong>{log.action}</strong>
-                    <span>{displayDateTime(log.createdAt)} · {log.actor}</span>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p className="caption">尚無稽核紀錄。</p>
-            )}
-          </section>
-        ) : null}
       </div>
     </section>
   );

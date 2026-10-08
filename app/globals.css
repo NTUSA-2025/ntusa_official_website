@@ -280,10 +280,18 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-audit-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
 .case-audit-list li { display: flex; gap: 10px; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 8px; font-size: 14px; }
 .case-audit-list span { color: var(--color-text-secondary); }
+.case-audit-page-list { gap: 0; }
+.case-audit-page-list li { align-items: center; padding: 16px 0; }
+.case-audit-primary { display: grid; gap: 5px; }
+.case-audit-primary strong { color: var(--color-secondary); }
+.case-audit-target { font-size: 13px; }
+.case-audit-target a { color: var(--color-brand-dark); font-weight: 700; }
+.case-audit-meta { text-align: right; }
 @media (max-width: 760px) {
   .case-manager { padding-left: 16px; padding-right: 16px; }
   .case-manager-header { align-items: flex-start; flex-direction: column; }
   .case-audit-list li { align-items: flex-start; flex-direction: column; }
+  .case-audit-meta { text-align: left; }
 }
 
 /* =====================================================

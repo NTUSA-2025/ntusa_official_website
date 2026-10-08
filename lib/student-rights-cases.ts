@@ -61,6 +61,13 @@ export function isStudentRightsCaseManager(session: Session | null): boolean {
   return managers.includes(email);
 }
 
+export function canViewStudentRightsCaseAudit(session: Session | null): boolean {
+  const user = session?.user;
+  if (!user?.email) return false;
+
+  return user.department === "資訊部" || user.department === "學權部";
+}
+
 export function publicCaseSort<T extends { occurredAt: Date; createdAt: Date }>(events: T[]): T[] {
   return [...events].sort((a, b) =>
     a.occurredAt.getTime() - b.occurredAt.getTime() || a.createdAt.getTime() - b.createdAt.getTime(),

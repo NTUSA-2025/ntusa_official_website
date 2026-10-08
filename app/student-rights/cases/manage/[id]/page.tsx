@@ -25,12 +25,6 @@ export default async function EditPublicCasePage({ params }: { params: Promise<{
 
   if (!caseRecord) notFound();
 
-  const auditTargets = [caseRecord.id, ...caseRecord.timelineEvents.map((timelineEvent) => timelineEvent.id)];
-  const auditLogs = await prisma.caseAuditLog.findMany({
-    where: { targetId: { in: auditTargets } },
-    orderBy: { createdAt: "desc" },
-  });
-
   const serializedCase = {
     ...caseRecord,
     openedAt: caseRecord.openedAt.toISOString(),
@@ -41,10 +35,6 @@ export default async function EditPublicCasePage({ params }: { params: Promise<{
       occurredAt: timelineEvent.occurredAt.toISOString(),
       createdAt: timelineEvent.createdAt.toISOString(),
       updatedAt: timelineEvent.updatedAt.toISOString(),
-    })),
-    auditLogs: auditLogs.map((log) => ({
-      ...log,
-      createdAt: log.createdAt.toISOString(),
     })),
   };
 
