@@ -49,16 +49,18 @@ export function parseEventInput(body: unknown) {
 }
 
 export function isStudentRightsCaseManager(session: Session | null): boolean {
-  const user = session?.user;
-  const email = user?.email?.toLowerCase().trim();
-  if (!email || !user) return false;
-  if (user.role === "admin") return true;
+  return isStudentRightsOrInformationDepartment(session);
+}
 
-  const managers = (process.env.STUDENT_RIGHTS_CASE_ADMIN_EMAILS || "")
-    .split(",")
-    .map((manager) => manager.toLowerCase().trim())
-    .filter(Boolean);
-  return managers.includes(email);
+export function canViewStudentRightsCaseAudit(session: Session | null): boolean {
+  return isStudentRightsOrInformationDepartment(session);
+}
+
+function isStudentRightsOrInformationDepartment(session: Session | null): boolean {
+  const user = session?.user;
+  if (!user?.email) return false;
+
+  return user.department === "資訊部" || user.department === "學權部";
 }
 
 export function publicCaseSort<T extends { occurredAt: Date; createdAt: Date }>(events: T[]): T[] {
