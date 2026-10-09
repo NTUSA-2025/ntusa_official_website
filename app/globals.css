@@ -227,7 +227,7 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-timeline-layout.expanded .case-timeline-latest li { padding-bottom: 32px; }
 .case-timeline-history li:last-child { padding-bottom: 0; }
 .case-timeline li::before { content: ""; position: absolute; z-index: 1; width: 12px; height: 12px; border-radius: 50%; background: var(--color-brand); left: -7px; top: 6px; border: 3px solid var(--color-surface); }
-.case-timeline li::after { content: ""; position: absolute; width: 2px; top: 18px; bottom: -12px; left: 1px; background: var(--color-brand-light); }
+.case-timeline li::after { content: ""; position: absolute; width: 2px; top: 18px; bottom: -12px; left: -2px; background: var(--color-brand-light); }
 .case-timeline-latest li::after { display: none; }
 .case-timeline-layout.expanded .case-timeline-latest li::after { display: block; }
 .case-timeline-history li:last-child::after { display: none; }
