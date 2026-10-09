@@ -221,12 +221,16 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-link-chevron { display: inline-block; transition: transform var(--transition); }
 .case-link-chevron.open { transform: rotate(180deg); }
 .case-back { display: inline-block; margin-bottom: 28px; }
-.case-timeline { list-style: none; padding: 0 0 0 24px; margin: 0; border-left: 2px solid var(--color-brand-light); }
+.case-timeline { list-style: none; padding: 0 0 0 24px; margin: 0; }
 .case-timeline li { position: relative; padding: 0 0 32px 28px; }
 .case-timeline-latest li { padding-bottom: 0; transition: padding-bottom var(--transition); }
 .case-timeline-layout.expanded .case-timeline-latest li { padding-bottom: 32px; }
 .case-timeline-history li:last-child { padding-bottom: 0; }
-.case-timeline li::before { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--color-brand); left: -7px; top: 6px; border: 3px solid var(--color-surface); }
+.case-timeline li::before { content: ""; position: absolute; z-index: 1; width: 12px; height: 12px; border-radius: 50%; background: var(--color-brand); left: -7px; top: 6px; border: 3px solid var(--color-surface); }
+.case-timeline li::after { content: ""; position: absolute; width: 2px; top: 18px; bottom: -12px; left: 1px; background: var(--color-brand-light); }
+.case-timeline-latest li::after { display: none; }
+.case-timeline-layout.expanded .case-timeline-latest li::after { display: block; }
+.case-timeline-history li:last-child::after { display: none; }
 .case-timeline time { color: var(--color-brand-dark); font-size: 14px; font-weight: 700; }
 .case-timeline p { margin: 6px 0 0; white-space: pre-wrap; }
 .case-empty-timeline { margin: 20px 0 0; color: var(--color-text-secondary); }
