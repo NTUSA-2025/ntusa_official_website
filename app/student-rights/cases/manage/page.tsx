@@ -95,6 +95,6 @@ function getCases() {
         take: 1,
       },
     },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { number: "desc" },
   });
 }

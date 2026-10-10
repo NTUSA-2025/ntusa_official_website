@@ -20,7 +20,7 @@ export async function GET() {
   try {
     const cases = await prisma.publicCase.findMany({
       include: { timelineEvents: { orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }] } },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { number: "desc" },
     });
     return NextResponse.json(cases);
   } catch (error) {
