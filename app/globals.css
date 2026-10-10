@@ -497,13 +497,16 @@ p, .body { font-size: 16px; font-weight: 400; }
 
 .drawer {
   position: fixed;
-  top: 0; right: 0; bottom: 0;
+  top: 0; right: 0;
+  height: 100vh;
+  height: 100dvh;
   width: 280px;
   background: var(--color-surface);
   z-index: 1001;
   transform: translateX(100%);
   transition: transform .35s cubic-bezier(.4,0,.2,1);
   padding: 24px 20px 32px;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   display: flex; flex-direction: column;
   gap: 32px;
   border-left: 1px solid var(--color-border);
@@ -511,6 +514,7 @@ p, .body { font-size: 16px; font-weight: 400; }
 .drawer.open { transform: translateX(0); }
 
 .drawer-close {
+  flex-shrink: 0;
   align-self: flex-end;
   width: 36px; height: 36px;
   border-radius: 50%;
@@ -522,9 +526,17 @@ p, .body { font-size: 16px; font-weight: 400; }
 }
 .drawer-close:hover { background: var(--color-brand-light); color: var(--color-brand-dark); }
 
-.drawer-logo { display: flex; align-items: center; gap: 12px; }
+.drawer-logo { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 
-.drawer-nav { display: flex; flex-direction: column; gap: 4px; }
+.drawer-nav {
+  display: flex; flex-direction: column; gap: 4px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding-bottom: 4px;
+}
+.drawer-nav > * { flex-shrink: 0; }
 .drawer-link {
   display: block;
   padding: 14px 16px;
