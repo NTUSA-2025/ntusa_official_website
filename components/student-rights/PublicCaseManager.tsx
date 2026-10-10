@@ -333,23 +333,26 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
 
         <form className="case-manager-panel" onSubmit={submitCase}>
           <h2>{isEditing ? "案件基本資料" : "建立案件"}</h2>
-          <label>
-            案件日期
-            <input
-              required
-              type="date"
-              value={form.openedAt}
-              onChange={(event) => setField("openedAt", event.target.value)}
-            />
-          </label>
-          <p className="caption">
-            可填寫實際受理或建案日期；系統建立時間會另外自動保存，兩者互不覆蓋。
-          </p>
-          {caseRecord ? (
+          {!caseRecord ? (
+            <>
+              <label>
+                案件日期
+                <input
+                  required
+                  type="date"
+                  value={form.openedAt}
+                  onChange={(event) => setField("openedAt", event.target.value)}
+                />
+              </label>
+              <p className="caption">
+                可填寫實際受理或建案日期；建立後即固定，系統建立時間會另外自動保存。
+              </p>
+            </>
+          ) : (
             <p className="case-system-created-at">
               系統建立時間：<time dateTime={caseRecord.createdAt}>{displayDateTime(caseRecord.createdAt)}</time>
             </p>
-          ) : null}
+          )}
           <label>
             案件主旨
             <textarea
