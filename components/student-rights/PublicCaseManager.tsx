@@ -56,6 +56,17 @@ function displayDate(value: string) {
   });
 }
 
+function displayDateTime(value: string) {
+  return new Date(value).toLocaleString("zh-TW", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Taipei",
+  });
+}
+
 export default function PublicCaseManager({ caseRecord }: { caseRecord?: ManagedPublicCase }) {
   const router = useRouter();
   const isEditing = Boolean(caseRecord);
@@ -322,6 +333,23 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
 
         <form className="case-manager-panel" onSubmit={submitCase}>
           <h2>{isEditing ? "案件基本資料" : "建立案件"}</h2>
+          <label>
+            案件日期
+            <input
+              required
+              type="date"
+              value={form.openedAt}
+              onChange={(event) => setField("openedAt", event.target.value)}
+            />
+          </label>
+          <p className="caption">
+            可填寫實際受理或建案日期；系統建立時間會另外自動保存，兩者互不覆蓋。
+          </p>
+          {caseRecord ? (
+            <p className="case-system-created-at">
+              系統建立時間：<time dateTime={caseRecord.createdAt}>{displayDateTime(caseRecord.createdAt)}</time>
+            </p>
+          ) : null}
           <label>
             案件主旨
             <textarea
