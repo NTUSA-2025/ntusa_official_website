@@ -70,7 +70,6 @@ export default async function PublicCaseManagePage() {
                   <p className="case-manager-case-progress">{latestProgress}</p>
                   <div className="case-manager-case-dates">
                     <span>案件日期：{displayDate(caseRecord.openedAt)}</span>
-                    <span>系統建立：{displayDate(caseRecord.createdAt)}</span>
                     <span>最近更新：{displayDate(caseRecord.updatedAt)}</span>
                   </div>
                 </Link>
