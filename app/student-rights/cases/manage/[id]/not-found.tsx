@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export default function PublicCaseNotFound() {
+export default async function PublicCaseNotFound() {
+  const t = await getTranslations("caseManagement");
   return (
     <section className="case-manager">
       <Link className="case-manager-back" href="/student-rights/cases/manage">
-        ← 返回所有案件
+        {t("back")}
       </Link>
       <div className="case-manager-panel">
-        <h1>找不到案件</h1>
-        <p>這筆案件可能已不存在，或網址不正確。</p>
+        <h1>{t("notFoundTitle")}</h1>
+        <p>{t("notFoundDescription")}</p>
       </div>
     </section>
   );

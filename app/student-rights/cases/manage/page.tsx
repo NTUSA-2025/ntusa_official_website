@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { isPublicCaseTableMissing } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
-function displayDate(value: Date) {
-  return value.toLocaleDateString("zh-TW", {
+function displayDate(value: Date, locale: string) {
+  return value.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -14,6 +15,7 @@ function displayDate(value: Date) {
 }
 
 export default async function PublicCaseManagePage() {
+  const [t, locale] = await Promise.all([getTranslations("caseManagement"), getLocale()]);
   let migrationPending = false;
   let cases: Awaited<ReturnType<typeof getCases>> = [];
 
@@ -28,25 +30,25 @@ export default async function PublicCaseManagePage() {
     <section className="case-manager">
       <header className="case-manager-header">
         <div className="case-manager-header-copy">
-          <p className="case-eyebrow">ADMINISTRATION</p>
-          <h1>學權案件管理</h1>
-          <p>檢視所有公開與未公開案件；進入案件後才能更新進度或調整基本資料。</p>
+          <p className="case-eyebrow">{t("eyebrow")}</p>
+          <h1>{t("title")}</h1>
+          <p>{t("description")}</p>
         </div>
         <Link className="btn btn-primary" href="/student-rights/cases/manage/new">
-          新增案件
+          {t("newCase")}
         </Link>
       </header>
 
       {migrationPending ? (
         <p className="case-manager-message" role="alert">
-          資料庫 migration 尚未完成；請在 staging 資料庫執行 <code>npm run db:migrate</code> 後重新整理。
+          {t("migrationPending")}
         </p>
       ) : null}
 
       <section className="case-manager-panel case-manager-list-panel">
         <div className="case-manager-section-heading">
-          <h2>所有案件</h2>
-          <span>{cases.length} 件</span>
+          <h2>{t("allCases")}</h2>
+          <span>{t("caseCount", { count: cases.length })}</span>
         </div>
 
         {cases.length ? (
@@ -61,16 +63,16 @@ export default async function PublicCaseManagePage() {
                   key={caseRecord.id}
                 >
                   <div className="case-manager-case-row">
-                    <strong>案件 #{caseRecord.number}</strong>
+                    <strong>{t("caseNumber", { number: caseRecord.number })}</strong>
                     <span className={`case-manager-status ${caseRecord.isPublic ? "public" : ""}`}>
-                      {caseRecord.isPublic ? "公開" : "未公開"}
+                      {t(caseRecord.isPublic ? "public" : "private")}
                     </span>
                   </div>
                   <h3>{caseRecord.publicSummary}</h3>
                   <p className="case-manager-case-progress">{latestProgress}</p>
                   <div className="case-manager-case-dates">
-                    <span>案件日期：{displayDate(caseRecord.openedAt)}</span>
-                    <span>最近更新：{displayDate(caseRecord.updatedAt)}</span>
+                    <span>{t("caseDate")}: {displayDate(caseRecord.openedAt, locale)}</span>
+                    <span>{t("lastUpdated")}: {displayDate(caseRecord.updatedAt, locale)}</span>
                   </div>
                 </Link>
               );
@@ -78,8 +80,8 @@ export default async function PublicCaseManagePage() {
           </div>
         ) : (
           <div className="case-manager-empty">
-            <p>尚未建立案件。</p>
-            <Link className="btn btn-outline" href="/student-rights/cases/manage/new">建立第一個案件</Link>
+            <p>{t("emptyCases")}</p>
+            <Link className="btn btn-outline" href="/student-rights/cases/manage/new">{t("createFirst")}</Link>
           </div>
         )}
       </section>
