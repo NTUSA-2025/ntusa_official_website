@@ -3,6 +3,47 @@ import { test, expect } from "@playwright/test";
 const BASE = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 
 test.describe("LocaleSwitcher E2E", () => {
+  for (const height of [667, 500]) {
+    test(`authenticated mobile drawer can scroll to language controls at ${height}px`, async ({ page, context }, testInfo) => {
+      await context.addCookies([{ name: "NEXT_LOCALE", value: "en", url: BASE }]);
+      await page.route("**/api/auth/session", (route) => route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: { name: "Test Admin", email: "test-admin@ntusa.ntu.edu.tw", role: "admin", department: "資訊部" },
+          expires: "2099-01-01T00:00:00.000Z",
+        }),
+      }));
+      await page.setViewportSize({ width: 375, height });
+      await page.goto(`${BASE}/about`, { waitUntil: "networkidle" });
+      const drawer = page.locator("#drawer");
+      await expect(drawer.locator('a[href="/student-rights/cases/manage"]')).toHaveCount(1);
+      await page.getByRole("button", { name: "Open menu", exact: true }).click();
+      await expect(drawer).toHaveClass(/\bopen\b/);
+
+      const closeButton = drawer.getByRole("button", { name: "Close menu", exact: true });
+      await expect(closeButton).toBeInViewport({ ratio: 1 });
+      const originalPageScroll = await page.evaluate(() => window.scrollY);
+      const nav = drawer.locator(".drawer-nav");
+      // Use user scrolling before clicking; Playwright's auto-scroll would mask this regression.
+      await nav.hover();
+      await page.mouse.wheel(0, 2000);
+      await expect.poll(() => nav.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+      const switcher = drawer.locator(".locale-switcher--drawer");
+      await expect(switcher).toBeInViewport({ ratio: 1 });
+      await expect(closeButton).toBeInViewport({ ratio: 1 });
+      expect(await page.evaluate(() => window.scrollY)).toBe(originalPageScroll);
+      const screenshotPath = testInfo.outputPath("scrolled-mobile-menu.png");
+      await page.screenshot({ path: screenshotPath });
+      await testInfo.attach("scrolled-mobile-menu", { path: screenshotPath, contentType: "image/png" });
+
+      await switcher.locator("button").filter({ hasText: "中" }).click();
+      await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+      await expect(drawer).not.toHaveClass(/\bopen\b/);
+      expect(await page.evaluate(() => document.body.style.overflow)).toBe("");
+    });
+  }
+
   test("authenticated desktop nav groups management actions without overflow", async ({ page, context }) => {
     await context.addCookies([
       {
