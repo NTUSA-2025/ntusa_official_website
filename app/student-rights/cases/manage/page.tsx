@@ -69,7 +69,7 @@ export default async function PublicCaseManagePage() {
                   <h3>{caseRecord.publicSummary}</h3>
                   <p className="case-manager-case-progress">{latestProgress}</p>
                   <div className="case-manager-case-dates">
-                    <span>建案：{displayDate(caseRecord.openedAt)}</span>
+                    <span>案件日期：{displayDate(caseRecord.openedAt)}</span>
                     <span>最近更新：{displayDate(caseRecord.updatedAt)}</span>
                   </div>
                 </Link>
@@ -95,6 +95,6 @@ function getCases() {
         take: 1,
       },
     },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { number: "desc" },
   });
 }

@@ -36,7 +36,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       const after = await tx.publicCase.update({
         where: { id },
         data: {
-          openedAt: input.openedAt,
+          openedAt: before.openedAt,
           publicSummary: input.publicSummary,
           currentSituation: publishEvent?.publicNote ?? before.currentSituation,
           isPublic: input.isPublic ?? before.isPublic,

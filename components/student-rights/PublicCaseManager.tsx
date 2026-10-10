@@ -32,8 +32,10 @@ type CaseForm = {
   isPublic: boolean;
 };
 
+type EventForm = Pick<TimelineEvent, "id" | "publicNote" | "isPublic"> & { occurredAt: string };
+
 const blankCase: CaseForm = {
-  openedAt: "",
+  openedAt: new Date().toLocaleDateString("en-CA"),
   currentSituation: "",
   publicSummary: "",
   isPublic: false,
@@ -54,6 +56,17 @@ function displayDate(value: string) {
   });
 }
 
+function displayDateTime(value: string) {
+  return new Date(value).toLocaleString("zh-TW", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Taipei",
+  });
+}
+
 export default function PublicCaseManager({ caseRecord }: { caseRecord?: ManagedPublicCase }) {
   const router = useRouter();
   const isEditing = Boolean(caseRecord);
@@ -64,6 +77,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     isPublic: caseRecord.isPublic,
   } : blankCase);
   const [newEventIsPublic, setNewEventIsPublic] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<EventForm | null>(null);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -143,6 +157,8 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
   }
 
   async function setEventVisibility(eventId: string, isPublic: boolean) {
+    const timelineEvent = caseRecord?.timelineEvents.find((item) => item.id === eventId);
+    if (!timelineEvent) return;
     setSubmitting(true);
     setMessage("");
 
@@ -150,7 +166,11 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
       const response = await fetch(`/api/admin/student-rights/events/${eventId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isPublic }),
+        body: JSON.stringify({
+          occurredAt: timelineEvent.occurredAt.slice(0, 10),
+          publicNote: timelineEvent.publicNote,
+          isPublic,
+        }),
       });
       if (!response.ok) {
         setMessage(`更新公開狀態失敗：${await errorMessage(response)}`);
@@ -161,6 +181,51 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
       router.refresh();
     } catch {
       setMessage("更新公開狀態失敗，請稍後再試。");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function updateEvent(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editingEvent) return;
+    setSubmitting(true);
+    setMessage("");
+    try {
+      const response = await fetch(`/api/admin/student-rights/events/${editingEvent.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingEvent),
+      });
+      if (!response.ok) {
+        setMessage(`更新進度失敗：${await errorMessage(response)}`);
+        return;
+      }
+      setEditingEvent(null);
+      setMessage("案件進度已更新並留下稽核紀錄。");
+      router.refresh();
+    } catch {
+      setMessage("更新進度失敗，請稍後再試。");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function deleteEvent(eventId: string) {
+    if (!window.confirm("確定要刪除這筆進度嗎？此操作無法復原。")) return;
+    setSubmitting(true);
+    setMessage("");
+    try {
+      const response = await fetch(`/api/admin/student-rights/events/${eventId}`, { method: "DELETE" });
+      if (!response.ok) {
+        setMessage(`刪除進度失敗：${await errorMessage(response)}`);
+        return;
+      }
+      setEditingEvent(null);
+      setMessage("案件進度已刪除，稽核紀錄仍保留。");
+      router.refresh();
+    } catch {
+      setMessage("刪除進度失敗，請稍後再試。");
     } finally {
       setSubmitting(false);
     }
@@ -199,7 +264,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                 <textarea required name="publicNote" maxLength={4000} rows={4} />
               </label>
               <label className="case-switch">
-                <span>公開此筆進度</span>
+                <span className={!newEventIsPublic ? "active" : ""}>不公開</span>
                 <input
                   name="isPublic"
                   type="checkbox"
@@ -207,7 +272,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                   checked={newEventIsPublic}
                   onChange={(event) => setNewEventIsPublic(event.target.checked)}
                 />
-                <span className="case-switch-state">{newEventIsPublic ? "公開" : "未公開"}</span>
+                <span className={newEventIsPublic ? "active" : ""}>公開</span>
               </label>
               <button className="btn btn-primary" disabled={submitting}>新增進度</button>
             </form>
@@ -220,22 +285,43 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               <ol className="case-manager-events">
                 {caseRecord.timelineEvents.map((timelineEvent) => (
                   <li key={timelineEvent.id}>
-                    <div className="case-event-heading">
-                      <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt)}</time>
-                      <label className="case-switch">
-                        <span>不公開</span>
-                        <input
-                          type="checkbox"
-                          role="switch"
-                          aria-label="是否公開此筆進度"
-                          checked={timelineEvent.isPublic}
-                          disabled={submitting}
-                          onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)}
-                        />
-                        <span className="case-switch-state">公開</span>
-                      </label>
-                    </div>
-                    <p>{timelineEvent.publicNote}</p>
+                    {editingEvent?.id === timelineEvent.id ? (
+                      <form className="case-event-edit-form" onSubmit={updateEvent}>
+                        <label>
+                          進度日期
+                          <input required type="date" value={editingEvent.occurredAt} onChange={(event) => setEditingEvent({ ...editingEvent, occurredAt: event.target.value })} />
+                        </label>
+                        <label>
+                          進度內容
+                          <textarea required maxLength={4000} rows={4} value={editingEvent.publicNote} onChange={(event) => setEditingEvent({ ...editingEvent, publicNote: event.target.value })} />
+                        </label>
+                        <label className="case-switch">
+                          <span className={!editingEvent.isPublic ? "active" : ""}>不公開</span>
+                          <input type="checkbox" role="switch" checked={editingEvent.isPublic} onChange={(event) => setEditingEvent({ ...editingEvent, isPublic: event.target.checked })} />
+                          <span className={editingEvent.isPublic ? "active" : ""}>公開</span>
+                        </label>
+                        <div className="case-event-actions">
+                          <button className="btn btn-primary" disabled={submitting}>儲存進度</button>
+                          <button className="btn btn-outline" type="button" disabled={submitting} onClick={() => setEditingEvent(null)}>取消</button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        <div className="case-event-heading">
+                          <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt)}</time>
+                          <label className="case-switch">
+                            <span className={!timelineEvent.isPublic ? "active" : ""}>不公開</span>
+                            <input type="checkbox" role="switch" aria-label="是否公開此筆進度" checked={timelineEvent.isPublic} disabled={submitting} onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)} />
+                            <span className={timelineEvent.isPublic ? "active" : ""}>公開</span>
+                          </label>
+                        </div>
+                        <p>{timelineEvent.publicNote}</p>
+                        <div className="case-event-actions">
+                          <button className="btn btn-outline" type="button" disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>編輯</button>
+                          <button className="btn btn-danger" type="button" disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>刪除</button>
+                        </div>
+                      </>
+                    )}
                   </li>
                 ))}
               </ol>
@@ -247,17 +333,28 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
 
         <form className="case-manager-panel" onSubmit={submitCase}>
           <h2>{isEditing ? "案件基本資料" : "建立案件"}</h2>
+          {!caseRecord ? (
+            <>
+              <label>
+                案件日期
+                <input
+                  required
+                  type="date"
+                  value={form.openedAt}
+                  onChange={(event) => setField("openedAt", event.target.value)}
+                />
+              </label>
+              <p className="caption">
+                可填寫實際受理或建案日期；建立後即固定，系統建立時間會另外自動保存。
+              </p>
+            </>
+          ) : (
+            <p className="case-system-created-at">
+              系統建立時間：<time dateTime={caseRecord.createdAt}>{displayDateTime(caseRecord.createdAt)}</time>
+            </p>
+          )}
           <label>
-            建案日期
-            <input
-              required
-              type="date"
-              value={form.openedAt}
-              onChange={(event) => setField("openedAt", event.target.value)}
-            />
-          </label>
-          <label>
-            事件概述
+            案件主旨
             <textarea
               required
               maxLength={4000}
@@ -279,14 +376,14 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
             </label>
           ) : null}
           <label className="case-switch">
-            <span>公開案件</span>
+            <span className={!form.isPublic ? "active" : ""}>不公開</span>
             <input
               type="checkbox"
               role="switch"
               checked={form.isPublic}
               onChange={(event) => setField("isPublic", event.target.checked)}
             />
-            <span className="case-switch-state">{form.isPublic ? "公開" : "未公開"}</span>
+            <span className={form.isPublic ? "active" : ""}>公開</span>
           </label>
           <div className="case-manager-actions">
             <button className="btn btn-primary" disabled={submitting}>

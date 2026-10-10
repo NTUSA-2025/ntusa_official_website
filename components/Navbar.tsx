@@ -83,7 +83,6 @@ export default function Navbar() {
     "/review",
     "/minutes/upload",
     "/student-rights/cases/manage",
-    "/student-rights/cases/audit",
   ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
   const canManageStudentRightsCases = session?.user?.department === "資訊部"
     || session?.user?.department === "學權部";
@@ -137,14 +136,9 @@ export default function Navbar() {
                       {t("uploadMinutes")}
                     </Link>
                     {canManageStudentRightsCases ? (
-                      <>
-                        <Link href="/student-rights/cases/manage" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
-                          {t("caseManagement")}
-                        </Link>
-                        <Link href="/student-rights/cases/audit" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
-                          {t("caseAudit")}
-                        </Link>
-                      </>
+                      <Link href="/student-rights/cases/manage" role="menuitem" className="nav-admin-item" onClick={() => setIsAdminMenuOpen(false)}>
+                        {t("caseManagement")}
+                      </Link>
                     ) : null}
                     <button
                       type="button"
@@ -212,14 +206,9 @@ export default function Navbar() {
                 {t("uploadMinutes")}
               </Link>
               {canManageStudentRightsCases ? (
-                <>
-                  <Link href="/student-rights/cases/manage" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                    {t("caseManagement")}
-                  </Link>
-                  <Link href="/student-rights/cases/audit" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
-                    {t("caseAudit")}
-                  </Link>
-                </>
+                <Link href="/student-rights/cases/manage" className="drawer-link" onClick={closeDrawer} style={{ color: "var(--color-brand-dark)", fontWeight: "bold" }}>
+                  {t("caseManagement")}
+                </Link>
               ) : null}
               <button onClick={() => { closeDrawer(); signOut({ callbackUrl: '/' }); }} className="drawer-link" style={{ color: "#e53e3e", textAlign: "left" }}>
                 {t("signOut")}

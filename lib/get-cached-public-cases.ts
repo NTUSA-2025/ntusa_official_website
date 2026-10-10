@@ -27,7 +27,7 @@ const getPublicCases = unstable_cache(
             orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
           },
         },
-        orderBy: { updatedAt: "desc" },
+        orderBy: { number: "desc" },
       });
       return rows.map((caseRecord) => ({
         id: caseRecord.id,

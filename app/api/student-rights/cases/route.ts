@@ -22,7 +22,7 @@ export async function GET() {
           orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
         },
       },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { number: "desc" },
     });
     return NextResponse.json(cases);
   } catch (error) {
