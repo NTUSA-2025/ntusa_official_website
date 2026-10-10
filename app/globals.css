@@ -264,7 +264,8 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-switch input[type="checkbox"]:checked::before { transform: translateX(18px); }
 .case-switch input[type="checkbox"]:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 3px; }
 .case-switch input[type="checkbox"]:disabled { opacity: .55; cursor: wait; }
-.case-switch-state { color: var(--color-text-secondary); font-size: 13px; font-weight: 500; }
+.case-switch > span { color: var(--color-text-secondary); font-weight: 500; }
+.case-switch > span.active { color: var(--color-secondary); font-weight: 700; }
 .case-manager-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .case-manager-message { padding: 12px 16px; border-radius: var(--radius-sm); background: var(--color-brand-light); color: var(--color-secondary); margin: 0 0 20px; }
 .case-manager-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }

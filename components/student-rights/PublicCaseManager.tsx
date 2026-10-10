@@ -33,7 +33,7 @@ type CaseForm = {
 };
 
 const blankCase: CaseForm = {
-  openedAt: "",
+  openedAt: new Date().toLocaleDateString("en-CA"),
   currentSituation: "",
   publicSummary: "",
   isPublic: false,
@@ -199,7 +199,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                 <textarea required name="publicNote" maxLength={4000} rows={4} />
               </label>
               <label className="case-switch">
-                <span>公開此筆進度</span>
+                <span className={!newEventIsPublic ? "active" : ""}>不公開</span>
                 <input
                   name="isPublic"
                   type="checkbox"
@@ -207,7 +207,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                   checked={newEventIsPublic}
                   onChange={(event) => setNewEventIsPublic(event.target.checked)}
                 />
-                <span className="case-switch-state">{newEventIsPublic ? "公開" : "未公開"}</span>
+                <span className={newEventIsPublic ? "active" : ""}>公開</span>
               </label>
               <button className="btn btn-primary" disabled={submitting}>新增進度</button>
             </form>
@@ -223,7 +223,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                     <div className="case-event-heading">
                       <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt)}</time>
                       <label className="case-switch">
-                        <span>不公開</span>
+                        <span className={!timelineEvent.isPublic ? "active" : ""}>不公開</span>
                         <input
                           type="checkbox"
                           role="switch"
@@ -232,7 +232,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                           disabled={submitting}
                           onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)}
                         />
-                        <span className="case-switch-state">公開</span>
+                        <span className={timelineEvent.isPublic ? "active" : ""}>公開</span>
                       </label>
                     </div>
                     <p>{timelineEvent.publicNote}</p>
@@ -248,16 +248,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         <form className="case-manager-panel" onSubmit={submitCase}>
           <h2>{isEditing ? "案件基本資料" : "建立案件"}</h2>
           <label>
-            建案日期
-            <input
-              required
-              type="date"
-              value={form.openedAt}
-              onChange={(event) => setField("openedAt", event.target.value)}
-            />
-          </label>
-          <label>
-            事件概述
+            案件主旨
             <textarea
               required
               maxLength={4000}
@@ -279,14 +270,14 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
             </label>
           ) : null}
           <label className="case-switch">
-            <span>公開案件</span>
+            <span className={!form.isPublic ? "active" : ""}>不公開</span>
             <input
               type="checkbox"
               role="switch"
               checked={form.isPublic}
               onChange={(event) => setField("isPublic", event.target.checked)}
             />
-            <span className="case-switch-state">{form.isPublic ? "公開" : "未公開"}</span>
+            <span className={form.isPublic ? "active" : ""}>公開</span>
           </label>
           <div className="case-manager-actions">
             <button className="btn btn-primary" disabled={submitting}>
