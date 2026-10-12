@@ -115,7 +115,7 @@
   "footer": {
     "orgName": "國立臺灣大學學生會",
     "orgNameEn": "NTU Student Association",
-    "adminSignInAriaLabel": "Admin sign in",
+    "adminSignIn": "Admin sign in",
     "bugReportLabel": "(Bug Report Email)",
     "copyright": "© 2026 NTU Student Association · IT Department"
   },

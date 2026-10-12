@@ -1,19 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 export default function Footer() {
-  const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("footer");
   const tNav = useTranslations("nav");
-
-  const handleLogoClick = () => {
-    router.push("/api/auth/signin");
-  };
 
   const isActive = (href: string) => pathname === href;
 
@@ -21,14 +16,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <button
-            type="button"
-            onClick={handleLogoClick}
-            aria-label={t("adminSignInAriaLabel")}
-            className="footer-logo-button"
-          >
-            <Image src="/NTUSA_Logo_1.png" alt={t("orgName")} width={32} height={32} className="logo-mark small" />
-          </button>
+          <Image src="/NTUSA_Logo_1.png" alt={t("orgName")} width={32} height={32} className="logo-mark small" />
           <div>
             <div className="footer-name">{t("orgName")}</div>
             <div className="footer-name-en">{t("orgNameEn")}</div>
@@ -61,6 +49,11 @@ export default function Footer() {
           >
             {tNav("data")}
           </Link>
+          {/* NextAuth serves this URL as HTML, so use a full page navigation. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/api/auth/signin">
+            {t("adminSignIn")}
+          </a>
         </div>
 
         <div className="footer-socials">

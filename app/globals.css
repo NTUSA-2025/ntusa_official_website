@@ -1136,22 +1136,6 @@ main { margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h)); }
   gap: 24px;
 }
 .footer-brand { display: flex; align-items: center; gap: 12px; }
-.footer-logo-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: opacity var(--transition);
-}
-.footer-logo-button:hover { opacity: .8; }
-.footer-logo-button:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 3px;
-}
 .footer-name { font-size: 15px; font-weight: 700; color: var(--color-text-invert); }
 .footer-name-en { font-size: 12px; color: rgba(255,255,255,.45); }
 .footer-contact {
