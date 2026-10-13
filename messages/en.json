@@ -41,6 +41,7 @@
     "public": "Public",
     "private": "Unpublished",
     "draft": "Save draft",
+    "publishNow": "Publish now",
     "caseDate": "Case date",
     "lastUpdated": "Last updated",
     "emptyCases": "No cases have been created yet.",

@@ -93,6 +93,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
 
   async function submitCase(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const publishOnCreate = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "public";
     setSubmitting(true);
     setMessage(null);
 
@@ -102,7 +103,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         {
           method: caseRecord ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify({ ...form, isPublic: caseRecord ? form.isPublic : publishOnCreate }),
         },
       );
       if (!response.ok) {
@@ -391,21 +392,28 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               />
             </label>
           ) : null}
-          <label className="case-switch">
-            <span className={!form.isPublic ? "active" : ""}>{t(isEditing ? "private" : "draft")}</span>
-            <input
-              type="checkbox"
-              role="switch"
-              aria-label={t("caseVisibility")}
-              checked={form.isPublic}
-              onChange={(event) => setField("isPublic", event.target.checked)}
-            />
-            <span className={form.isPublic ? "active" : ""}>{t("public")}</span>
-          </label>
+          {caseRecord ? (
+            <label className="case-switch">
+              <span className={!form.isPublic ? "active" : ""}>{t("private")}</span>
+              <input
+                type="checkbox"
+                role="switch"
+                aria-label={t("caseVisibility")}
+                checked={form.isPublic}
+                onChange={(event) => setField("isPublic", event.target.checked)}
+              />
+              <span className={form.isPublic ? "active" : ""}>{t("public")}</span>
+            </label>
+          ) : null}
           <div className="case-manager-actions">
-            <button className="btn btn-primary" disabled={submitting}>
-              {isEditing ? t("saveCase") : t("createCase")}
-            </button>
+            {caseRecord ? (
+              <button className="btn btn-primary" disabled={submitting}>{t("saveCase")}</button>
+            ) : (
+              <>
+                <button className="btn btn-outline" type="submit" name="publication" value="draft" disabled={submitting}>{t("draft")}</button>
+                <button className="btn btn-primary" type="submit" name="publication" value="public" disabled={submitting}>{t("publishNow")}</button>
+              </>
+            )}
           </div>
         </form>
 

@@ -35,8 +35,9 @@ describe("case management translations", () => {
       expect(markup).toContain(t("subject"));
       expect(markup).toContain(t("initialProgress"));
       expect(markup).toContain(t("createCase"));
-      expect(markup).toContain(t("caseVisibility"));
-      expect(markup).toContain(`${t("draft")}</span><input type="checkbox" role="switch" aria-label="${t("caseVisibility")}"`);
+      expect(markup).toContain(`value="draft" name="publication">${t("draft")}</button>`);
+      expect(markup).toContain(`value="public" name="publication">${t("publishNow")}</button>`);
+      expect(markup).not.toContain(t("caseVisibility"));
       if (locale === "en") expect(markup).not.toMatch(/\p{Script=Han}/u);
     });
 
