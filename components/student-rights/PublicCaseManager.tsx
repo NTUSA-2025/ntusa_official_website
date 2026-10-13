@@ -392,7 +392,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
             </label>
           ) : null}
           <label className="case-switch">
-            <span className={!form.isPublic ? "active" : ""}>{t("private")}</span>
+            <span className={!form.isPublic ? "active" : ""}>{t("draft")}</span>
             <input
               type="checkbox"
               role="switch"

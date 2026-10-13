@@ -40,6 +40,7 @@
     "caseNumber": "案件 #{number}",
     "public": "公開",
     "private": "不公開",
+    "draft": "儲存草稿",
     "caseDate": "案件日期",
     "lastUpdated": "最近更新",
     "emptyCases": "尚未建立案件。",
