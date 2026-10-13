@@ -319,45 +319,47 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                 </form>
               )}
             </section>
-            <section className="case-manager-panel case-history-panel">
-              <div className="case-manager-section-heading">
-                <h2>{t("progressHistory")}</h2>
-                <span>{t("progressCount", { count: caseRecord.timelineEvents.length })}</span>
-              </div>
-              {caseRecord.timelineEvents.length ? (
-                <ol className="case-manager-events">
-                  {caseRecord.timelineEvents.map((timelineEvent) => (
-                    <li className="case-event-row" key={timelineEvent.id}>
-                      <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
-                      <p title={timelineEvent.publicNote}>{timelineEvent.publicNote}</p>
-                      <button
-                        className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
-                        type="button"
-                        role="switch"
-                        aria-label={t("progressVisibility")}
-                        aria-checked={timelineEvent.isPublic}
-                        aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
-                        title={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
-                        disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
-                        onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
-                      >
-                        <span className="case-event-switch-track" aria-hidden="true" />
-                      </button>
-                      <div className="case-event-actions">
-                        <button className="case-event-icon-button" type="button" aria-label={t("edit")} title={t("edit")} disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>
-                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z" /></svg>
+            <div className="case-history-slot">
+              <section className="case-manager-panel case-history-panel">
+                <div className="case-manager-section-heading">
+                  <h2>{t("progressHistory")}</h2>
+                  <span>{t("progressCount", { count: caseRecord.timelineEvents.length })}</span>
+                </div>
+                {caseRecord.timelineEvents.length ? (
+                  <ol className="case-manager-events" tabIndex={0} aria-label={t("progressHistory")}>
+                    {caseRecord.timelineEvents.map((timelineEvent) => (
+                      <li className="case-event-row" key={timelineEvent.id}>
+                        <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
+                        <p title={timelineEvent.publicNote}>{timelineEvent.publicNote}</p>
+                        <button
+                          className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
+                          type="button"
+                          role="switch"
+                          aria-label={t("progressVisibility")}
+                          aria-checked={timelineEvent.isPublic}
+                          aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
+                          title={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
+                          disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
+                          onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
+                        >
+                          <span className="case-event-switch-track" aria-hidden="true" />
                         </button>
-                        <button className="case-event-icon-button case-event-delete" type="button" aria-label={t("delete")} title={t("delete")} disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>
-                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p className="caption">{t("emptyProgress")}</p>
-              )}
-            </section>
+                        <div className="case-event-actions">
+                          <button className="case-event-icon-button" type="button" aria-label={t("edit")} title={t("edit")} disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z" /></svg>
+                          </button>
+                          <button className="case-event-icon-button case-event-delete" type="button" aria-label={t("delete")} title={t("delete")} disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="caption">{t("emptyProgress")}</p>
+                )}
+              </section>
+            </div>
           </div>
         ) : null}
 
