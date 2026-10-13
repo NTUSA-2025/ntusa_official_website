@@ -45,6 +45,10 @@ describe("case management translations", () => {
       const markup = render(caseRecord);
       expect(markup).toContain(t("editTitle", { number: 5 }));
       expect(markup).toContain(t("saveCase"));
+      expect(markup).toContain('class="case-manager-panel case-event-panel"');
+      expect(markup).toContain('class="case-manager-panel case-history-panel"');
+      expect(markup).toContain(`value="draft" name="publication">${t("draft")}</button>`);
+      expect(markup).toContain(`value="public" name="publication">${t("publishNow")}</button>`);
       expect(markup).toContain(`${t("private")}</span><input type="checkbox" role="switch" aria-label="${t("caseVisibility")}"`);
       expect(markup).toContain(t("progressVisibility"));
       expect(markup).toContain(t("progressCount", { count: 1 }));
@@ -59,7 +63,8 @@ describe("case management translations", () => {
     it(`explains and locks progress visibility for an unpublished case in ${locale}`, () => {
       const markup = render({ ...caseRecord, isPublic: false, timelineEvents: [{ ...caseRecord.timelineEvents[0], isPublic: false }] });
       expect(markup).toContain(t("publishCaseFirst"));
-      expect(markup.match(/aria-label="[^"]+" aria-describedby="case-visibility-hint"[^>]*disabled=""/g)).toHaveLength(2);
+      expect(markup).toMatch(/<button[^>]*value="public"[^>]*disabled=""[^>]*aria-describedby="case-visibility-hint"/);
+      expect(markup.match(/aria-label="[^"]+" aria-describedby="case-visibility-hint"[^>]*disabled=""/g)).toHaveLength(1);
     });
 
     it(`renders usable notifications and confirmation messages in ${locale}`, () => {

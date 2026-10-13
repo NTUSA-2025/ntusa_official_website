@@ -250,6 +250,8 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-editor-header { margin-bottom: 28px; }
 .case-manager-back { display: inline-block; margin-bottom: 20px; color: var(--color-brand-dark); font-weight: 700; }
 .case-manager-stack { display: grid; gap: 20px; }
+.case-progress-layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: start; gap: 20px; }
+.case-progress-layout > .case-manager-panel { min-width: 0; }
 .case-manager-panel { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 24px; }
 .case-manager-panel h2 { color: var(--color-secondary); margin: 0 0 16px; }
 .case-manager-panel label { display: grid; gap: 6px; margin-bottom: 15px; font-size: 14px; font-weight: 700; color: var(--color-secondary); }
@@ -288,13 +290,12 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-empty p { margin: 0; }
 .case-event-form { display: grid; gap: 14px; }
 .case-event-form .btn { width: fit-content; }
-.case-event-form + .case-manager-section-heading { margin-top: 32px; }
 .case-manager-events { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
 .case-manager-events li { border-top: 1px solid var(--color-border); padding-top: 12px; }
 .case-event-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .case-event-heading time { color: var(--color-brand-dark); font-weight: 700; font-size: 14px; }
 .case-manager-panel .case-event-heading .case-switch { margin: 0; }
-.case-manager-events li p { white-space: pre-wrap; margin: 4px 0 8px; }
+.case-manager-events li p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 8px; }
 .case-event-edit-form { display: grid; gap: 12px; }
 .case-event-edit-form label { margin-bottom: 0; }
 .case-event-actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -324,6 +325,9 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-audit-target { font-size: 13px; }
 .case-audit-target a { color: var(--color-brand-dark); font-weight: 700; }
 .case-audit-meta { text-align: right; }
+@media (max-width: 900px) {
+  .case-progress-layout { grid-template-columns: 1fr; }
+}
 @media (max-width: 760px) {
   .case-manager { padding-left: 16px; padding-right: 16px; }
   .case-manager-header { align-items: flex-start; flex-direction: column; }
