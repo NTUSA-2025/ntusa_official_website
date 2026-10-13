@@ -274,7 +274,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               <h2>{editingEvent ? t("editProgressTitle") : t("addProgressTitle")}</h2>
               {!caseRecord.isPublic ? <p className="case-visibility-hint" id="case-visibility-hint">{t("publishCaseFirst")}</p> : null}
               {editingEvent ? (
-                <form onSubmit={updateEvent} className="case-event-form">
+                <form key="edit-progress" onSubmit={updateEvent} className="case-event-form">
                   <label>
                     {t("progressDate")}
                     <input ref={editDateRef} required type="date" value={editingEvent.occurredAt} onChange={(event) => setEditingEvent({ ...editingEvent, occurredAt: event.target.value })} />
@@ -294,7 +294,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                   </div>
                 </form>
               ) : (
-                <form onSubmit={addEvent} className="case-event-form">
+                <form key="add-progress" onSubmit={addEvent} className="case-event-form">
                   <label>
                     {t("progressDate")}
                     <input required name="occurredAt" type="date" />
