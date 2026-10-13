@@ -36,7 +36,7 @@ describe("case management translations", () => {
       expect(markup).toContain(t("initialProgress"));
       expect(markup).toContain(t("createCase"));
       expect(markup).toContain(t("caseVisibility"));
-      expect(markup).toContain(t("draft"));
+      expect(markup).toContain(`${t("draft")}</span><input type="checkbox" role="switch" aria-label="${t("caseVisibility")}"`);
       if (locale === "en") expect(markup).not.toMatch(/\p{Script=Han}/u);
     });
 
@@ -44,7 +44,7 @@ describe("case management translations", () => {
       const markup = render(caseRecord);
       expect(markup).toContain(t("editTitle", { number: 5 }));
       expect(markup).toContain(t("saveCase"));
-      expect(markup).toContain(t("draft"));
+      expect(markup).toContain(`${t("private")}</span><input type="checkbox" role="switch" aria-label="${t("caseVisibility")}"`);
       expect(markup).toContain(t("progressVisibility"));
       expect(markup).toContain(t("progressCount", { count: 1 }));
       expect(markup).toContain(t("delete"));
