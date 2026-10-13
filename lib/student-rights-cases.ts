@@ -48,6 +48,16 @@ export function parseEventInput(body: unknown) {
   };
 }
 
+export function assertProgressVisibilityAllowed(caseIsPublic: boolean, previousIsPublic: boolean, nextIsPublic: boolean): void {
+  if (!caseIsPublic && previousIsPublic !== nextIsPublic) {
+    throw new CaseValidationError("CASE_MUST_BE_PUBLIC");
+  }
+}
+
+export function latestPublicProgress(events: { publicNote: string }[]): string {
+  return events[0]?.publicNote ?? "";
+}
+
 export function isStudentRightsCaseManager(session: Session | null): boolean {
   return isStudentRightsOrInformationDepartment(session);
 }

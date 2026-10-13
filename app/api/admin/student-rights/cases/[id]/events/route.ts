@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CaseValidationError, isStudentRightsCaseManager, parseEventInput, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { assertProgressVisibilityAllowed, CaseValidationError, isStudentRightsCaseManager, parseEventInput, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +24,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const event = await prisma.$transaction(async (tx) => {
       const caseRecord = await tx.publicCase.findUnique({ where: { id: caseId } });
       if (!caseRecord) return null;
+      assertProgressVisibilityAllowed(caseRecord.isPublic, false, input.isPublic ?? false);
       const created = await tx.caseTimelineEvent.create({
         data: { ...input, isPublic: input.isPublic ?? false, caseId, createdBy: actor, updatedBy: actor },
       });

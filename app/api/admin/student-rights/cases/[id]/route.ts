@@ -30,9 +30,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
             orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
           })
         : null;
-      if (input.isPublic && !before.isPublic && !publishEvent) {
-        throw new CaseValidationError("PUBLIC_EVENT_REQUIRED");
-      }
       const after = await tx.publicCase.update({
         where: { id },
         data: {

@@ -266,6 +266,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
           <section className="case-manager-panel case-event-panel">
             <h2>{t("addProgressTitle")}</h2>
             <p className="caption">{t("progressHelp")}</p>
+            {!caseRecord.isPublic ? <p className="case-visibility-hint" id="case-visibility-hint">{t("publishCaseFirst")}</p> : null}
             <form onSubmit={addEvent} className="case-event-form">
               <label>
                 {t("progressDate")}
@@ -282,7 +283,9 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                   type="checkbox"
                   role="switch"
                   aria-label={t("progressVisibility")}
+                  aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
                   checked={newEventIsPublic}
+                  disabled={!caseRecord.isPublic || submitting}
                   onChange={(event) => setNewEventIsPublic(event.target.checked)}
                 />
                 <span className={newEventIsPublic ? "active" : ""}>{t("public")}</span>
@@ -310,7 +313,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                         </label>
                         <label className="case-switch">
                           <span className={!editingEvent.isPublic ? "active" : ""}>{t("private")}</span>
-                          <input type="checkbox" role="switch" aria-label={t("progressVisibility")} checked={editingEvent.isPublic} onChange={(event) => setEditingEvent({ ...editingEvent, isPublic: event.target.checked })} />
+                          <input type="checkbox" role="switch" aria-label={t("progressVisibility")} aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined} checked={editingEvent.isPublic} disabled={!caseRecord.isPublic || submitting} onChange={(event) => setEditingEvent({ ...editingEvent, isPublic: event.target.checked })} />
                           <span className={editingEvent.isPublic ? "active" : ""}>{t("public")}</span>
                         </label>
                         <div className="case-event-actions">
@@ -324,7 +327,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                           <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt, locale)}</time>
                           <label className="case-switch">
                             <span className={!timelineEvent.isPublic ? "active" : ""}>{t("private")}</span>
-                            <input type="checkbox" role="switch" aria-label={t("progressVisibility")} checked={timelineEvent.isPublic} disabled={submitting} onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)} />
+                            <input type="checkbox" role="switch" aria-label={t("progressVisibility")} aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined} checked={timelineEvent.isPublic} disabled={!caseRecord.isPublic || submitting} onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)} />
                             <span className={timelineEvent.isPublic ? "active" : ""}>{t("public")}</span>
                           </label>
                         </div>

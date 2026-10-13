@@ -53,11 +53,17 @@ describe("case management translations", () => {
       expect(markup).not.toContain(t("caseDateHelp"));
     });
 
+    it(`explains and locks progress visibility for an unpublished case in ${locale}`, () => {
+      const markup = render({ ...caseRecord, isPublic: false, timelineEvents: [{ ...caseRecord.timelineEvents[0], isPublic: false }] });
+      expect(markup).toContain(t("publishCaseFirst"));
+      expect(markup.match(/aria-label="[^"]+" aria-describedby="case-visibility-hint"[^>]*disabled=""/g)).toHaveLength(2);
+    });
+
     it(`renders usable notifications and confirmation messages in ${locale}`, () => {
-      const reason = t("errors.PUBLIC_EVENT_REQUIRED");
+      const reason = t("errors.CASE_MUST_BE_PUBLIC");
       const message = t("notifications.deleteFailed", { reason });
       expect(message).toContain(reason);
-      expect(message).not.toContain("PUBLIC_EVENT_REQUIRED");
+      expect(message).not.toContain("CASE_MUST_BE_PUBLIC");
       expect(t("deleteConfirm")).toContain(locale === "en" ? "cannot be undone" : "無法復原");
       expect(t("progressCount", { count: 2 })).toBe(locale === "en" ? "2 updates" : "2 筆");
     });

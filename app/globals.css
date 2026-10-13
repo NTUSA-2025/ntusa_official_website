@@ -263,7 +263,8 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-switch input[type="checkbox"]:checked { background: var(--color-brand-dark); }
 .case-switch input[type="checkbox"]:checked::before { transform: translateX(18px); }
 .case-switch input[type="checkbox"]:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 3px; }
-.case-switch input[type="checkbox"]:disabled { opacity: .55; cursor: wait; }
+.case-switch input[type="checkbox"]:disabled { opacity: .55; cursor: not-allowed; }
+.case-visibility-hint { margin: 12px 0; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--color-brand-light); color: var(--color-secondary); font-size: 14px; }
 .case-switch > span { color: var(--color-text-secondary); font-weight: 500; }
 .case-switch > span.active { color: var(--color-secondary); font-weight: 700; }
 .case-manager-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }

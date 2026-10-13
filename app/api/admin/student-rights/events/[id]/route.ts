@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CaseValidationError, isStudentRightsCaseManager, parseEventInput, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { assertProgressVisibilityAllowed, CaseValidationError, isStudentRightsCaseManager, parseEventInput, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +24,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const result = await prisma.$transaction(async (tx) => {
       const before = await tx.caseTimelineEvent.findUnique({ where: { id } });
       if (!before) return null;
+      const caseRecord = await tx.publicCase.findUniqueOrThrow({ where: { id: before.caseId } });
+      assertProgressVisibilityAllowed(caseRecord.isPublic, before.isPublic, input.isPublic ?? before.isPublic);
       const after = await tx.caseTimelineEvent.update({
         where: { id },
         data: { ...input, isPublic: input.isPublic ?? before.isPublic, updatedBy: actor },
@@ -32,8 +34,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         where: { caseId: before.caseId, isPublic: true },
         orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
       });
-      const caseRecord = await tx.publicCase.findUniqueOrThrow({ where: { id: before.caseId } });
-      if (!newestPublicEvent && caseRecord.isPublic) throw new CaseValidationError("PUBLIC_EVENT_REQUIRED");
       if (newestPublicEvent) {
         await tx.publicCase.update({
           where: { id: before.caseId },
@@ -70,8 +70,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
         where: { caseId: before.caseId, isPublic: true },
         orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
       });
-      const caseRecord = await tx.publicCase.findUniqueOrThrow({ where: { id: before.caseId } });
-      if (!newestPublicEvent && caseRecord.isPublic) throw new CaseValidationError("PUBLIC_EVENT_REQUIRED");
       if (newestPublicEvent) {
         await tx.publicCase.update({
           where: { id: before.caseId },
