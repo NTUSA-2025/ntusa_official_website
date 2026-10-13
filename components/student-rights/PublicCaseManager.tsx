@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type PointerEvent as ReactPointerEvent } from "react";
 
 type TimelineEvent = {
   id: string;
@@ -91,6 +91,9 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
   const [editingEvent, setEditingEvent] = useState<EventForm | null>(null);
   const editingEventId = editingEvent?.id;
   const editDateRef = useRef<HTMLInputElement>(null);
+  const historyListRef = useRef<HTMLOListElement>(null);
+  const historyDragOffsetRef = useRef<number | null>(null);
+  const [historyScrollbar, setHistoryScrollbar] = useState({ visible: false, thumbHeight: 0, thumbTop: 0 });
   const [message, setMessage] = useState<{
     key: "caseSaved" | "progressAdded" | "progressPublished" | "progressHidden" | "progressSaved" | "progressDeleted" | "saveFailed" | "addFailed" | "visibilityFailed" | "updateFailed" | "deleteFailed";
     errorCode?: string;
@@ -100,6 +103,47 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
   useEffect(() => {
     if (editingEventId) editDateRef.current?.focus();
   }, [editingEventId]);
+
+  const syncHistoryScrollbar = useCallback(() => {
+    const list = historyListRef.current;
+    if (!list) return;
+    const scrollRange = list.scrollHeight - list.clientHeight;
+    const visible = scrollRange > 1;
+    const thumbHeight = visible ? Math.max(28, list.clientHeight * list.clientHeight / list.scrollHeight) : 0;
+    const thumbTop = visible ? list.scrollTop / scrollRange * (list.clientHeight - thumbHeight) : 0;
+    setHistoryScrollbar((previous) => previous.visible === visible && Math.abs(previous.thumbHeight - thumbHeight) < 0.5 && Math.abs(previous.thumbTop - thumbTop) < 0.5
+      ? previous
+      : { visible, thumbHeight, thumbTop });
+  }, []);
+
+  useEffect(() => {
+    const list = historyListRef.current;
+    if (!list) return;
+    syncHistoryScrollbar();
+    const observer = new ResizeObserver(syncHistoryScrollbar);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [caseRecord?.timelineEvents, syncHistoryScrollbar]);
+
+  function scrollHistoryFromPointer(clientY: number, track: HTMLDivElement, offset: number) {
+    const list = historyListRef.current;
+    if (!list) return;
+    const trackRect = track.getBoundingClientRect();
+    const travel = trackRect.height - historyScrollbar.thumbHeight;
+    if (travel <= 0) return;
+    const position = Math.max(0, Math.min(travel, clientY - trackRect.top - offset));
+    list.scrollTop = position / travel * (list.scrollHeight - list.clientHeight);
+  }
+
+  function startHistoryScrollbarDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const trackRect = event.currentTarget.getBoundingClientRect();
+    const pointerY = event.clientY - trackRect.top;
+    const onThumb = pointerY >= historyScrollbar.thumbTop && pointerY <= historyScrollbar.thumbTop + historyScrollbar.thumbHeight;
+    const offset = onThumb ? pointerY - historyScrollbar.thumbTop : historyScrollbar.thumbHeight / 2;
+    historyDragOffsetRef.current = offset;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    scrollHistoryFromPointer(event.clientY, event.currentTarget, offset);
+  }
 
   const setField = <K extends keyof CaseForm>(field: K, value: CaseForm[K]) => {
     setForm((previous) => ({ ...previous, [field]: value }));
@@ -326,35 +370,54 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                   <span>{t("progressCount", { count: caseRecord.timelineEvents.length })}</span>
                 </div>
                 {caseRecord.timelineEvents.length ? (
-                  <ol className="case-manager-events" tabIndex={0} aria-label={t("progressHistory")}>
-                    {caseRecord.timelineEvents.map((timelineEvent) => (
-                      <li className="case-event-row" key={timelineEvent.id}>
-                        <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
-                        <p title={timelineEvent.publicNote}>{timelineEvent.publicNote}</p>
-                        <button
-                          className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
-                          type="button"
-                          role="switch"
-                          aria-label={t("progressVisibility")}
-                          aria-checked={timelineEvent.isPublic}
-                          aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
-                          title={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
-                          disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
-                          onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
-                        >
-                          <span className="case-event-switch-track" aria-hidden="true" />
-                        </button>
-                        <div className="case-event-actions">
-                          <button className="case-event-icon-button" type="button" aria-label={t("edit")} title={t("edit")} disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z" /></svg>
+                  <div className="case-history-scroll-area">
+                    <ol ref={historyListRef} className="case-manager-events" tabIndex={0} aria-label={t("progressHistory")} onScroll={syncHistoryScrollbar}>
+                      {caseRecord.timelineEvents.map((timelineEvent) => (
+                        <li className="case-event-row" key={timelineEvent.id}>
+                          <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
+                          <p title={timelineEvent.publicNote}>{timelineEvent.publicNote}</p>
+                          <button
+                            className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
+                            type="button"
+                            role="switch"
+                            aria-label={t("progressVisibility")}
+                            aria-checked={timelineEvent.isPublic}
+                            aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
+                            title={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
+                            disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
+                            onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
+                          >
+                            <span className="case-event-switch-track" aria-hidden="true" />
                           </button>
-                          <button className="case-event-icon-button case-event-delete" type="button" aria-label={t("delete")} title={t("delete")} disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
-                          </button>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
+                          <div className="case-event-actions">
+                            <button className="case-event-icon-button" type="button" aria-label={t("edit")} title={t("edit")} disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>
+                              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z" /></svg>
+                            </button>
+                            <button className="case-event-icon-button case-event-delete" type="button" aria-label={t("delete")} title={t("delete")} disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>
+                              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    {historyScrollbar.visible ? (
+                      <div
+                        className="case-history-scrollbar"
+                        aria-hidden="true"
+                        onPointerDown={startHistoryScrollbarDrag}
+                        onPointerMove={(event) => {
+                          if (historyDragOffsetRef.current !== null) scrollHistoryFromPointer(event.clientY, event.currentTarget, historyDragOffsetRef.current);
+                        }}
+                        onPointerUp={(event) => {
+                          historyDragOffsetRef.current = null;
+                          event.currentTarget.releasePointerCapture(event.pointerId);
+                        }}
+                        onPointerCancel={() => { historyDragOffsetRef.current = null; }}
+                      >
+                        <span className="case-history-scrollbar-thumb" style={{ height: historyScrollbar.thumbHeight, transform: `translateY(${historyScrollbar.thumbTop}px)` }} />
+                      </div>
+                    ) : null}
+                  </div>
                 ) : (
                   <p className="caption">{t("emptyProgress")}</p>
                 )}
