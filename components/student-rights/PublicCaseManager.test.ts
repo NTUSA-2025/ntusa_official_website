@@ -62,6 +62,17 @@ describe("case management translations", () => {
       expect(markup).not.toContain(t("caseDateHelp"));
     });
 
+    it(`prefills the new progress date with today in Taipei in ${locale}`, () => {
+      vi.useFakeTimers();
+      try {
+        vi.setSystemTime(new Date("2026-10-13T16:30:00.000Z"));
+        const markup = render(caseRecord);
+        expect(markup).toMatch(/<input[^>]*type="date"[^>]*name="occurredAt"[^>]*value="2026-10-14"/);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it(`explains and locks progress visibility for an unpublished case in ${locale}`, () => {
       const markup = render({ ...caseRecord, isPublic: false, timelineEvents: [{ ...caseRecord.timelineEvents[0], isPublic: false }] });
       expect(markup).toContain(t("publishCaseFirst"));

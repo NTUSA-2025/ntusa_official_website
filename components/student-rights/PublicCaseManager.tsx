@@ -77,6 +77,17 @@ function displayDateTime(value: string, locale: string) {
   });
 }
 
+function todayInTaipei() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Taipei",
+  }).formatToParts(new Date());
+  const date = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  return `${date.year}-${date.month}-${date.day}`;
+}
+
 export default function PublicCaseManager({ caseRecord }: { caseRecord?: ManagedPublicCase }) {
   const router = useRouter();
   const t = useTranslations("caseManagement");
@@ -360,7 +371,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                 <form key="add-progress" onSubmit={addEvent} className="case-event-form">
                   <label>
                     {t("progressDate")}
-                    <input required name="occurredAt" type="date" />
+                    <input required name="occurredAt" type="date" defaultValue={todayInTaipei()} />
                   </label>
                   <label className="event-note">
                     {t("progressContent")}
