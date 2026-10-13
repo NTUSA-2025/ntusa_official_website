@@ -298,6 +298,17 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-events li p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 8px; }
 .case-event-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .case-event-actions .btn { padding: 7px 14px; }
+.case-history-panel { padding: 20px 18px; }
+.case-history-panel .case-manager-section-heading { gap: 8px; }
+.case-history-panel .case-manager-section-heading h2 { font-size: 18px; }
+.case-history-panel .case-manager-section-heading > span { font-size: 13px; white-space: nowrap; }
+.case-history-panel .case-manager-events { gap: 18px; }
+.case-history-panel .case-manager-events li { padding-top: 16px; }
+.case-history-panel .case-event-heading { gap: 10px; }
+.case-history-panel .case-event-heading time { line-height: 1.5; }
+.case-history-panel .case-event-heading .case-switch { gap: 6px; font-size: 13px; }
+.case-history-panel .case-manager-events li p { margin: 12px 0 16px; font-size: 14px; line-height: 1.65; }
+.case-history-panel .case-event-actions .btn { padding: 7px 12px; font-size: 14px; }
 .btn-danger { border: 1px solid #c53b3b; background: transparent; color: #a82727; }
 .btn-danger:hover { background: #fff0f0; }
 .case-audit-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
