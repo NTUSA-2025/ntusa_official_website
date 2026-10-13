@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { isPublicCaseTableMissing } from "@/lib/student-rights-cases";
+import { isPublicCaseTableMissing, latestPublicProgress } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,6 @@ export async function GET() {
       select: {
         number: true,
         openedAt: true,
-        currentSituation: true,
         publicSummary: true,
         createdAt: true,
         updatedAt: true,
@@ -24,7 +23,10 @@ export async function GET() {
       },
       orderBy: { number: "desc" },
     });
-    return NextResponse.json(cases);
+    return NextResponse.json(cases.map((caseRecord) => ({
+      ...caseRecord,
+      currentSituation: latestPublicProgress(caseRecord.timelineEvents),
+    })));
   } catch (error) {
     if (isPublicCaseTableMissing(error)) return NextResponse.json([]);
     console.error("讀取公開學權案件失敗:", error);

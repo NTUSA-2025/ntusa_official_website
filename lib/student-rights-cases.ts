@@ -38,6 +38,15 @@ export function parseCaseInput(body: unknown) {
   };
 }
 
+export function parseCaseUpdateInput(body: unknown) {
+  if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
+  const input = body as Record<string, unknown>;
+  return {
+    publicSummary: requiredText(input.publicSummary, "PUBLIC_SUMMARY", 4000),
+    isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
+  };
+}
+
 export function parseEventInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;
@@ -46,6 +55,16 @@ export function parseEventInput(body: unknown) {
     publicNote: requiredText(input.publicNote, "PUBLIC_NOTE", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
   };
+}
+
+export function assertProgressVisibilityAllowed(caseIsPublic: boolean, previousIsPublic: boolean, nextIsPublic: boolean): void {
+  if (!caseIsPublic && previousIsPublic !== nextIsPublic) {
+    throw new CaseValidationError("CASE_MUST_BE_PUBLIC");
+  }
+}
+
+export function latestPublicProgress(events: { publicNote: string }[]): string {
+  return events[0]?.publicNote ?? "";
 }
 
 export function isStudentRightsCaseManager(session: Session | null): boolean {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Session } from "next-auth";
-import { canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, parseCaseInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
+import { assertProgressVisibilityAllowed, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseUpdateInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
 
 function sessionFor(role: Session["user"]["role"], department: string): Session {
   return {
@@ -13,6 +13,12 @@ describe("student-rights public case input", () => {
   it("accepts case details without a manually entered number, source, or progress status", () => {
     expect(parseCaseInput({ openedAt: "2026-08-01", currentSituation: "已聯繫相關單位", publicSummary: "已匿名化摘要" }))
       .toMatchObject({ currentSituation: "已聯繫相關單位", isPublic: undefined });
+  });
+
+  it("edits only the visible case fields without requiring the initial progress", () => {
+    expect(parseCaseUpdateInput({ publicSummary: " 更新後主旨 ", isPublic: false }))
+      .toEqual({ publicSummary: "更新後主旨", isPublic: false });
+    expect(() => parseCaseUpdateInput({ publicSummary: "  " })).toThrow("PUBLIC_SUMMARY_REQUIRED");
   });
 
   it("rejects invalid dates and timestamps with a time component", () => {
@@ -30,6 +36,19 @@ describe("student-rights public case input", () => {
   it("stores progress dates without a time-of-day choice", () => {
     const event = parseEventInput({ occurredAt: "2026-09-25", publicNote: "處理中" });
     expect(event.occurredAt.toISOString()).toBe("2026-09-25T12:00:00.000Z");
+  });
+
+  it("locks progress visibility until the case is public", () => {
+    expect(() => assertProgressVisibilityAllowed(false, false, true)).toThrow("CASE_MUST_BE_PUBLIC");
+    expect(() => assertProgressVisibilityAllowed(false, true, false)).toThrow("CASE_MUST_BE_PUBLIC");
+    expect(() => assertProgressVisibilityAllowed(false, false, false)).not.toThrow();
+    expect(() => assertProgressVisibilityAllowed(false, true, true)).not.toThrow();
+    expect(() => assertProgressVisibilityAllowed(true, false, true)).not.toThrow();
+  });
+
+  it("does not expose an unpublished current situation when no progress is public", () => {
+    expect(latestPublicProgress([])).toBe("");
+    expect(latestPublicProgress([{ publicNote: "公開進度" }])).toBe("公開進度");
   });
 
   it("only allows the student rights and information departments to view case audits", () => {

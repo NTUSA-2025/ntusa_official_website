@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type PointerEvent as ReactPointerEvent } from "react";
 
 type TimelineEvent = {
   id: string;
@@ -57,6 +57,15 @@ function displayDate(value: string, locale: string) {
   });
 }
 
+function displayCompactDate(value: string, locale: string) {
+  return new Date(value).toLocaleDateString(locale, {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "UTC",
+  });
+}
+
 function displayDateTime(value: string, locale: string) {
   return new Date(value).toLocaleString(locale, {
     year: "numeric",
@@ -66,6 +75,17 @@ function displayDateTime(value: string, locale: string) {
     minute: "2-digit",
     timeZone: "Asia/Taipei",
   });
+}
+
+function todayInTaipei() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Taipei",
+  }).formatToParts(new Date());
+  const date = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  return `${date.year}-${date.month}-${date.day}`;
 }
 
 export default function PublicCaseManager({ caseRecord }: { caseRecord?: ManagedPublicCase }) {
@@ -79,21 +99,74 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     publicSummary: caseRecord.publicSummary,
     isPublic: caseRecord.isPublic,
   } : blankCase);
-  const [newEventIsPublic, setNewEventIsPublic] = useState(false);
   const [editingEvent, setEditingEvent] = useState<EventForm | null>(null);
+  const editingEventId = editingEvent?.id;
+  const editDateRef = useRef<HTMLInputElement>(null);
+  const historyListRef = useRef<HTMLOListElement>(null);
+  const historyDragOffsetRef = useRef<number | null>(null);
+  const [historyScrollbar, setHistoryScrollbar] = useState({ visible: false, thumbHeight: 0, thumbTop: 0 });
   const [message, setMessage] = useState<{
     key: "caseSaved" | "progressAdded" | "progressPublished" | "progressHidden" | "progressSaved" | "progressDeleted" | "saveFailed" | "addFailed" | "visibilityFailed" | "updateFailed" | "deleteFailed";
     errorCode?: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [savingCase, setSavingCase] = useState(false);
+
+  useEffect(() => {
+    if (editingEventId) editDateRef.current?.focus();
+  }, [editingEventId]);
+
+  const syncHistoryScrollbar = useCallback(() => {
+    const list = historyListRef.current;
+    if (!list) return;
+    const scrollRange = list.scrollHeight - list.clientHeight;
+    const visible = scrollRange > 1;
+    const thumbHeight = visible ? Math.max(28, list.clientHeight * list.clientHeight / list.scrollHeight) : 0;
+    const thumbTop = visible ? list.scrollTop / scrollRange * (list.clientHeight - thumbHeight) : 0;
+    setHistoryScrollbar((previous) => previous.visible === visible && Math.abs(previous.thumbHeight - thumbHeight) < 0.5 && Math.abs(previous.thumbTop - thumbTop) < 0.5
+      ? previous
+      : { visible, thumbHeight, thumbTop });
+  }, []);
+
+  useEffect(() => {
+    const list = historyListRef.current;
+    if (!list) return;
+    syncHistoryScrollbar();
+    const observer = new ResizeObserver(syncHistoryScrollbar);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [caseRecord?.timelineEvents, syncHistoryScrollbar]);
+
+  function scrollHistoryFromPointer(clientY: number, track: HTMLDivElement, offset: number) {
+    const list = historyListRef.current;
+    if (!list) return;
+    const trackRect = track.getBoundingClientRect();
+    const travel = trackRect.height - historyScrollbar.thumbHeight;
+    if (travel <= 0) return;
+    const position = Math.max(0, Math.min(travel, clientY - trackRect.top - offset));
+    list.scrollTop = position / travel * (list.scrollHeight - list.clientHeight);
+  }
+
+  function startHistoryScrollbarDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const trackRect = event.currentTarget.getBoundingClientRect();
+    const pointerY = event.clientY - trackRect.top;
+    const onThumb = pointerY >= historyScrollbar.thumbTop && pointerY <= historyScrollbar.thumbTop + historyScrollbar.thumbHeight;
+    const offset = onThumb ? pointerY - historyScrollbar.thumbTop : historyScrollbar.thumbHeight / 2;
+    historyDragOffsetRef.current = offset;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    scrollHistoryFromPointer(event.clientY, event.currentTarget, offset);
+  }
 
   const setField = <K extends keyof CaseForm>(field: K, value: CaseForm[K]) => {
     setForm((previous) => ({ ...previous, [field]: value }));
+    setMessage((previous) => previous?.key === "caseSaved" || previous?.key === "saveFailed" ? null : previous);
   };
 
   async function submitCase(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const publishOnCreate = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "public";
     setSubmitting(true);
+    setSavingCase(true);
     setMessage(null);
 
     try {
@@ -102,7 +175,9 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         {
           method: caseRecord ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(caseRecord
+            ? { publicSummary: form.publicSummary, isPublic: form.isPublic }
+            : { ...form, isPublic: publishOnCreate }),
         },
       );
       if (!response.ok) {
@@ -122,6 +197,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
       setMessage({ key: "saveFailed", errorCode: "REQUEST_FAILED" });
     } finally {
       setSubmitting(false);
+      setSavingCase(false);
     }
   }
 
@@ -131,6 +207,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
 
     const formElement = event.currentTarget;
     const data = new FormData(formElement);
+    const publish = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "public";
     setSubmitting(true);
     setMessage(null);
 
@@ -141,7 +218,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         body: JSON.stringify({
           occurredAt: data.get("occurredAt"),
           publicNote: data.get("publicNote"),
-          isPublic: data.get("isPublic") === "on",
+          isPublic: publish,
         }),
       });
       if (!response.ok) {
@@ -152,7 +229,6 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
       const createdEvent = await response.json() as TimelineEvent;
       if (createdEvent.isPublic) setField("currentSituation", createdEvent.publicNote);
       formElement.reset();
-      setNewEventIsPublic(false);
       setMessage({ key: "progressAdded" });
       router.refresh();
     } catch {
@@ -237,6 +313,12 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     }
   }
 
+  const caseSaveMessage = message?.key === "caseSaved" || message?.key === "saveFailed";
+  const messageText = message ? t(`notifications.${message.key}`, {
+    reason: t(t.has(`errors.${message.errorCode}`) ? `errors.${message.errorCode}` : "errors.REQUEST_FAILED"),
+  }) : null;
+  const caseSaveFeedback = savingCase ? t("savingCase") : caseSaveMessage ? messageText : null;
+
   return (
     <section className="case-manager">
       <Link className="case-manager-back" href="/student-rights/cases/manage">
@@ -253,98 +335,119 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         </p>
       </header>
 
-      {message ? (
+      {message && !caseSaveMessage ? (
         <p className="case-manager-message" role="status">
-          {t(`notifications.${message.key}`, {
-            reason: t(t.has(`errors.${message.errorCode}`) ? `errors.${message.errorCode}` : "errors.REQUEST_FAILED"),
-          })}
+          {messageText}
         </p>
       ) : null}
 
       <div className="case-manager-stack">
         {caseRecord ? (
-          <section className="case-manager-panel case-event-panel">
-            <h2>{t("addProgressTitle")}</h2>
-            <p className="caption">{t("progressHelp")}</p>
-            <form onSubmit={addEvent} className="case-event-form">
-              <label>
-                {t("progressDate")}
-                <input required name="occurredAt" type="date" />
-              </label>
-              <label className="event-note">
-                {t("progressContent")}
-                <textarea required name="publicNote" maxLength={4000} rows={4} />
-              </label>
-              <label className="case-switch">
-                <span className={!newEventIsPublic ? "active" : ""}>{t("private")}</span>
-                <input
-                  name="isPublic"
-                  type="checkbox"
-                  role="switch"
-                  aria-label={t("progressVisibility")}
-                  checked={newEventIsPublic}
-                  onChange={(event) => setNewEventIsPublic(event.target.checked)}
-                />
-                <span className={newEventIsPublic ? "active" : ""}>{t("public")}</span>
-              </label>
-              <button className="btn btn-primary" disabled={submitting}>{t("addProgress")}</button>
-            </form>
-
-            <div className="case-manager-section-heading">
-              <h2>{t("progressHistory")}</h2>
-              <span>{t("progressCount", { count: caseRecord.timelineEvents.length })}</span>
+          <div className="case-progress-layout">
+            <section className="case-manager-panel case-event-panel">
+              <h2>{editingEvent ? t("editProgressTitle") : t("addProgressTitle")}</h2>
+              {!caseRecord.isPublic ? <p className="case-visibility-hint" id="case-visibility-hint">{t("publishCaseFirst")}</p> : null}
+              {editingEvent ? (
+                <form key="edit-progress" onSubmit={updateEvent} className="case-event-form">
+                  <label>
+                    {t("progressDate")}
+                    <input ref={editDateRef} required type="date" value={editingEvent.occurredAt} onChange={(event) => setEditingEvent({ ...editingEvent, occurredAt: event.target.value })} />
+                  </label>
+                  <label className="event-note">
+                    {t("progressContent")}
+                    <textarea required maxLength={4000} rows={4} value={editingEvent.publicNote} onChange={(event) => setEditingEvent({ ...editingEvent, publicNote: event.target.value })} />
+                  </label>
+                  <label className="case-switch">
+                    <span className={!editingEvent.isPublic ? "active" : ""}>{t("private")}</span>
+                    <input type="checkbox" role="switch" aria-label={t("progressVisibility")} aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined} checked={editingEvent.isPublic} disabled={!caseRecord.isPublic || submitting} onChange={(event) => setEditingEvent({ ...editingEvent, isPublic: event.target.checked })} />
+                    <span className={editingEvent.isPublic ? "active" : ""}>{t("public")}</span>
+                  </label>
+                  <div className="case-manager-actions">
+                    <button className="btn btn-primary" disabled={submitting}>{t("saveProgress")}</button>
+                    <button className="btn btn-outline" type="button" disabled={submitting} onClick={() => setEditingEvent(null)}>{t("cancel")}</button>
+                  </div>
+                </form>
+              ) : (
+                <form key="add-progress" onSubmit={addEvent} className="case-event-form">
+                  <label>
+                    {t("progressDate")}
+                    <input required name="occurredAt" type="date" defaultValue={todayInTaipei()} />
+                  </label>
+                  <label className="event-note">
+                    {t("progressContent")}
+                    <textarea required name="publicNote" maxLength={4000} rows={4} />
+                  </label>
+                  <div className="case-manager-actions">
+                    <button className="btn btn-outline" type="submit" name="publication" value="draft" disabled={submitting}>{t("draft")}</button>
+                    <button className="btn btn-primary" type="submit" name="publication" value="public" disabled={!caseRecord.isPublic || submitting} aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}>{t("publishNow")}</button>
+                  </div>
+                </form>
+              )}
+            </section>
+            <div className="case-history-slot">
+              <section className="case-manager-panel case-history-panel">
+                <div className="case-manager-section-heading">
+                  <h2>{t("progressHistory")}</h2>
+                  <span>{t("progressCount", { count: caseRecord.timelineEvents.length })}</span>
+                </div>
+                {caseRecord.timelineEvents.length ? (
+                  <div className="case-history-scroll-area">
+                    <ol ref={historyListRef} className="case-manager-events" tabIndex={0} aria-label={t("progressHistory")} onScroll={syncHistoryScrollbar}>
+                      {caseRecord.timelineEvents.map((timelineEvent) => (
+                        <li className="case-event-row" key={timelineEvent.id}>
+                          <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
+                          <p title={timelineEvent.publicNote}>{timelineEvent.publicNote}</p>
+                          <button
+                            className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
+                            type="button"
+                            role="switch"
+                            aria-label={t("progressVisibility")}
+                            aria-checked={timelineEvent.isPublic}
+                            aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
+                            title={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
+                            disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
+                            onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
+                          >
+                            <span className="case-event-switch-track" aria-hidden="true" />
+                          </button>
+                          <div className="case-event-actions">
+                            <button className="case-event-icon-button" type="button" aria-label={t("edit")} title={t("edit")} disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>
+                              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z" /></svg>
+                            </button>
+                            <button className="case-event-icon-button case-event-delete" type="button" aria-label={t("delete")} title={t("delete")} disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>
+                              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    {historyScrollbar.visible ? (
+                      <div
+                        className="case-history-scrollbar"
+                        aria-hidden="true"
+                        onPointerDown={startHistoryScrollbarDrag}
+                        onPointerMove={(event) => {
+                          if (historyDragOffsetRef.current !== null) scrollHistoryFromPointer(event.clientY, event.currentTarget, historyDragOffsetRef.current);
+                        }}
+                        onPointerUp={(event) => {
+                          historyDragOffsetRef.current = null;
+                          event.currentTarget.releasePointerCapture(event.pointerId);
+                        }}
+                        onPointerCancel={() => { historyDragOffsetRef.current = null; }}
+                      >
+                        <span className="case-history-scrollbar-thumb" style={{ height: historyScrollbar.thumbHeight, transform: `translateY(${historyScrollbar.thumbTop}px)` }} />
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <p className="caption">{t("emptyProgress")}</p>
+                )}
+              </section>
             </div>
-            {caseRecord.timelineEvents.length ? (
-              <ol className="case-manager-events">
-                {caseRecord.timelineEvents.map((timelineEvent) => (
-                  <li key={timelineEvent.id}>
-                    {editingEvent?.id === timelineEvent.id ? (
-                      <form className="case-event-edit-form" onSubmit={updateEvent}>
-                        <label>
-                          {t("progressDate")}
-                          <input required type="date" value={editingEvent.occurredAt} onChange={(event) => setEditingEvent({ ...editingEvent, occurredAt: event.target.value })} />
-                        </label>
-                        <label>
-                          {t("progressContent")}
-                          <textarea required maxLength={4000} rows={4} value={editingEvent.publicNote} onChange={(event) => setEditingEvent({ ...editingEvent, publicNote: event.target.value })} />
-                        </label>
-                        <label className="case-switch">
-                          <span className={!editingEvent.isPublic ? "active" : ""}>{t("private")}</span>
-                          <input type="checkbox" role="switch" aria-label={t("progressVisibility")} checked={editingEvent.isPublic} onChange={(event) => setEditingEvent({ ...editingEvent, isPublic: event.target.checked })} />
-                          <span className={editingEvent.isPublic ? "active" : ""}>{t("public")}</span>
-                        </label>
-                        <div className="case-event-actions">
-                          <button className="btn btn-primary" disabled={submitting}>{t("saveProgress")}</button>
-                          <button className="btn btn-outline" type="button" disabled={submitting} onClick={() => setEditingEvent(null)}>{t("cancel")}</button>
-                        </div>
-                      </form>
-                    ) : (
-                      <>
-                        <div className="case-event-heading">
-                          <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt, locale)}</time>
-                          <label className="case-switch">
-                            <span className={!timelineEvent.isPublic ? "active" : ""}>{t("private")}</span>
-                            <input type="checkbox" role="switch" aria-label={t("progressVisibility")} checked={timelineEvent.isPublic} disabled={submitting} onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)} />
-                            <span className={timelineEvent.isPublic ? "active" : ""}>{t("public")}</span>
-                          </label>
-                        </div>
-                        <p>{timelineEvent.publicNote}</p>
-                        <div className="case-event-actions">
-                          <button className="btn btn-outline" type="button" disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>{t("edit")}</button>
-                          <button className="btn btn-danger" type="button" disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>{t("delete")}</button>
-                        </div>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p className="caption">{t("emptyProgress")}</p>
-            )}
-          </section>
+          </div>
         ) : null}
 
-        <form className="case-manager-panel" onSubmit={submitCase}>
+        <form className="case-manager-panel" onSubmit={submitCase} aria-busy={savingCase}>
           <h2>{isEditing ? t("caseDetails") : t("createCase")}</h2>
           {!caseRecord ? (
             <>
@@ -388,22 +491,34 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               />
             </label>
           ) : null}
-          <label className="case-switch">
-            <span className={!form.isPublic ? "active" : ""}>{t("private")}</span>
-            <input
-              type="checkbox"
-              role="switch"
-              aria-label={t("caseVisibility")}
-              checked={form.isPublic}
-              onChange={(event) => setField("isPublic", event.target.checked)}
-            />
-            <span className={form.isPublic ? "active" : ""}>{t("public")}</span>
-          </label>
+          {caseRecord ? (
+            <label className="case-switch">
+              <span className={!form.isPublic ? "active" : ""}>{t("private")}</span>
+              <input
+                type="checkbox"
+                role="switch"
+                aria-label={t("caseVisibility")}
+                checked={form.isPublic}
+                onChange={(event) => setField("isPublic", event.target.checked)}
+              />
+              <span className={form.isPublic ? "active" : ""}>{t("public")}</span>
+            </label>
+          ) : null}
           <div className="case-manager-actions">
-            <button className="btn btn-primary" disabled={submitting}>
-              {isEditing ? t("saveCase") : t("createCase")}
-            </button>
+            {caseRecord ? (
+              <button className="btn btn-primary" type="submit" disabled={submitting}>{savingCase ? t("savingCase") : t("saveCase")}</button>
+            ) : (
+              <>
+                <button className="btn btn-outline" type="submit" name="publication" value="draft" disabled={submitting}>{t("draft")}</button>
+                <button className="btn btn-primary" type="submit" name="publication" value="public" disabled={submitting}>{t("publishNow")}</button>
+              </>
+            )}
           </div>
+          {caseSaveFeedback ? (
+            <p className={`case-save-feedback${message?.key === "saveFailed" ? " error" : ""}`} role={message?.key === "saveFailed" ? "alert" : "status"}>
+              {caseSaveFeedback}
+            </p>
+          ) : null}
         </form>
 
       </div>

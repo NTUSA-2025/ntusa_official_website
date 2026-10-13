@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CaseValidationError, isStudentRightsCaseManager, parseCaseInput, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { CaseValidationError, isStudentRightsCaseManager, parseCaseUpdateInput, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +19,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   try {
     const { id } = await params;
-    const input = parseCaseInput(await request.json());
+    const input = parseCaseUpdateInput(await request.json());
     const actor = session.user.email.toLowerCase();
     const updated = await prisma.$transaction(async (tx) => {
       const before = await tx.publicCase.findUnique({ where: { id } });
@@ -30,9 +30,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
             orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
           })
         : null;
-      if (input.isPublic && !before.isPublic && !publishEvent) {
-        throw new CaseValidationError("PUBLIC_EVENT_REQUIRED");
-      }
       const after = await tx.publicCase.update({
         where: { id },
         data: {

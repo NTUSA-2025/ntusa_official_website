@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import prisma from "./prisma";
-import { isPublicCaseTableMissing } from "./student-rights-cases";
+import { isPublicCaseTableMissing, latestPublicProgress } from "./student-rights-cases";
 
 export interface HomePublicCase {
   id: string;
@@ -33,7 +33,7 @@ const getPublicCases = unstable_cache(
         id: caseRecord.id,
         number: caseRecord.number,
         openedAt: caseRecord.openedAt.toISOString(),
-        currentSituation: caseRecord.currentSituation,
+        currentSituation: latestPublicProgress(caseRecord.timelineEvents),
         publicSummary: caseRecord.publicSummary,
         updatedAt: caseRecord.updatedAt.toISOString(),
         timelineEvents: caseRecord.timelineEvents.map((event) => ({
