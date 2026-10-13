@@ -250,7 +250,7 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-editor-header { margin-bottom: 28px; }
 .case-manager-back { display: inline-block; margin-bottom: 20px; color: var(--color-brand-dark); font-weight: 700; }
 .case-manager-stack { display: grid; gap: 20px; }
-.case-progress-layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); align-items: start; gap: 20px; }
+.case-progress-layout { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 2fr); align-items: start; gap: 20px; }
 .case-progress-layout > .case-manager-panel { min-width: 0; }
 .case-manager-panel { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 24px; }
 .case-manager-panel h2 { color: var(--color-secondary); margin: 0 0 16px; }
@@ -323,7 +323,7 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-audit-target { font-size: 13px; }
 .case-audit-target a { color: var(--color-brand-dark); font-weight: 700; }
 .case-audit-meta { text-align: right; }
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .case-progress-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
