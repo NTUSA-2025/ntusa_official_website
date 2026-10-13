@@ -59,7 +59,7 @@ function displayDate(value: string, locale: string) {
 
 function displayCompactDate(value: string, locale: string) {
   return new Date(value).toLocaleDateString(locale, {
-    year: "numeric",
+    year: "2-digit",
     month: "2-digit",
     day: "2-digit",
     timeZone: "UTC",
@@ -327,25 +327,29 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               {caseRecord.timelineEvents.length ? (
                 <ol className="case-manager-events">
                   {caseRecord.timelineEvents.map((timelineEvent) => (
-                    <li key={timelineEvent.id}>
-                      <div className="case-event-heading">
-                        <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
-                        <button
-                          className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
-                          type="button"
-                          aria-label={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
-                          aria-pressed={timelineEvent.isPublic}
-                          aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
-                          disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
-                          onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
-                        >
-                          {t(timelineEvent.isPublic ? "public" : "private")}
-                        </button>
-                      </div>
-                      <p>{timelineEvent.publicNote}</p>
+                    <li className="case-event-row" key={timelineEvent.id}>
+                      <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
+                      <p title={timelineEvent.publicNote}>{timelineEvent.publicNote}</p>
+                      <button
+                        className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
+                        type="button"
+                        role="switch"
+                        aria-label={t("progressVisibility")}
+                        aria-checked={timelineEvent.isPublic}
+                        aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
+                        title={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
+                        disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
+                        onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
+                      >
+                        <span className="case-event-switch-track" aria-hidden="true" />
+                      </button>
                       <div className="case-event-actions">
-                        <button className="case-event-action" type="button" disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>{t("edit")}</button>
-                        <button className="case-event-action case-event-delete" type="button" disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>{t("delete")}</button>
+                        <button className="case-event-icon-button" type="button" aria-label={t("edit")} title={t("edit")} disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z" /></svg>
+                        </button>
+                        <button className="case-event-icon-button case-event-delete" type="button" aria-label={t("delete")} title={t("delete")} disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v7m4-7v7" /></svg>
+                        </button>
                       </div>
                     </li>
                   ))}
