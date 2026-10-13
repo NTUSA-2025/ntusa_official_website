@@ -250,7 +250,7 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-editor-header { margin-bottom: 28px; }
 .case-manager-back { display: inline-block; margin-bottom: 20px; color: var(--color-brand-dark); font-weight: 700; }
 .case-manager-stack { display: grid; gap: 20px; }
-.case-progress-layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: start; gap: 20px; }
+.case-progress-layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); align-items: start; gap: 20px; }
 .case-progress-layout > .case-manager-panel { min-width: 0; }
 .case-manager-panel { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 24px; }
 .case-manager-panel h2 { color: var(--color-secondary); margin: 0 0 16px; }
@@ -296,8 +296,6 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-event-heading time { color: var(--color-brand-dark); font-weight: 700; font-size: 14px; }
 .case-manager-panel .case-event-heading .case-switch { margin: 0; }
 .case-manager-events li p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 8px; }
-.case-event-edit-form { display: grid; gap: 12px; }
-.case-event-edit-form label { margin-bottom: 0; }
 .case-event-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .case-event-actions .btn { padding: 7px 14px; }
 .btn-danger { border: 1px solid #c53b3b; background: transparent; color: #a82727; }
