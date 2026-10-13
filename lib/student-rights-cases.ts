@@ -38,6 +38,15 @@ export function parseCaseInput(body: unknown) {
   };
 }
 
+export function parseCaseUpdateInput(body: unknown) {
+  if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
+  const input = body as Record<string, unknown>;
+  return {
+    publicSummary: requiredText(input.publicSummary, "PUBLIC_SUMMARY", 4000),
+    isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
+  };
+}
+
 export function parseEventInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;

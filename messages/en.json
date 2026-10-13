@@ -75,6 +75,7 @@
     "subject": "Case subject",
     "initialProgress": "Initial progress",
     "saveCase": "Save case details",
+    "savingCase": "Saving…",
     "deleteConfirm": "Delete this progress update? This action cannot be undone.",
     "notFoundTitle": "Case not found",
     "notFoundDescription": "This case may no longer exist, or the address may be incorrect.",

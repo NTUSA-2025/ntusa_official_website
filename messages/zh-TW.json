@@ -75,6 +75,7 @@
     "subject": "案件主旨",
     "initialProgress": "初始進度",
     "saveCase": "儲存案件資料",
+    "savingCase": "儲存中…",
     "deleteConfirm": "確定要刪除這筆進度嗎？此操作無法復原。",
     "notFoundTitle": "找不到案件",
     "notFoundDescription": "這筆案件可能已不存在，或網址不正確。",

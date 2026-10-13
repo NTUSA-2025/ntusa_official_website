@@ -99,6 +99,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     errorCode?: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [savingCase, setSavingCase] = useState(false);
 
   useEffect(() => {
     if (editingEventId) editDateRef.current?.focus();
@@ -147,12 +148,14 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
 
   const setField = <K extends keyof CaseForm>(field: K, value: CaseForm[K]) => {
     setForm((previous) => ({ ...previous, [field]: value }));
+    setMessage((previous) => previous?.key === "caseSaved" || previous?.key === "saveFailed" ? null : previous);
   };
 
   async function submitCase(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const publishOnCreate = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "public";
     setSubmitting(true);
+    setSavingCase(true);
     setMessage(null);
 
     try {
@@ -161,7 +164,9 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         {
           method: caseRecord ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...form, isPublic: caseRecord ? form.isPublic : publishOnCreate }),
+          body: JSON.stringify(caseRecord
+            ? { publicSummary: form.publicSummary, isPublic: form.isPublic }
+            : { ...form, isPublic: publishOnCreate }),
         },
       );
       if (!response.ok) {
@@ -181,6 +186,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
       setMessage({ key: "saveFailed", errorCode: "REQUEST_FAILED" });
     } finally {
       setSubmitting(false);
+      setSavingCase(false);
     }
   }
 
@@ -296,6 +302,12 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     }
   }
 
+  const caseSaveMessage = message?.key === "caseSaved" || message?.key === "saveFailed";
+  const messageText = message ? t(`notifications.${message.key}`, {
+    reason: t(t.has(`errors.${message.errorCode}`) ? `errors.${message.errorCode}` : "errors.REQUEST_FAILED"),
+  }) : null;
+  const caseSaveFeedback = savingCase ? t("savingCase") : caseSaveMessage ? messageText : null;
+
   return (
     <section className="case-manager">
       <Link className="case-manager-back" href="/student-rights/cases/manage">
@@ -312,11 +324,9 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         </p>
       </header>
 
-      {message ? (
+      {message && !caseSaveMessage ? (
         <p className="case-manager-message" role="status">
-          {t(`notifications.${message.key}`, {
-            reason: t(t.has(`errors.${message.errorCode}`) ? `errors.${message.errorCode}` : "errors.REQUEST_FAILED"),
-          })}
+          {messageText}
         </p>
       ) : null}
 
@@ -426,7 +436,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
           </div>
         ) : null}
 
-        <form className="case-manager-panel" onSubmit={submitCase}>
+        <form className="case-manager-panel" onSubmit={submitCase} aria-busy={savingCase}>
           <h2>{isEditing ? t("caseDetails") : t("createCase")}</h2>
           {!caseRecord ? (
             <>
@@ -485,7 +495,7 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
           ) : null}
           <div className="case-manager-actions">
             {caseRecord ? (
-              <button className="btn btn-primary" disabled={submitting}>{t("saveCase")}</button>
+              <button className="btn btn-primary" type="submit" disabled={submitting}>{savingCase ? t("savingCase") : t("saveCase")}</button>
             ) : (
               <>
                 <button className="btn btn-outline" type="submit" name="publication" value="draft" disabled={submitting}>{t("draft")}</button>
@@ -493,6 +503,11 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               </>
             )}
           </div>
+          {caseSaveFeedback ? (
+            <p className={`case-save-feedback${message?.key === "saveFailed" ? " error" : ""}`} role={message?.key === "saveFailed" ? "alert" : "status"}>
+              {caseSaveFeedback}
+            </p>
+          ) : null}
         </form>
 
       </div>

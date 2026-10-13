@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Session } from "next-auth";
-import { assertProgressVisibilityAllowed, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
+import { assertProgressVisibilityAllowed, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseUpdateInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
 
 function sessionFor(role: Session["user"]["role"], department: string): Session {
   return {
@@ -13,6 +13,12 @@ describe("student-rights public case input", () => {
   it("accepts case details without a manually entered number, source, or progress status", () => {
     expect(parseCaseInput({ openedAt: "2026-08-01", currentSituation: "已聯繫相關單位", publicSummary: "已匿名化摘要" }))
       .toMatchObject({ currentSituation: "已聯繫相關單位", isPublic: undefined });
+  });
+
+  it("edits only the visible case fields without requiring the initial progress", () => {
+    expect(parseCaseUpdateInput({ publicSummary: " 更新後主旨 ", isPublic: false }))
+      .toEqual({ publicSummary: "更新後主旨", isPublic: false });
+    expect(() => parseCaseUpdateInput({ publicSummary: "  " })).toThrow("PUBLIC_SUMMARY_REQUIRED");
   });
 
   it("rejects invalid dates and timestamps with a time component", () => {
