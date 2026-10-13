@@ -57,6 +57,8 @@
     "progressDate": "進度日期",
     "progressContent": "進度內容",
     "progressVisibility": "是否公開此筆進度",
+    "publishProgressAction": "公開此筆進度",
+    "hideProgressAction": "將此筆進度設為不公開",
     "publishCaseFirst": "案件公開後，進度才可以公開。請先在下方公開案件並儲存。",
     "caseVisibility": "是否公開此案件",
     "progressHistory": "進度紀錄",

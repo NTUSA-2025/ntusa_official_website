@@ -50,12 +50,13 @@ describe("case management translations", () => {
       expect(markup).toContain(`value="draft" name="publication">${t("draft")}</button>`);
       expect(markup).toContain(`value="public" name="publication">${t("publishNow")}</button>`);
       expect(markup).toContain(`${t("private")}</span><input type="checkbox" role="switch" aria-label="${t("caseVisibility")}"`);
-      expect(markup).toContain(t("progressVisibility"));
+      expect(markup).toContain(`aria-label="${t("hideProgressAction")}" aria-pressed="true"`);
       expect(markup).toContain(t("progressCount", { count: 1 }));
       expect(markup).toContain(t("delete"));
       expect(markup).toContain(caseRecord.publicSummary);
       expect(markup).toContain(caseRecord.timelineEvents[0].publicNote);
       expect(markup).toContain(locale === "en" ? "September 18, 2026" : "2026年9月18日");
+      expect(markup).toContain(locale === "en" ? ">09/18/2026</time>" : ">2026/09/18</time>");
       expect(markup).toContain(locale === "en" ? "October 2, 2026" : "2026年10月2日");
       expect(markup).not.toContain(t("caseDateHelp"));
     });
@@ -64,7 +65,7 @@ describe("case management translations", () => {
       const markup = render({ ...caseRecord, isPublic: false, timelineEvents: [{ ...caseRecord.timelineEvents[0], isPublic: false }] });
       expect(markup).toContain(t("publishCaseFirst"));
       expect(markup).toMatch(/<button[^>]*value="public"[^>]*disabled=""[^>]*aria-describedby="case-visibility-hint"/);
-      expect(markup.match(/aria-label="[^"]+" aria-describedby="case-visibility-hint"[^>]*disabled=""/g)).toHaveLength(1);
+      expect(markup).toContain(`aria-label="${t("publishProgressAction")}" aria-pressed="false" aria-describedby="case-visibility-hint" disabled=""`);
     });
 
     it(`renders usable notifications and confirmation messages in ${locale}`, () => {

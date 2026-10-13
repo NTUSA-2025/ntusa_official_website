@@ -294,23 +294,27 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-events li { border-top: 1px solid var(--color-border); padding-top: 12px; }
 .case-event-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .case-event-heading time { color: var(--color-brand-dark); font-weight: 700; font-size: 14px; }
-.case-manager-panel .case-event-heading .case-switch { margin: 0; }
 .case-manager-events li p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 8px; }
 .case-event-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.case-event-actions .btn { padding: 7px 14px; }
 .case-history-panel { padding: 20px 18px; }
 .case-history-panel .case-manager-section-heading { gap: 8px; }
 .case-history-panel .case-manager-section-heading h2 { font-size: 18px; }
 .case-history-panel .case-manager-section-heading > span { font-size: 13px; white-space: nowrap; }
-.case-history-panel .case-manager-events { gap: 18px; }
-.case-history-panel .case-manager-events li { padding-top: 16px; }
-.case-history-panel .case-event-heading { gap: 10px; }
-.case-history-panel .case-event-heading time { line-height: 1.5; }
-.case-history-panel .case-event-heading .case-switch { gap: 6px; font-size: 13px; }
-.case-history-panel .case-manager-events li p { margin: 12px 0 16px; font-size: 14px; line-height: 1.65; }
-.case-history-panel .case-event-actions .btn { padding: 7px 12px; font-size: 14px; }
-.btn-danger { border: 1px solid #c53b3b; background: transparent; color: #a82727; }
-.btn-danger:hover { background: #fff0f0; }
+.case-history-panel .case-manager-events { gap: 0; }
+.case-history-panel .case-manager-events li { padding: 14px 0 16px; }
+.case-history-panel .case-manager-events li:last-child { padding-bottom: 0; }
+.case-history-panel .case-event-heading { align-items: baseline; gap: 6px 8px; }
+.case-history-panel .case-event-heading time { font-size: 13px; line-height: 1.5; white-space: nowrap; }
+.case-event-visibility { min-height: 30px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); color: var(--color-secondary); padding: 4px 8px; font: inherit; font-size: 12px; font-weight: 700; line-height: 1.5; white-space: nowrap; cursor: pointer; }
+.case-event-visibility.public { border-color: var(--color-brand); background: var(--color-brand-light); color: var(--color-brand-dark); }
+.case-event-visibility:hover:not(:disabled) { border-color: var(--color-brand-dark); }
+.case-event-visibility:focus-visible, .case-event-action:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 3px; }
+.case-event-visibility:disabled, .case-event-action:disabled { opacity: .55; cursor: not-allowed; }
+.case-history-panel .case-manager-events li p { margin: 8px 0 6px; font-size: 14px; line-height: 1.55; }
+.case-history-panel .case-event-actions { gap: 14px; }
+.case-event-action { min-height: 30px; border: 0; background: none; color: var(--color-brand-dark); padding: 6px 0; font: inherit; font-size: 13px; font-weight: 700; line-height: 1.4; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.case-event-action:hover:not(:disabled) { text-decoration-thickness: 2px; }
+.case-event-delete { color: #a82727; }
 .case-audit-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
 .case-audit-list li { display: flex; gap: 10px; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 8px; font-size: 14px; }
 .case-audit-list span { color: var(--color-text-secondary); }

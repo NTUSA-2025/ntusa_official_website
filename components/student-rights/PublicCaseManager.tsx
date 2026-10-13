@@ -57,6 +57,15 @@ function displayDate(value: string, locale: string) {
   });
 }
 
+function displayCompactDate(value: string, locale: string) {
+  return new Date(value).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "UTC",
+  });
+}
+
 function displayDateTime(value: string, locale: string) {
   return new Date(value).toLocaleString(locale, {
     year: "numeric",
@@ -320,17 +329,23 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
                   {caseRecord.timelineEvents.map((timelineEvent) => (
                     <li key={timelineEvent.id}>
                       <div className="case-event-heading">
-                        <time dateTime={timelineEvent.occurredAt}>{displayDate(timelineEvent.occurredAt, locale)}</time>
-                        <label className="case-switch">
-                          <span className={!timelineEvent.isPublic ? "active" : ""}>{t("private")}</span>
-                          <input type="checkbox" role="switch" aria-label={t("progressVisibility")} aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined} checked={timelineEvent.isPublic} disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id} onChange={(event) => setEventVisibility(timelineEvent.id, event.target.checked)} />
-                          <span className={timelineEvent.isPublic ? "active" : ""}>{t("public")}</span>
-                        </label>
+                        <time dateTime={timelineEvent.occurredAt} title={displayDate(timelineEvent.occurredAt, locale)}>{displayCompactDate(timelineEvent.occurredAt, locale)}</time>
+                        <button
+                          className={`case-event-visibility${timelineEvent.isPublic ? " public" : ""}`}
+                          type="button"
+                          aria-label={t(timelineEvent.isPublic ? "hideProgressAction" : "publishProgressAction")}
+                          aria-pressed={timelineEvent.isPublic}
+                          aria-describedby={!caseRecord.isPublic ? "case-visibility-hint" : undefined}
+                          disabled={!caseRecord.isPublic || submitting || editingEvent?.id === timelineEvent.id}
+                          onClick={() => setEventVisibility(timelineEvent.id, !timelineEvent.isPublic)}
+                        >
+                          {t(timelineEvent.isPublic ? "public" : "private")}
+                        </button>
                       </div>
                       <p>{timelineEvent.publicNote}</p>
                       <div className="case-event-actions">
-                        <button className="btn btn-outline" type="button" disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>{t("edit")}</button>
-                        <button className="btn btn-danger" type="button" disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>{t("delete")}</button>
+                        <button className="case-event-action" type="button" disabled={submitting} onClick={() => setEditingEvent({ ...timelineEvent, occurredAt: timelineEvent.occurredAt.slice(0, 10) })}>{t("edit")}</button>
+                        <button className="case-event-action case-event-delete" type="button" disabled={submitting} onClick={() => deleteEvent(timelineEvent.id)}>{t("delete")}</button>
                       </div>
                     </li>
                   ))}

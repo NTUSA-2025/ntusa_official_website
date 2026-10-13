@@ -57,6 +57,8 @@
     "progressDate": "Progress date",
     "progressContent": "Progress details",
     "progressVisibility": "Publish this progress update",
+    "publishProgressAction": "Publish this progress update",
+    "hideProgressAction": "Unpublish this progress update",
     "publishCaseFirst": "Publish and save the case first. Then you can change the visibility of its progress updates.",
     "caseVisibility": "Publish this case",
     "progressHistory": "Progress history",
