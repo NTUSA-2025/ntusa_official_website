@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "npm run build && playwright test",
+    "test:e2e": "npm run build -- --webpack && playwright test",
+    "verify:release": "npm run build -- --webpack && npm test && playwright test && npm run lint",
     "db:migrate": "prisma migrate deploy",
     "db:seed-public-cases": "node scripts/seed-public-cases.mjs",
     "deploy:staging": "./scripts/deploy-staging.sh"
