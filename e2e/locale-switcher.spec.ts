@@ -150,7 +150,7 @@ test.describe("LocaleSwitcher E2E", () => {
     await expect(enBtn).toBeVisible();
     await enBtn.click();
 
-    // Wait for router.refresh to complete
+    // Wait for the document reload to apply the new cookie.
     await page.waitForFunction(() => {
       return document.documentElement.getAttribute("lang") === "en";
     }, { timeout: 8000 });
@@ -311,6 +311,28 @@ test.describe("LocaleSwitcher E2E", () => {
 
     const htmlLang = await page.locator("html").getAttribute("lang");
     expect(htmlLang, "html[lang] after drawer EN click").toBe("en");
+  });
+
+  test("mobile locale change clears pages cached in the previous language", async ({ page, context }) => {
+    await context.addCookies([{ name: "NEXT_LOCALE", value: "en", url: BASE }]);
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.goto(BASE, { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.locator('#drawer a[href="/cases"]').click();
+    await expect(page.locator("h1").first()).toContainText("Case");
+    await page.locator("header .nav-logo").click();
+    await expect(page.locator("h1").first()).toContainText("NTU Student Association");
+
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.locator(".locale-switcher--drawer button").filter({ hasText: "中" }).click();
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+    expect(await page.evaluate(() => performance.getEntriesByType("navigation")[0]?.toJSON().type)).toBe("reload");
+
+    await page.getByRole("button", { name: "開啟選單" }).click();
+    await page.locator('#drawer a[href="/cases"]').click();
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+    await expect(page.locator("h1").first()).toContainText("案件");
   });
 
   test("7. English navigation keeps the bilingual brand name", async ({

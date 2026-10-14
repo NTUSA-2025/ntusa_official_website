@@ -1,8 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { locales, type Locale } from "@/i18n/config";
 import { serializeLocaleCookie } from "@/lib/locale-cookie";
 
@@ -16,9 +14,7 @@ export default function LocaleSwitcher({
   onSwitch?: () => void;
 }) {
   const locale = useLocale() as Locale;
-  const router = useRouter();
   const t = useTranslations("common");
-  const [isPending, startTransition] = useTransition();
 
   const switchTo = (next: Locale) => {
     if (next === locale) return;
@@ -33,9 +29,10 @@ export default function LocaleSwitcher({
       serializeLocaleCookie(next, secure),
     );
     onSwitch?.();
-    startTransition(() => {
-      router.refresh();
-    });
+    // A route refresh only clears the current page's client cache. Reload the
+    // document so pages visited before the locale change cannot stay translated
+    // with the previous cookie value.
+    window.location.reload();
   };
 
   return (
@@ -53,7 +50,7 @@ export default function LocaleSwitcher({
             key={target}
             type="button"
             onClick={() => switchTo(target)}
-            disabled={isPending || isActive}
+            disabled={isActive}
             aria-pressed={isActive}
             aria-label={ariaLabel}
             className={`locale-switcher__option ${isActive ? "is-active" : ""}`}
