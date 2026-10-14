@@ -1,12 +1,14 @@
-import HomeClient from "../components/HomeClient";
-import { getCachedHomePostPreviews } from "../lib/get-cached-home-posts";
-import { getCachedMeetingMinutes } from "../lib/get-cached-meeting-minutes";
+import HomePageClient from "@/components/public-pages/HomePageClient";
+import LegacyHomeHashRedirect from "@/components/LegacyHomeHashRedirect";
+import { getCachedHomePostPreviews } from "@/lib/get-cached-home-posts";
 
 export default async function Home() {
-  const [formattedPosts, minutes] = await Promise.all([
-    getCachedHomePostPreviews(),
-    getCachedMeetingMinutes(),
-  ]);
-  return <HomeClient posts={formattedPosts} initialMinutes={minutes} />;
-}
+  const posts = await getCachedHomePostPreviews();
 
+  return (
+    <>
+      <LegacyHomeHashRedirect />
+      <HomePageClient posts={posts} />
+    </>
+  );
+}

@@ -139,6 +139,7 @@ npm run lint
 npm run test
 npm run test:e2e
 npm run build
+npm run verify:release
 ```
 
 ## 部署
@@ -151,9 +152,7 @@ npm run build
 部署前至少應先確認：
 
 ```bash
-npm run lint
-npm run test
-npm run build
+npm run verify:release
 ```
 
 ### 重新部署應用程式
@@ -161,6 +160,14 @@ npm run build
 ```bash
 pm2 restart ntusa-website
 ```
+
+### 資料庫遷移
+
+部署請使用 `npm run db:migrate`（Prisma Migrate），不要使用 `prisma db push`。`staging` 的 Vercel GitHub Actions 會使用 GitHub `staging` Environment Secret `STAGING_DATABASE_URL` 套用遷移，這個連線字串必須指向 Vercel Preview 使用的同一個資料庫；Vercel Secret 無法由 CLI 下載給 Actions。`main` 的自架部署會在建置及重啟 PM2 前，使用伺服器上的 `DATABASE_URL` 套用遷移。遷移失敗會停止部署，現有服務不會被重啟。
+
+首次讓既有正式資料庫使用 Prisma Migrate 時，先在正式伺服器執行 `npx prisma migrate status`。若資料表已存在但沒有遷移紀錄，須先依現有 schema 確認並 baseline；不可直接對既有資料庫重跑建表遷移。staging 與正式環境應設定各自的 `DATABASE_URL`。
+
+若無法從外部連進正式資料庫，請由可連入正式伺服器的人員，在包含本次 `prisma/migrations` 的候選發布版本、且 `DATABASE_URL` 指向正式庫的環境中，執行 `npx prisma migrate status` 與 `npx prisma db pull --print`，提供輸出以核對遷移紀錄及既有表結構；`--print` 只輸出 schema，不會覆寫 `schema.prisma`。請勿提供 `DATABASE_URL` 或其他密鑰。確認既有 `Post`、`MeetingMinute` 表與 baseline 遷移一致後，才能對正式庫執行 `npx prisma migrate resolve --applied 20260901000000_baseline_existing_schema`。最後再次執行 `npx prisma migrate status`，確認僅剩預期的新遷移，再推送 `main`。
 
 ### Caddy 注意事項
 

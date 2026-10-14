@@ -50,7 +50,7 @@ jobs:
         run: npm ci
 
       - name: Prepare test database
-        run: npx prisma db push
+        run: npm run db:migrate
 
       - name: Lint
         run: npm run lint

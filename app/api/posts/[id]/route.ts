@@ -6,6 +6,7 @@ import prisma from "../../../../lib/prisma";
 import { Resend } from "resend";
 import ApprovalNotificationEmail from "../../../../components/emails/ApprovalNotificationEmail";
 import ReviewRequestEmail from "../../../../components/emails/ReviewRequestEmail";
+import { sanitizePostHtml } from "@/lib/post-html";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -105,6 +106,7 @@ export async function PATCH(
         where: { id },
         data: { 
           status,
+          content: sanitizePostHtml(post.content),
           rejectReason: status === "REJECTED" ? rejectReason : null 
         },
       });
@@ -137,6 +139,13 @@ export async function PATCH(
       if (!isAuthor && !isDeptMember && !isReviewer) {
         return NextResponse.json({ errorCode: "FORBIDDEN_UPDATE" }, { status: 403 });
       }
+      if (content !== undefined && typeof content !== "string") {
+        return NextResponse.json({ errorCode: "TITLE_CONTENT_REQUIRED" }, { status: 400 });
+      }
+      const cleanContent = sanitizePostHtml(content === undefined ? post.content : content);
+      if (!cleanContent.trim()) {
+        return NextResponse.json({ errorCode: "TITLE_CONTENT_REQUIRED" }, { status: 400 });
+      }
 
       // [調整] 為了測試與安全性，只要是透過編輯器修改內容，一律回到 PENDING 重新審核
       // 除非是公關部在審核介面單純變更狀態 (那會走上面 status && !title 的分支)
@@ -146,7 +155,7 @@ export async function PATCH(
         where: { id },
         data: {
           title: title || post.title,
-          content: content || post.content,
+          content: cleanContent,
           coverImage: coverImage !== undefined ? coverImage : post.coverImage,
           status: finalStatus,
           rejectReason: null, // 清空先前的退回原因

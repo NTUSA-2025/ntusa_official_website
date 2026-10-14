@@ -9,13 +9,16 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "npm run build && playwright test",
+    "test:e2e": "npm run build -- --webpack && playwright test",
+    "verify:release": "npm run build -- --webpack && npm test && playwright test && npm run lint",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed-public-cases": "node scripts/seed-public-cases.mjs",
     "deploy:staging": "./scripts/deploy-staging.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1139.0",
     "@aws-sdk/s3-request-presigner": "^3.1139.0",
-    "@next/third-parties": "^16.3.6",
+    "@next/third-parties": "16.3.8",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@react-email/components": "^1.0.10",
@@ -26,13 +29,14 @@
     "@tiptap/starter-kit": "^3.31.3",
     "browser-image-compression": "^2.0.2",
     "googleapis": "^171.4.0",
-    "next": "16.3.6",
+    "next": "16.3.8",
     "next-auth": "^4.24.15",
     "next-intl": "^4.14.6",
     "pg": "^8.23.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "resend": "^6.28.1"
+    "resend": "^6.28.1",
+    "sanitize-html": "^2.18.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
@@ -42,8 +46,9 @@
     "@types/pg": "^8.18.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.2",
     "eslint": "^9",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "16.3.8",
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
     "typescript": "^5",
@@ -51,6 +56,11 @@
   },
   "overrides": {
     "baseline-browser-mapping": "^2.11.0",
-    "qs": "^6.16.0"
+    "deepmerge-ts": "8.0.0",
+    "mysql2": "3.23.1",
+    "postcss-selector-parser": "7.1.6",
+    "qs": "^6.16.0",
+    "sharp": "0.35.5",
+    "source-map-js": "1.2.2"
   }
 }

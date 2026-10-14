@@ -1,53 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { tabFromHashFragment } from "@/lib/home-active-tab";
 
 export default function Footer() {
-  const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("footer");
   const tNav = useTranslations("nav");
-  const [activeHash, setActiveHash] = useState("home");
 
-  useEffect(() => {
-    const updateActiveHash = () => setActiveHash(tabFromHashFragment(window.location.hash));
-
-    window.addEventListener("hashchange", updateActiveHash);
-    updateActiveHash();
-
-    return () => window.removeEventListener("hashchange", updateActiveHash);
-  }, [pathname]);
-
-  const handleLogoClick = () => {
-    router.push("/api/auth/signin");
-  };
-
-  const handleHashNavigation = (e: React.MouseEvent<HTMLAnchorElement>, hashId: string) => {
-    if (pathname === "/") {
-      e.preventDefault();
-      window.location.hash = hashId;
-    }
-  };
-
-  const isActive = (hashId: string) => pathname === "/" && activeHash === hashId;
+  const isActive = (href: string) => pathname === href;
 
   return (
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <button
-            type="button"
-            onClick={handleLogoClick}
-            aria-label={t("adminSignInAriaLabel")}
-            className="footer-logo-button"
-          >
-            <Image src="/NTUSA_Logo_1.png" alt={t("orgName")} width={32} height={32} className="logo-mark small" />
-          </button>
+          <Image src="/NTUSA_Logo_1.png" alt={t("orgName")} width={32} height={32} className="logo-mark small" />
           <div>
             <div className="footer-name">{t("orgName")}</div>
             <div className="footer-name-en">{t("orgNameEn")}</div>
@@ -62,21 +31,29 @@ export default function Footer() {
         </div>
 
         <div className="footer-links">
-          <Link href="/#home" onClick={(e) => handleHashNavigation(e, "home")} className={isActive("home") ? "active" : undefined}>
+          <Link href="/" className={isActive("/") ? "active" : undefined}>
             {tNav("home")}
           </Link>
-          <Link href="/#about" onClick={(e) => handleHashNavigation(e, "about")} className={isActive("about") ? "active" : undefined}>
+          <Link href="/about" className={isActive("/about") ? "active" : undefined}>
             {tNav("about")}
           </Link>
-          <Link href="/#announcements" onClick={(e) => handleHashNavigation(e, "announcements")} className={isActive("announcements") ? "active" : undefined}>
+          <Link href="/announcements" className={isActive("/announcements") ? "active" : undefined}>
             {tNav("rights")}
           </Link>
-         <Link href="/#forms" onClick={(e) => handleHashNavigation(e, "forms")} className={isActive("forms") ? "active" : undefined}>
+         <Link href="/forms" className={isActive("/forms") ? "active" : undefined}>
             {tNav("forms")}
           </Link>
-          <Link href="/#data" onClick={(e) => handleHashNavigation(e, "data")} className={isActive("data") ? "active" : undefined}>
+          <Link
+            href="/data"
+            className={isActive("/data") || isActive("/university-meeting-representatives") ? "active" : undefined}
+          >
             {tNav("data")}
           </Link>
+          {/* NextAuth serves this URL as HTML, so use a full page navigation. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/api/auth/signin">
+            {t("adminSignIn")}
+          </a>
         </div>
 
         <div className="footer-socials">

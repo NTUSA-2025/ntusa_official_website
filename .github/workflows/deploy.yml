@@ -21,6 +21,8 @@ jobs:
           npm install
 
           npm run build
+          # Keep the running version on the old schema if the build fails.
+          npm run db:migrate
           pm2 restart ntusa-website
 
       - name: Notify Discord on Success

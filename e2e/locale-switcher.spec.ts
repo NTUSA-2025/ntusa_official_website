@@ -1,21 +1,116 @@
 import { test, expect } from "@playwright/test";
 
-const BASE = "http://localhost:3000";
+const BASE = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 
 test.describe("LocaleSwitcher E2E", () => {
-  test("direct hash link keeps navbar navigation functional", async ({ page }) => {
+  for (const height of [667, 500]) {
+    test(`authenticated mobile drawer can scroll to language controls at ${height}px`, async ({ page, context }, testInfo) => {
+      await context.addCookies([{ name: "NEXT_LOCALE", value: "en", url: BASE }]);
+      await page.route("**/api/auth/session", (route) => route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: { name: "Test Admin", email: "test-admin@ntusa.ntu.edu.tw", role: "admin", department: "資訊部" },
+          expires: "2099-01-01T00:00:00.000Z",
+        }),
+      }));
+      await page.setViewportSize({ width: 375, height });
+      await page.goto(`${BASE}/about`, { waitUntil: "networkidle" });
+      const drawer = page.locator("#drawer");
+      await expect(drawer.locator('a[href="/student-rights/cases/manage"]')).toHaveCount(1);
+      await page.getByRole("button", { name: "Open menu", exact: true }).click();
+      await expect(drawer).toHaveClass(/\bopen\b/);
+
+      const closeButton = drawer.getByRole("button", { name: "Close menu", exact: true });
+      await expect(closeButton).toBeInViewport({ ratio: 1 });
+      const originalPageScroll = await page.evaluate(() => window.scrollY);
+      const nav = drawer.locator(".drawer-nav");
+      // Use user scrolling before clicking; Playwright's auto-scroll would mask this regression.
+      await nav.hover();
+      await page.mouse.wheel(0, 2000);
+      await expect.poll(() => nav.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+      const switcher = drawer.locator(".locale-switcher--drawer");
+      await expect(switcher).toBeInViewport({ ratio: 1 });
+      await expect(closeButton).toBeInViewport({ ratio: 1 });
+      expect(await page.evaluate(() => window.scrollY)).toBe(originalPageScroll);
+      const screenshotPath = testInfo.outputPath("scrolled-mobile-menu.png");
+      await page.screenshot({ path: screenshotPath });
+      await testInfo.attach("scrolled-mobile-menu", { path: screenshotPath, contentType: "image/png" });
+
+      await switcher.locator("button").filter({ hasText: "中" }).click();
+      await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+      await expect(drawer).not.toHaveClass(/\bopen\b/);
+      expect(await page.evaluate(() => document.body.style.overflow)).toBe("");
+    });
+  }
+
+  test("authenticated desktop nav groups management actions without overflow", async ({ page, context }) => {
+    await context.addCookies([
+      {
+        name: "NEXT_LOCALE",
+        value: "en",
+        url: BASE,
+      },
+    ]);
+    await page.route("**/api/auth/session", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          user: {
+            name: "Test Admin",
+            email: "test-admin@ntusa.ntu.edu.tw",
+            role: "admin",
+            department: "資訊部",
+          },
+          expires: "2099-01-01T00:00:00.000Z",
+        }),
+      });
+    });
+    await page.setViewportSize({ width: 1024, height: 800 });
+    await page.goto(`${BASE}/about`, { waitUntil: "networkidle" });
+
+    const adminTrigger = page.locator(".nav-admin-trigger");
+    await expect(adminTrigger).toBeVisible();
+    await expect(adminTrigger).toHaveText(/Admin/);
+
+    const navBounds = await page.locator("header.navbar").evaluate((header) => {
+      const links = header.querySelector(".nav-links");
+      if (!(links instanceof HTMLElement)) throw new Error("Desktop navigation is missing");
+      return {
+        headerLeft: header.getBoundingClientRect().left,
+        headerRight: header.getBoundingClientRect().right,
+        linksLeft: links.getBoundingClientRect().left,
+        linksRight: links.getBoundingClientRect().right,
+      };
+    });
+    expect(navBounds.linksLeft).toBeGreaterThanOrEqual(navBounds.headerLeft);
+    expect(navBounds.linksRight).toBeLessThanOrEqual(navBounds.headerRight);
+
+    await adminTrigger.click();
+    const adminMenu = page.locator("#desktop-admin-menu");
+    await expect(adminMenu).toBeVisible();
+    await expect(adminMenu.locator('[role="menuitem"]')).toHaveCount(5);
+    await expect(adminMenu.locator('a[href="/editor"]')).toHaveCount(1);
+    await expect(adminMenu.locator('a[href="/review"]')).toHaveCount(1);
+    await expect(adminMenu.locator('a[href="/minutes/upload"]')).toHaveCount(1);
+    await expect(adminMenu.locator('a[href="/student-rights/cases/manage"]')).toHaveCount(1);
+    await expect(adminMenu.locator('a[href="/student-rights/cases/audit"]')).toHaveCount(0);
+  });
+
+  test("legacy hash redirects and navbar uses path routes", async ({ page }) => {
     await page.goto(`${BASE}/#about`, { waitUntil: "networkidle" });
 
-    await expect(page).toHaveURL(`${BASE}/#about`);
-    await expect(page.locator("#about")).toHaveClass(/\bactive\b/);
+    await expect(page).toHaveURL(`${BASE}/about`);
+    await expect(page.locator('header a[href="/about"]')).toHaveClass(/\bactive\b/);
 
-    const formsLink = page.locator('header a[href="/#forms"]');
+    const formsLink = page.locator('header a[href="/forms"]');
     await expect(formsLink).toHaveCount(1);
     await formsLink.click();
 
-    await expect(page).toHaveURL(`${BASE}/#forms`);
-    await expect(page.locator("#forms")).toHaveClass(/\bactive\b/);
-    await expect(page.locator("#about")).not.toHaveClass(/\bactive\b/);
+    await expect(page).toHaveURL(`${BASE}/forms`);
+    await expect(formsLink).toHaveClass(/\bactive\b/);
+    await expect(page.locator('header a[href="/about"]')).not.toHaveClass(/\bactive\b/);
   });
 
   test("1. Default landing — zh-TW", async ({ page }) => {
@@ -55,7 +150,7 @@ test.describe("LocaleSwitcher E2E", () => {
     await expect(enBtn).toBeVisible();
     await enBtn.click();
 
-    // Wait for router.refresh to complete
+    // Wait for the document reload to apply the new cookie.
     await page.waitForFunction(() => {
       return document.documentElement.getAttribute("lang") === "en";
     }, { timeout: 8000 });
@@ -216,6 +311,28 @@ test.describe("LocaleSwitcher E2E", () => {
 
     const htmlLang = await page.locator("html").getAttribute("lang");
     expect(htmlLang, "html[lang] after drawer EN click").toBe("en");
+  });
+
+  test("mobile locale change clears pages cached in the previous language", async ({ page, context }) => {
+    await context.addCookies([{ name: "NEXT_LOCALE", value: "en", url: BASE }]);
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.goto(BASE, { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.locator('#drawer a[href="/cases"]').click();
+    await expect(page.locator("h1").first()).toContainText("Case");
+    await page.locator("header .nav-logo").click();
+    await expect(page.locator("h1").first()).toContainText("NTU Student Association");
+
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.locator(".locale-switcher--drawer button").filter({ hasText: "中" }).click();
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+    expect(await page.evaluate(() => performance.getEntriesByType("navigation")[0]?.toJSON().type)).toBe("reload");
+
+    await page.getByRole("button", { name: "開啟選單" }).click();
+    await page.locator('#drawer a[href="/cases"]').click();
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+    await expect(page.locator("h1").first()).toContainText("案件");
   });
 
   test("7. English navigation keeps the bilingual brand name", async ({

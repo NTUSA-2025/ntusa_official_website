@@ -4,6 +4,7 @@ import { authOptions } from "../../lib/auth";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { proxyR2Url, proxyR2Html } from "@/lib/r2-proxy";
+import { sanitizePostHtml } from "@/lib/post-html";
 import ReviewButtons from "../../components/ReviewButtons";
 import Link from "next/link";
 import type { Post } from "@prisma/client";
@@ -141,7 +142,7 @@ export default async function ReviewDashboard() {
                   <span className="text-sm text-gray-500 font-medium block mb-2">{t("contentLabel")}</span>
                   <div
                     className="tiptap prose max-w-none bg-white p-4 border rounded-md"
-                    dangerouslySetInnerHTML={{ __html: proxyR2Html(post.content) }}
+                    dangerouslySetInnerHTML={{ __html: sanitizePostHtml(proxyR2Html(post.content)) }}
                   />
 
                   <div className="mt-4 text-right">
