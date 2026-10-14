@@ -4,6 +4,7 @@ import { redirect, notFound } from "next/navigation";
 import prisma from "../../../lib/prisma";
 import Editor from "../../../components/Editor";
 import { getTranslations } from "next-intl/server";
+import { sanitizePostHtml } from "@/lib/post-html";
 
 export default async function EditPage({
   params,
@@ -51,7 +52,7 @@ export default async function EditPage({
         initialData={{
           id: post.id,
           title: post.title,
-          content: post.content,
+          content: sanitizePostHtml(post.content),
           coverImage: post.coverImage,
           status: post.status,
         }}

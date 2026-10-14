@@ -4,6 +4,7 @@ import { authOptions } from "../../../lib/auth";
 import prisma from "../../../lib/prisma";
 import { Resend } from "resend";
 import ReviewRequestEmail from "../../../components/emails/ReviewRequestEmail";
+import { sanitizePostHtml } from "@/lib/post-html";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -26,7 +27,11 @@ export async function POST(request: Request) {
     // [修正] 移除 authorEmail，不再信任前端傳來的身分
     const { title, content, coverImage } = body;
 
-    if (!title || !content) {
+    if (typeof title !== "string" || !title.trim() || typeof content !== "string") {
+      return NextResponse.json({ errorCode: "TITLE_CONTENT_REQUIRED" }, { status: 400 });
+    }
+    const cleanContent = sanitizePostHtml(content);
+    if (!cleanContent.trim()) {
       return NextResponse.json({ errorCode: "TITLE_CONTENT_REQUIRED" }, { status: 400 });
     }
 
@@ -37,7 +42,7 @@ export async function POST(request: Request) {
     const newPost = await prisma.post.create({
       data: {
         title,
-        content,
+        content: cleanContent,
         coverImage,
         authorEmail, // 使用後端取得的信箱
         authorName: session.user.name, // 存入發文者的名字
@@ -78,7 +83,10 @@ export async function GET() {
       where: { status: "APPROVED" },
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json(posts);
+    return NextResponse.json(posts.map((post) => ({
+      ...post,
+      content: sanitizePostHtml(post.content),
+    })));
   } catch (error) {
     console.error("讀取文章失敗:", error);
     return NextResponse.json({ errorCode: "INTERNAL_ERROR" }, { status: 500 });
