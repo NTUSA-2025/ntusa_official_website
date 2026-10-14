@@ -3,6 +3,15 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../lib/auth";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_REQUEST_BYTES = 6 * 1024 * 1024;
+
+function isWebp(buffer: Buffer): boolean {
+  return buffer.length >= 12
+    && buffer.toString("ascii", 0, 4) === "RIFF"
+    && buffer.toString("ascii", 8, 12) === "WEBP";
+}
+
 // 初始化 R2 客戶端
 const s3Client = new S3Client({
   region: "auto",
@@ -20,18 +29,30 @@ export async function POST(request: Request) {
       return NextResponse.json({ errorCode: "UNAUTHORIZED" }, { status: 401 });
     }
 
-    const formData = await request.formData();
-    const file = formData.get("image") as File;
+    const contentLength = Number(request.headers.get("content-length"));
+    if (contentLength > MAX_REQUEST_BYTES) {
+      return NextResponse.json({ errorCode: "FILE_TOO_LARGE" }, { status: 413 });
+    }
 
-    if (!file) {
+    const formData = await request.formData();
+    const file = formData.get("image");
+
+    if (!(file instanceof File)) {
       return NextResponse.json({ errorCode: "NO_FILE" }, { status: 400 });
+    }
+    if (file.size === 0 || file.size > MAX_IMAGE_BYTES) {
+      return NextResponse.json({ errorCode: "FILE_TOO_LARGE" }, { status: 413 });
+    }
+    if (file.type !== "image/webp") {
+      return NextResponse.json({ errorCode: "INVALID_FILE_TYPE" }, { status: 415 });
     }
 
     // 將 File 轉換為 Buffer 以供 SDK 使用
     const buffer = Buffer.from(await file.arrayBuffer());
-    // 產生唯一的檔案名稱
-    const fileExtension = file.type.split("/")[1] || "webp";
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
+    if (!isWebp(buffer)) {
+      return NextResponse.json({ errorCode: "INVALID_IMAGE" }, { status: 400 });
+    }
+    const fileName = `${crypto.randomUUID()}.webp`;
 
     // 3. 呼叫 R2 S3 API 上傳
     await s3Client.send(
@@ -39,7 +60,7 @@ export async function POST(request: Request) {
         Bucket: process.env.R2_BUCKET_NAME,
         Key: fileName,
         Body: buffer,
-        ContentType: file.type,
+        ContentType: "image/webp",
       })
     );
 
