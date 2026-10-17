@@ -5,7 +5,7 @@ describe("university meeting representatives data", () => {
   it("includes all meetings and groups additional representatives", () => {
     const meetings = getUniversityMeetings();
 
-    expect(meetings).toHaveLength(50);
+    expect(meetings).toHaveLength(49);
     expect(new Set(meetings.map((meeting) => meeting.id)).size).toBe(meetings.length);
     expect(meetings.find((meeting) => meeting.name === "行政E化工作小組會議")?.representatives)
       .toHaveLength(2);
