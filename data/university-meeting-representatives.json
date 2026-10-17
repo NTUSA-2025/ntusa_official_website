@@ -1,20 +1,5 @@
 [
   {
-    "id": "meeting-1",
-    "name": "校長月會",
-    "representatives": [
-      {
-        "name": "會長 社會科學院 孫傳哲",
-        "email": "sun.thuan.tiat@ntusa.ntu.edu.tw"
-      }
-    ],
-    "otherRepresentatives": "學代會1、研協會1",
-    "subject": "校長與各級主管皆會到場，學生代表可於兩週前提案",
-    "frequency": "每月1次",
-    "regulationUrl": "",
-    "minutesUrl": ""
-  },
-  {
     "id": "meeting-2",
     "name": "校務會議",
     "representatives": [
