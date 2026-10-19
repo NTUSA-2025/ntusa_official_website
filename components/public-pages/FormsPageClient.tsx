@@ -22,13 +22,6 @@ export default function FormsPageClient() {
           <h2 className="section-title">{tForms("complaintTitle")}</h2>
         </div>
         <div className="links-grid">
-          <a href="https://student.ju.mp/" target="_blank" rel="noopener noreferrer" className="link-card fade-up-target">
-            <div className="link-card-body">
-              <h3 className="link-card-title">{tForms("studentRightsFormTitle")}</h3>
-              <p className="link-card-desc">{tForms("studentRightsFormDesc")}</p>
-            </div>
-            <span className="link-card-arrow">→</span>
-          </a>
           <a
             href="https://line.me/R/ti/p/%40ntusa"
             target="_blank"
@@ -43,6 +36,13 @@ export default function FormsPageClient() {
             <div className="link-card-body">
               <h3 className="link-card-title">{tForms("lineCardTitle")}</h3>
               <p className="link-card-desc">{tForms("lineCardDesc")}</p>
+            </div>
+            <span className="link-card-arrow">→</span>
+          </a>
+          <a href="https://student.ju.mp/" target="_blank" rel="noopener noreferrer" className="link-card fade-up-target">
+            <div className="link-card-body">
+              <h3 className="link-card-title">{tForms("studentRightsFormTitle")}</h3>
+              <p className="link-card-desc">{tForms("studentRightsFormDesc")}</p>
             </div>
             <span className="link-card-arrow">→</span>
           </a>
