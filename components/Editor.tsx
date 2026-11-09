@@ -55,6 +55,9 @@ export default function Editor({ authorEmail, department, userRole, initialData 
         heading: {
           levels: [1, 2, 3],
         },
+        link: {
+          openOnClick: false,
+        },
       }),
       Image,
       Placeholder.configure({
@@ -107,6 +110,33 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     const url = await uploadSelectedImage(file);
     if (url) editor.chain().focus().setImage({ src: proxyR2Url(url) || url }).run();
     input.value = "";
+  };
+
+  const onInsertLink = () => {
+    if (!editor) return;
+
+    const isEmptySelection = editor.state.selection.empty;
+    const isEditingLink = editor.isActive("link");
+    const input = window.prompt(tToolbar("linkPrompt"), editor.getAttributes("link").href || "https://");
+    if (input === null) return;
+
+    let href: string;
+    try {
+      const url = new URL(input.trim());
+      if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("Invalid protocol");
+      href = url.href;
+    } catch {
+      window.alert(tToolbar("invalidLink"));
+      return;
+    }
+
+    if (isEmptySelection && isEditingLink) {
+      editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
+    } else if (isEmptySelection) {
+      editor.chain().focus().insertContent({ type: "text", text: href, marks: [{ type: "link", attrs: { href } }] }).run();
+    } else {
+      editor.chain().focus().setLink({ href }).run();
+    }
   };
 
   const handleSubmit = async () => {
@@ -228,6 +258,12 @@ export default function Editor({ authorEmail, department, userRole, initialData 
            {/* 歷史紀錄 */}
            <button onClick={() => editor?.chain().focus().undo().run()} disabled={!editor?.can().undo()} className="px-2 py-1.5 rounded text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-30">{tToolbar("undo")}</button>
            <button onClick={() => editor?.chain().focus().redo().run()} disabled={!editor?.can().redo()} className="px-2 py-1.5 rounded text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-30">{tToolbar("redo")}</button>
+
+           <div className="w-px bg-gray-300 mx-1 my-1"></div>
+
+           {/* 連結 */}
+           <button onClick={onInsertLink} className={getButtonClass(editor?.isActive('link'))}>{tToolbar("insertLink")}</button>
+           <button onClick={() => editor?.chain().focus().extendMarkRange("link").unsetLink().run()} disabled={!editor?.isActive('link')} className="px-2 py-1.5 rounded text-sm font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-30">{tToolbar("removeLink")}</button>
 
            <div className="flex-grow"></div> {/* 將插入圖片推到最右邊 */}
 

@@ -363,6 +363,10 @@
       "hr": "Divider",
       "undo": "Undo",
       "redo": "Redo",
+      "insertLink": "Insert link",
+      "removeLink": "Remove link",
+      "linkPrompt": "Enter the full URL (including https://)",
+      "invalidLink": "Enter a valid http or https URL",
       "insertImage": "Insert image",
       "uploadingImage": "Uploading…"
     },

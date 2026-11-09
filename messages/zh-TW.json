@@ -363,6 +363,10 @@
       "hr": "分隔線",
       "undo": "復原",
       "redo": "重做",
+      "insertLink": "插入連結",
+      "removeLink": "移除連結",
+      "linkPrompt": "請輸入完整網址（含 https://）",
+      "invalidLink": "請輸入有效的 http 或 https 網址",
       "insertImage": "插入圖片",
       "uploadingImage": "圖片上傳中..."
     },

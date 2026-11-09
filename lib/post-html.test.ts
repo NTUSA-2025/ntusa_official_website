@@ -7,6 +7,16 @@ describe("sanitizePostHtml", () => {
     expect(sanitizePostHtml(html)).toBe(html.replaceAll("<br>", "<br />").replaceAll("<hr>", "<hr />").replaceAll('alt="Photo">', 'alt="Photo" />'));
   });
 
+  it("preserves safe article links without editor-only attributes", () => {
+    const html = '<p>See <a href="https://example.com/events?q=1" target="_blank" rel="noopener noreferrer nofollow">events</a></p>';
+    expect(sanitizePostHtml(html)).toBe('<p>See <a href="https://example.com/events?q=1">events</a></p>');
+  });
+
+  it("removes unsafe link destinations and event handlers", () => {
+    const html = '<p><a href="javascript:alert(1)">bad</a><a href="//evil.example">relative</a><a href="https://example.com" onclick="alert(1)">safe</a></p>';
+    expect(sanitizePostHtml(html)).toBe('<p><a>bad</a><a>relative</a><a href="https://example.com">safe</a></p>');
+  });
+
   it("drops scripts, event handlers, styles, and unsupported elements", () => {
     const html = '<div><p class="unsafe" style="background:url(javascript:alert(1))" onclick="alert(1)">Safe</p><script>alert(1)</script><svg onload="alert(1)"><text>bad</text></svg><img src="/r2/photo.png" onerror="alert(1)" alt="Photo"></div>';
     expect(sanitizePostHtml(html)).toBe('<p>Safe</p><img src="/r2/photo.png" alt="Photo" />');

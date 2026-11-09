@@ -40,6 +40,15 @@ describe("post API HTML cleaning", () => {
     expect(vi.mocked(prisma.post.create).mock.calls[0][0].data.content).toBe("<p>Hello</p><img />");
   });
 
+  it("keeps a safe link when creating an announcement", async () => {
+    const response = await POST(new Request("http://localhost/api/posts", {
+      method: "POST",
+      body: JSON.stringify({ title: "New", content: '<p>Read <a href="https://example.com/info" target="_blank">details</a></p>' }),
+    }));
+    expect(response.status).toBe(201);
+    expect(vi.mocked(prisma.post.create).mock.calls[0][0].data.content).toBe('<p>Read <a href="https://example.com/info">details</a></p>');
+  });
+
   it("rejects a create request whose only content is a script", async () => {
     const response = await POST(new Request("http://localhost/api/posts", {
       method: "POST",

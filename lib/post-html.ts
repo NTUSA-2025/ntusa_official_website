@@ -5,11 +5,12 @@ import sanitizeHtml from "sanitize-html";
 const postHtmlOptions: sanitizeHtml.IOptions = {
   allowedTags: [
     "p", "br", "h1", "h2", "h3", "strong", "em", "s", "strike",
-    "blockquote", "ul", "ol", "li", "pre", "code", "hr", "img",
+    "blockquote", "ul", "ol", "li", "pre", "code", "hr", "img", "a",
   ],
   allowedAttributes: {
     ol: ["start"],
     img: ["src", "alt", "title"],
+    a: ["href"],
   },
   allowedSchemes: ["http", "https"],
   allowProtocolRelative: false,
