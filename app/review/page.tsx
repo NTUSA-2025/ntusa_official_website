@@ -4,7 +4,7 @@ import { authOptions } from "../../lib/auth";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { proxyR2Url, proxyR2Html } from "@/lib/r2-proxy";
-import { sanitizePostHtml } from "@/lib/post-html";
+import { getPostLinkDestinations, sanitizePostHtml } from "@/lib/post-html";
 import ReviewButtons from "../../components/ReviewButtons";
 import Link from "next/link";
 import type { Post } from "@prisma/client";
@@ -23,6 +23,25 @@ const StatusBadge = ({ status, labels }: { status: string; labels: StatusLabels 
       return <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">{labels.pending}</span>;
   }
 };
+
+function PostLinkDestinations({ content, label, internalLabel }: { content: string; label: string; internalLabel: string }) {
+  const destinations = getPostLinkDestinations(content);
+  if (destinations.length === 0) return null;
+
+  return (
+    <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3">
+      <p className="text-xs font-semibold text-amber-900">{label}</p>
+      <ul className="mt-2 space-y-2">
+        {destinations.map(({ href, hostname }) => (
+          <li key={href} className="text-xs text-gray-700">
+            <strong className="block text-amber-900">{hostname || internalLabel}</strong>
+            <span className="block break-all">{href}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default async function ReviewDashboard() {
   // 1. 權限驗證
@@ -96,6 +115,7 @@ export default async function ReviewDashboard() {
                       </p>
                     )}
                     <p><span className="font-medium">{t("submittedAtLabel")}</span> {new Date(post.createdAt).toLocaleString(t("dateLocale"), { timeZone: "Asia/Taipei" })}</p>
+                    {isPR && <PostLinkDestinations content={post.content} label={t("linkDestinationsLabel")} internalLabel={t("internalLinkLabel")} />}
                     {post.status === "REJECTED" && post.rejectReason && (
                       <p className="mt-2 p-2 bg-red-50 border border-red-100 rounded text-red-700">
                         <span className="font-bold">{t("rejectReasonLabel")}</span> {post.rejectReason}

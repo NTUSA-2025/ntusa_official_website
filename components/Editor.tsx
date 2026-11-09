@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { proxyR2Html, proxyR2Url, unproxyR2Html } from "@/lib/r2-proxy";
 import { uploadImage, type ImageUploadErrorCode } from "../lib/upload";
+import { hasLinkCredentials } from "@/lib/post-link-url";
 
 interface EditorProps {
   authorEmail: string;
@@ -38,6 +39,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   const [title, setTitle] = useState(initialData?.title || "");
   const [coverImage, setCoverImage] = useState<string | null>(initialData?.coverImage || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [linkSelection, setLinkSelection] = useState<LinkSelection | null>(null);
   const [linkText, setLinkText] = useState("");
@@ -164,6 +166,10 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     try {
       const url = new URL(candidate);
       if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("Invalid protocol");
+      if (hasLinkCredentials(candidate)) {
+        setLinkError(tToolbar("credentialedLink"));
+        return;
+      }
       href = url.href;
     } catch {
       setLinkError(tToolbar("invalidLink"));
@@ -192,6 +198,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     }
 
     setIsSubmitting(true);
+    setSubmitError("");
     try {
       const isEdit = !!initialData?.id;
       const url = isEdit ? `/api/posts/${initialData.id}` : "/api/posts";
@@ -224,6 +231,11 @@ export default function Editor({ authorEmail, department, userRole, initialData 
         alert(isEdit && targetStatus === "APPROVED" ? t("updateSuccessNoReview") || t("updateSuccess") : (isEdit ? t("updateSuccess") : t("submitSuccess")));
         router.push(isEdit ? "/review" : "/");
       } else {
+        const errorResponse = await res.json().catch(() => null);
+        if (errorResponse?.errorCode === "UNSAFE_LINK_URL") {
+          setSubmitError(t("unsafeLinkInContent"));
+          return;
+        }
         throw new Error(isEdit ? t("updateFailedInternal") : t("submitFailedInternal"));
       }
     } catch (error) {
@@ -366,7 +378,8 @@ export default function Editor({ authorEmail, department, userRole, initialData 
       </div>
 
       {/* 提交按鈕 */}
-      <div className="flex justify-end mt-4">
+      <div className="flex flex-col items-end gap-3 mt-4">
+        {submitError && <p role="alert" className="text-sm text-red-700">{submitError}</p>}
         <button
           onClick={handleSubmit}
           disabled={isSubmitting || isUploadingImage || !title.trim()}

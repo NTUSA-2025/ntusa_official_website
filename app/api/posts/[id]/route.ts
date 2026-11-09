@@ -6,7 +6,7 @@ import prisma from "../../../../lib/prisma";
 import { Resend } from "resend";
 import ApprovalNotificationEmail from "../../../../components/emails/ApprovalNotificationEmail";
 import ReviewRequestEmail from "../../../../components/emails/ReviewRequestEmail";
-import { sanitizePostHtml } from "@/lib/post-html";
+import { hasCredentialedPostLink, sanitizePostHtml } from "@/lib/post-html";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -141,6 +141,9 @@ export async function PATCH(
       }
       if (content !== undefined && typeof content !== "string") {
         return NextResponse.json({ errorCode: "TITLE_CONTENT_REQUIRED" }, { status: 400 });
+      }
+      if (content !== undefined && hasCredentialedPostLink(content)) {
+        return NextResponse.json({ errorCode: "UNSAFE_LINK_URL" }, { status: 400 });
       }
       const cleanContent = sanitizePostHtml(content === undefined ? post.content : content);
       if (!cleanContent.trim()) {
