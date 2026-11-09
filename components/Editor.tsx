@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -23,6 +23,13 @@ interface EditorProps {
   };
 }
 
+interface LinkSelection {
+  from: number;
+  to: number;
+  text: string;
+  isExistingLink: boolean;
+}
+
 export default function Editor({ authorEmail, department, userRole, initialData }: EditorProps) {
   const router = useRouter();
   const t = useTranslations("editor");
@@ -32,6 +39,10 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   const [coverImage, setCoverImage] = useState<string | null>(initialData?.coverImage || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [linkSelection, setLinkSelection] = useState<LinkSelection | null>(null);
+  const [linkText, setLinkText] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkError, setLinkError] = useState("");
 
   const uploadErrorMessages: Record<ImageUploadErrorCode, string> = {
     emptyFile: t("uploadErrors.emptyFile"),
@@ -47,6 +58,14 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const linkTextInputRef = useRef<HTMLInputElement>(null);
+  const linkUrlInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!linkSelection) return;
+    const input = linkSelection.from === linkSelection.to ? linkTextInputRef : linkUrlInputRef;
+    input.current?.focus();
+  }, [linkSelection]);
 
   // 初始化 Tiptap 編輯器
   const editor = useEditor({
@@ -112,31 +131,58 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     input.value = "";
   };
 
-  const onInsertLink = () => {
+  const onOpenLinkPanel = () => {
     if (!editor) return;
-
-    const isEmptySelection = editor.state.selection.empty;
-    const isEditingLink = editor.isActive("link");
-    const input = window.prompt(tToolbar("linkPrompt"), editor.getAttributes("link").href || "https://");
-    if (input === null) return;
-
-    let href: string;
-    try {
-      const url = new URL(input.trim());
-      if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("Invalid protocol");
-      href = url.href;
-    } catch {
-      window.alert(tToolbar("invalidLink"));
+    if (linkSelection) {
+      setLinkSelection(null);
       return;
     }
 
-    if (isEmptySelection && isEditingLink) {
-      editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
-    } else if (isEmptySelection) {
-      editor.chain().focus().insertContent({ type: "text", text: href, marks: [{ type: "link", attrs: { href } }] }).run();
-    } else {
-      editor.chain().focus().setLink({ href }).run();
+    const isExistingLink = editor.isActive("link");
+    if (isExistingLink && editor.state.selection.empty) editor.commands.extendMarkRange("link");
+    const { from, to } = editor.state.selection;
+    setLinkSelection({ from, to, text: editor.state.doc.textBetween(from, to, " "), isExistingLink });
+    setLinkText("");
+    setLinkUrl(isExistingLink ? editor.getAttributes("link").href || "" : "");
+    setLinkError("");
+  };
+
+  const onApplyLink = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!editor || !linkSelection) return;
+
+    if (linkSelection.from === linkSelection.to && !linkText.trim()) {
+      setLinkError(tToolbar("linkTextRequired"));
+      return;
     }
+
+    const input = linkUrl.trim();
+    const hasScheme = /^[a-z][a-z\d+.-]*:/i.test(input);
+    const hasHostPort = /^[^/:\s]+:\d+(?:[/?#]|$)/.test(input);
+    const candidate = hasScheme && !hasHostPort ? input : `https://${input}`;
+    let href: string;
+    try {
+      const url = new URL(candidate);
+      if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("Invalid protocol");
+      href = url.href;
+    } catch {
+      setLinkError(tToolbar("invalidLink"));
+      return;
+    }
+
+    const chain = editor.chain().focus().setTextSelection({ from: linkSelection.from, to: linkSelection.to });
+    if (linkSelection.from === linkSelection.to) {
+      chain.insertContent({ type: "text", text: linkText.trim(), marks: [{ type: "link", attrs: { href } }] }).run();
+    } else {
+      chain.setLink({ href }).run();
+    }
+    setLinkSelection(null);
+  };
+
+  const onRemoveLink = () => {
+    if (!editor || !linkSelection) return;
+    editor.chain().focus().setTextSelection({ from: linkSelection.from, to: linkSelection.to }).unsetLink().run();
+    setLinkSelection(null);
   };
 
   const handleSubmit = async () => {
@@ -262,8 +308,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
            <div className="w-px bg-gray-300 mx-1 my-1"></div>
 
            {/* 連結 */}
-           <button onClick={onInsertLink} className={getButtonClass(editor?.isActive('link'))}>{tToolbar("insertLink")}</button>
-           <button onClick={() => editor?.chain().focus().extendMarkRange("link").unsetLink().run()} disabled={!editor?.isActive('link')} className="px-2 py-1.5 rounded text-sm font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-30">{tToolbar("removeLink")}</button>
+           <button type="button" onClick={onOpenLinkPanel} aria-expanded={!!linkSelection} aria-controls="editor-link-panel" className={getButtonClass(!!linkSelection || editor?.isActive('link'))}>{editor?.isActive('link') ? tToolbar("editLink") : tToolbar("insertLink")}</button>
 
            <div className="flex-grow"></div> {/* 將插入圖片推到最右邊 */}
 
@@ -277,9 +322,47 @@ export default function Editor({ authorEmail, department, userRole, initialData 
              {isUploadingImage ? tToolbar("uploadingImage") : tToolbar("insertImage")}
            </button>
         </div>
+
+        {linkSelection && (
+          <form
+            id="editor-link-panel"
+            onSubmit={onApplyLink}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                setLinkSelection(null);
+                editor?.commands.focus();
+              }
+            }}
+            className="border-b border-blue-200 bg-blue-50 p-4"
+          >
+            <div className="flex flex-col gap-3 max-w-xl">
+              <p className="font-semibold text-sm text-blue-900">{linkSelection.isExistingLink ? tToolbar("editLink") : tToolbar("insertLink")}</p>
+              {linkSelection.from === linkSelection.to ? (
+                <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+                  {tToolbar("linkText")}
+                  <input ref={linkTextInputRef} type="text" value={linkText} onChange={(event) => { setLinkText(event.target.value); setLinkError(""); }} placeholder={tToolbar("linkTextPlaceholder")} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                </label>
+              ) : (
+                <p className="text-sm text-gray-700">{tToolbar("selectedText")}: <span className="font-medium break-words">{linkSelection.text}</span></p>
+              )}
+              <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+                {tToolbar("linkUrl")}
+                <input ref={linkUrlInputRef} type="text" inputMode="url" autoComplete="url" value={linkUrl} onChange={(event) => { setLinkUrl(event.target.value); setLinkError(""); }} placeholder="https://example.com" aria-invalid={!!linkError} aria-describedby={linkError ? "editor-link-hint editor-link-error" : "editor-link-hint"} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+              </label>
+              <p id="editor-link-hint" className="text-xs text-gray-600">{tToolbar("linkHint")}</p>
+              {linkError && <p id="editor-link-error" role="alert" className="text-sm text-red-700">{linkError}</p>}
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                {linkSelection.isExistingLink && <button type="button" onClick={onRemoveLink} className="mr-auto rounded-md px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50">{tToolbar("removeLink")}</button>}
+                <button type="button" onClick={() => { setLinkSelection(null); editor?.commands.focus(); }} className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200">{tToolbar("cancelLink")}</button>
+                <button type="submit" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">{tToolbar("applyLink")}</button>
+              </div>
+            </div>
+          </form>
+        )}
         
         {/* Tiptap 編輯器本體 */}
-        <EditorContent editor={editor} className="bg-white min-h-[400px] cursor-text" onClick={() => editor?.commands.focus()} />
+        <EditorContent editor={editor} className="bg-white min-h-[400px] cursor-text" onFocus={() => setLinkSelection(null)} onClick={() => editor?.commands.focus()} />
       </div>
 
       {/* 提交按鈕 */}
