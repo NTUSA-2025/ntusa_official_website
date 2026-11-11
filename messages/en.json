@@ -293,27 +293,19 @@
       "electionCommitteeDesc": "Visit the Election Committee announcements website."
     },
     "data": {
-      "eyebrow": "Public Information",
       "title": "Public Information",
       "desc": "Meeting minutes, budgets and final accounts, and other public documents from the Student Association.",
       "tabMinutes": "Minutes",
       "tabBudget": "Budgets",
       "tabRepresentatives": "Student Representatives",
-      "tabOther": "Other",
       "minutesTitle": "Meeting Minutes",
       "minutesDesc": "Public minutes from Student Association meetings. Click to view or download the PDF.",
       "minutesEmpty": "No meeting minutes have been published yet.",
       "minutesViewPdf": "View PDF →",
-      "types": {
-        "admin": "Administrative Dept. Meeting"
-      },
       "uploadButton": "Upload Minutes",
       "budgetTitle": "Historical Budgets and Final Accounts",
       "budgetDesc": "Past budgets and final accounts of the Student Association.",
-      "budgetOpenDrive": "Open in Google Drive →",
-      "otherTitle": "Other Documents",
-      "otherDesc": "Additional public records will be added here over time.",
-      "otherBadge": "Document embed"
+      "budgetOpenDrive": "Open in Google Drive →"
     }
   },
   "campusTools": {
