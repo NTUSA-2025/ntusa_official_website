@@ -128,7 +128,7 @@
     "eyebrow": "Campus Governance",
     "title": "校級會議學生代表",
     "description": "學生代表將同學的聲音帶進校級會議。你可以在這裡查詢各會議的學生會代表、聯絡方式、會議職掌與相關規範。",
-    "back": "← 返回公開資料",
+    "back": "← 返回資訊公開",
     "listTitle": "會議與代表名單",
     "count": "共 {count} 項會議",
     "searchLabel": "搜尋會議或代表",
@@ -293,7 +293,7 @@
       "electionCommitteeDesc": "前往選舉委員會公告網站。"
     },
     "data": {
-      "eyebrow": "Public Records",
+      "eyebrow": "Public Information",
       "title": "資訊公開",
       "desc": "學生會會議紀錄、預決算及其他公開文件。",
       "tabMinutes": "會議紀錄",
