@@ -126,7 +126,7 @@
   },
   "representatives": {
     "eyebrow": "Campus Governance",
-    "title": "University Meeting Student Representatives",
+    "title": "Student Representatives",
     "description": "Student representatives bring student voices into university-level meetings. Find the NTUSA representative, contact details, remit, and governing rules for each meeting here.",
     "back": "← Back to public information",
     "listTitle": "Meetings and representatives",
@@ -298,7 +298,7 @@
       "desc": "Meeting minutes, budgets and final accounts, and other public documents from the Student Association.",
       "tabMinutes": "Minutes",
       "tabBudget": "Budgets",
-      "tabRepresentatives": "University Meeting Student Representatives",
+      "tabRepresentatives": "Student Representatives",
       "tabOther": "Other",
       "minutesTitle": "Meeting Minutes",
       "minutesDesc": "Public minutes from Student Association meetings. Click to view or download the PDF.",
