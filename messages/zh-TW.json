@@ -293,27 +293,19 @@
       "electionCommitteeDesc": "前往選舉委員會公告網站。"
     },
     "data": {
-      "eyebrow": "Public Information",
       "title": "資訊公開",
       "desc": "學生會會議紀錄、預決算及其他公開文件。",
       "tabMinutes": "會議紀錄",
       "tabBudget": "預決算",
       "tabRepresentatives": "校級會議學生代表",
-      "tabOther": "其他文件",
       "minutesTitle": "會議紀錄",
       "minutesDesc": "學生會各次會議之公開紀錄，點擊即可檢視或下載 PDF。",
       "minutesEmpty": "目前尚未發布會議紀錄。",
       "minutesViewPdf": "查看 PDF →",
-      "types": {
-        "admin": "行政部門會議"
-      },
       "uploadButton": "上傳會議紀錄",
       "budgetTitle": "歷年預決算",
       "budgetDesc": "學生會歷年預算與決算資料",
-      "budgetOpenDrive": "在 Google Drive 中開啟 →",
-      "otherTitle": "其他文件",
-      "otherDesc": "其他公開資料將陸續更新於此。",
-      "otherBadge": "文件嵌入區"
+      "budgetOpenDrive": "在 Google Drive 中開啟 →"
     }
   },
   "campusTools": {
