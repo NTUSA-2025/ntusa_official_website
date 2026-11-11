@@ -62,7 +62,7 @@ export async function PATCH(
       data: input,
     });
 
-    revalidatePath("/");
+    revalidatePath("/data");
     revalidatePath("/minutes/upload");
     return NextResponse.json(updatedMinute);
   } catch (error) {
@@ -92,7 +92,7 @@ export async function DELETE(
     }
 
     await prisma.meetingMinute.delete({ where: { id } });
-    revalidatePath("/");
+    revalidatePath("/data");
     revalidatePath("/minutes/upload");
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
