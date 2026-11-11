@@ -2,6 +2,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { POST as createMinute } from "../app/api/minutes/route";
 import { DELETE as deleteMinute, PATCH as updateMinute } from "../app/api/minutes/[id]/route";
 import { getServerSession } from "next-auth/next";
+import { revalidatePath } from "next/cache";
 import type { Session } from "next-auth";
 import prisma from "./prisma";
 
@@ -147,6 +148,7 @@ describe("Meeting Minutes API", () => {
           department: "會本部",
         },
       });
+      expect(revalidatePath).toHaveBeenCalledWith("/data");
     });
   });
 
@@ -173,6 +175,7 @@ describe("Meeting Minutes API", () => {
 
       expect(res.status).toBe(200);
       expect(mockedPrisma.meetingMinute.delete).toHaveBeenCalledWith({ where: { id: "m-1" } });
+      expect(revalidatePath).toHaveBeenCalledWith("/data");
     });
 
     it("rejects non-author without admin/reviewer role", async () => {
@@ -269,6 +272,7 @@ describe("Meeting Minutes API", () => {
           url: updatedMinute.url,
         },
       });
+      expect(revalidatePath).toHaveBeenCalledWith("/data");
     });
 
     it("rejects updates from a user without permission", async () => {

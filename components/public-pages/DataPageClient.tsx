@@ -4,12 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
-import type { UnifiedMeetingMinute } from "@/lib/get-cached-meeting-minutes";
+import type { PublicMeetingMinute } from "@/lib/get-public-meeting-minutes";
 import type { UniversityMeeting } from "@/lib/university-meeting-representatives";
 import MeetingRepresentativesPageClient from "@/components/representatives/MeetingRepresentativesPageClient";
 import { useFadeUp } from "./useFadeUp";
 
-export default function DataPageClient({ minutes, meetings }: { minutes: UnifiedMeetingMinute[]; meetings: UniversityMeeting[] }) {
+export default function DataPageClient({ minutes, meetings }: { minutes: PublicMeetingMinute[]; meetings: UniversityMeeting[] }) {
   const { data: session } = useSession();
   const [dataTab, setDataTab] = useState("minutes");
   const locale = useLocale();

@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/data");
     revalidatePath("/minutes/upload");
     return NextResponse.json(newMinute, { status: 201 });
   } catch (error) {
