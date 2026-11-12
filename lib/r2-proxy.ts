@@ -28,3 +28,9 @@ export function proxyR2Html(html: string): string {
   if (!R2_PUBLIC_URL) return html;
   return html.replaceAll(R2_PUBLIC_URL, "/r2");
 }
+
+/** Restore canonical R2 URLs before saving content edited with same-origin previews. */
+export function unproxyR2Html(html: string): string {
+  if (!R2_PUBLIC_URL) return html;
+  return html.replaceAll('src="/r2/', `src="${R2_PUBLIC_URL}/`);
+}

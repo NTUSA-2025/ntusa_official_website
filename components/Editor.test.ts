@@ -5,6 +5,10 @@ import zh from "@/messages/zh-TW.json";
 import type { ImageUploadErrorCode } from "@/lib/upload";
 import Editor from "./Editor";
 
+vi.hoisted(() => {
+  process.env.NEXT_PUBLIC_R2_PUBLIC_URL = "https://pub-test.r2.dev";
+});
+
 const mocks = vi.hoisted(() => ({
   alert: vi.fn(),
   uploadImage: vi.fn(),
@@ -153,5 +157,29 @@ describe("Editor image upload alerts", () => {
     expect(chain.setImage).toHaveBeenCalledWith({ src: url });
     expect(chain.run).toHaveBeenCalledTimes(1);
     expect(mocks.alert).not.toHaveBeenCalled();
+  });
+
+  it("shows newly uploaded R2 images through the same-origin proxy", async () => {
+    mocks.uploadImage.mockResolvedValue({ ok: true, url: "https://pub-test.r2.dev/photo.webp" });
+
+    await selectImage("body");
+
+    expect(chain.setImage).toHaveBeenCalledWith({ src: "/r2/photo.webp" });
+  });
+
+  it("shows existing R2 body images through the same-origin proxy", () => {
+    Editor({
+      authorEmail: "editor@example.com",
+      initialData: {
+        id: "post-1",
+        title: "Test",
+        content: '<p><img src="https://pub-test.r2.dev/old.webp"></p>',
+        coverImage: null,
+      },
+    });
+
+    expect(mocks.useEditor).toHaveBeenCalledWith(expect.objectContaining({
+      content: '<p><img src="/r2/old.webp"></p>',
+    }));
   });
 });

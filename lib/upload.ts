@@ -20,6 +20,25 @@ function isHeicFile(file: File): boolean {
   return /^image\/hei[cf](?:-sequence)?$/i.test(file.type) || /\.(?:heic|heif)$/i.test(file.name);
 }
 
+function imageTypeFromName(name: string): string | undefined {
+  const extension = name.match(/\.([^.]+)$/)?.[1]?.toLowerCase();
+  const types: Record<string, string> = {
+    jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png",
+    webp: "image/webp", bmp: "image/bmp", gif: "image/gif", avif: "image/avif",
+  };
+  return extension ? types[extension] : undefined;
+}
+
+function supportsWebpEncoding(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    return canvas.toDataURL("image/webp").startsWith("data:image/webp");
+  } catch {
+    return false;
+  }
+}
+
 async function canDecodeImage(file: File): Promise<boolean> {
   const url = URL.createObjectURL(file);
   try {
@@ -49,9 +68,12 @@ function errorFromResponse(status: number, errorCode: unknown): ImageUploadError
 export async function uploadImage(file: File): Promise<ImageUploadResult> {
   if (file.size === 0) return { ok: false, errorCode: "emptyFile" };
   const heic = isHeicFile(file);
-  if (!heic && !file.type.startsWith("image/")) return { ok: false, errorCode: "invalidFormat" };
+  const unknownMimeType = !file.type || file.type === "application/octet-stream";
+  if (!heic && !unknownMimeType && !file.type.startsWith("image/")) return { ok: false, errorCode: "invalidFormat" };
+  const fileType = unknownMimeType ? imageTypeFromName(file.name) : file.type;
+  if (!heic && !fileType) return { ok: false, errorCode: "invalidFormat" };
 
-  let imageFile = file;
+  let imageFile = !unknownMimeType || heic ? file : new File([file], file.name, { type: fileType, lastModified: file.lastModified });
   if (heic) {
     try {
       const { heicTo } = await import("heic-to/csp");
@@ -69,11 +91,16 @@ export async function uploadImage(file: File): Promise<ImageUploadResult> {
 
   let compressedFile: File;
   try {
+    const targetType = supportsWebpEncoding()
+      ? "image/webp"
+      : imageFile.type === "image/png" || imageFile.type === "image/webp" || imageFile.type === "image/gif"
+        ? "image/png"
+        : "image/jpeg";
     compressedFile = await imageCompression(imageFile, {
       maxSizeMB: 0.8,
       maxWidthOrHeight: 1920,
       useWebWorker: true,
-      fileType: "image/webp",
+      fileType: targetType,
     });
   } catch (error) {
     console.error("圖片壓縮失敗:", error);
@@ -82,6 +109,11 @@ export async function uploadImage(file: File): Promise<ImageUploadResult> {
     } catch (decodeCheckError) {
       console.error("圖片解碼檢查失敗:", decodeCheckError);
     }
+    return { ok: false, errorCode: "processingFailed" };
+  }
+
+  if (!["image/webp", "image/jpeg", "image/png"].includes(compressedFile.type)) {
+    console.error("圖片壓縮格式不受支援:", compressedFile.type);
     return { ok: false, errorCode: "processingFailed" };
   }
 
