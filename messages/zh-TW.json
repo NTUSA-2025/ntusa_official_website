@@ -369,6 +369,7 @@
     "uploadErrors": {
       "emptyFile": "圖片檔案是空的，請重新選擇。",
       "invalidFormat": "無法辨識圖片格式，請改用 JPG、PNG、WebP 或 BMP。",
+      "invalidImage": "無法讀取圖片內容，檔案可能已損毀或不完整。請重新匯出為 JPG 或 PNG，再上傳。",
       "processingFailed": "瀏覽器無法處理這張圖片，請改用 JPG、PNG、WebP 或 BMP，或嘗試較小的圖片。",
       "tooLarge": "圖片壓縮後仍超過上傳限制，請使用較小或較低解析度的圖片。",
       "sessionExpired": "登入已失效，請重新登入後再上傳圖片。",
