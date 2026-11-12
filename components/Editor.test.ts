@@ -46,6 +46,7 @@ const image = new File(["image"], "photo.jpg", { type: "image/jpeg" });
 const uploadErrors = [
   { code: "emptyFile", zh: "圖片檔案是空的，請重新選擇。", en: "This image file is empty. Please choose another file." },
   { code: "invalidFormat", zh: "無法辨識圖片格式，請改用 JPG、PNG、WebP 或 BMP。", en: "This image format could not be read. Please use JPG, PNG, WebP, or BMP." },
+  { code: "invalidImage", zh: "無法讀取圖片內容，檔案可能已損毀或不完整。請重新匯出為 JPG 或 PNG，再上傳。", en: "The image contents could not be read. The file may be damaged or incomplete. Please export it again as JPG or PNG." },
   { code: "processingFailed", zh: "瀏覽器無法處理這張圖片，請改用 JPG、PNG、WebP 或 BMP，或嘗試較小的圖片。", en: "Your browser could not process this image. Try JPG, PNG, WebP, or BMP, or use a smaller image." },
   { code: "tooLarge", zh: "圖片壓縮後仍超過上傳限制，請使用較小或較低解析度的圖片。", en: "The image is still too large after compression. Please use a smaller or lower-resolution image." },
   { code: "sessionExpired", zh: "登入已失效，請重新登入後再上傳圖片。", en: "Your session has expired. Please sign in again before uploading an image." },

@@ -36,6 +36,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   const uploadErrorMessages: Record<ImageUploadErrorCode, string> = {
     emptyFile: t("uploadErrors.emptyFile"),
     invalidFormat: t("uploadErrors.invalidFormat"),
+    invalidImage: t("uploadErrors.invalidImage"),
     processingFailed: t("uploadErrors.processingFailed"),
     tooLarge: t("uploadErrors.tooLarge"),
     sessionExpired: t("uploadErrors.sessionExpired"),

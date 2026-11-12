@@ -3,6 +3,7 @@ import imageCompression from "browser-image-compression";
 export type ImageUploadErrorCode =
   | "emptyFile"
   | "invalidFormat"
+  | "invalidImage"
   | "processingFailed"
   | "tooLarge"
   | "sessionExpired"
@@ -19,11 +20,26 @@ function isHeicFile(file: File): boolean {
   return /^image\/hei[cf](?:-sequence)?$/i.test(file.type) || /\.(?:heic|heif)$/i.test(file.name);
 }
 
+async function canDecodeImage(file: File): Promise<boolean> {
+  const url = URL.createObjectURL(file);
+  try {
+    return await new Promise<boolean>((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve(true);
+      image.onerror = () => resolve(false);
+      image.src = url;
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 function errorFromResponse(status: number, errorCode: unknown): ImageUploadErrorCode {
   if (status === 413 || errorCode === "FILE_TOO_LARGE") return "tooLarge";
   if (status === 401 || errorCode === "UNAUTHORIZED") return "sessionExpired";
   if (status === 403 || errorCode === "FORBIDDEN") return "permissionDenied";
-  if (status === 415 || errorCode === "INVALID_FILE_TYPE" || errorCode === "INVALID_IMAGE" || errorCode === "NO_FILE") {
+  if (errorCode === "INVALID_IMAGE") return "invalidImage";
+  if (status === 415 || errorCode === "INVALID_FILE_TYPE" || errorCode === "NO_FILE") {
     return "invalidFormat";
   }
   if (status >= 500) return "serverFailed";
@@ -35,10 +51,9 @@ export async function uploadImage(file: File): Promise<ImageUploadResult> {
   const heic = isHeicFile(file);
   if (!heic && !file.type.startsWith("image/")) return { ok: false, errorCode: "invalidFormat" };
 
-  let compressedFile: File;
-  try {
-    let imageFile = file;
-    if (heic) {
+  let imageFile = file;
+  if (heic) {
+    try {
       const { heicTo } = await import("heic-to/csp");
       const jpeg = await heicTo({ blob: file, type: "image/jpeg", quality: 0.9 });
       if (jpeg.size === 0 || jpeg.type !== "image/jpeg") throw new Error("HEIC conversion produced an invalid JPEG");
@@ -46,8 +61,14 @@ export async function uploadImage(file: File): Promise<ImageUploadResult> {
         ? file.name.replace(/\.(?:heic|heif)$/i, ".jpg")
         : `${file.name}.jpg`;
       imageFile = new File([jpeg], jpegName, { type: "image/jpeg", lastModified: file.lastModified });
+    } catch (error) {
+      console.error("HEIC 轉檔失敗:", error);
+      return { ok: false, errorCode: "processingFailed" };
     }
+  }
 
+  let compressedFile: File;
+  try {
     compressedFile = await imageCompression(imageFile, {
       maxSizeMB: 0.8,
       maxWidthOrHeight: 1920,
@@ -56,6 +77,11 @@ export async function uploadImage(file: File): Promise<ImageUploadResult> {
     });
   } catch (error) {
     console.error("圖片壓縮失敗:", error);
+    try {
+      if (!(await canDecodeImage(imageFile))) return { ok: false, errorCode: "invalidImage" };
+    } catch (decodeCheckError) {
+      console.error("圖片解碼檢查失敗:", decodeCheckError);
+    }
     return { ok: false, errorCode: "processingFailed" };
   }
 

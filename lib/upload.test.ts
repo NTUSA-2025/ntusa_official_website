@@ -10,6 +10,18 @@ const fetchMock = vi.fn();
 const imageFile = new File(["image"], "photo.jpg", { type: "image/jpeg" });
 const webpFile = new File(["webp"], "photo.webp", { type: "image/webp" });
 
+function stubImageDecode(succeeds: boolean) {
+  vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:test-image");
+  vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
+  vi.stubGlobal("Image", class {
+    onload: (() => void) | null = null;
+    onerror: (() => void) | null = null;
+    set src(_value: string) {
+      queueMicrotask(() => succeeds ? this.onload?.() : this.onerror?.());
+    }
+  });
+}
+
 describe("uploadImage feedback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -70,7 +82,7 @@ describe("uploadImage feedback", () => {
     [403, "FORBIDDEN", "permissionDenied"],
     [413, "FILE_TOO_LARGE", "tooLarge"],
     [415, "INVALID_FILE_TYPE", "invalidFormat"],
-    [400, "INVALID_IMAGE", "invalidFormat"],
+    [400, "INVALID_IMAGE", "invalidImage"],
     [500, "INTERNAL_ERROR", "serverFailed"],
   ] as const)("reports API error %i as %s", async (status, apiCode, expected) => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ errorCode: apiCode }), { status }));
@@ -85,12 +97,26 @@ describe("uploadImage feedback", () => {
   });
 
   it("distinguishes image processing from network failures", async () => {
+    stubImageDecode(true);
     vi.mocked(imageCompression).mockRejectedValueOnce(new Error("Cannot decode image"));
     await expect(uploadImage(imageFile)).resolves.toEqual({ ok: false, errorCode: "processingFailed" });
     expect(fetchMock).not.toHaveBeenCalled();
 
     fetchMock.mockRejectedValueOnce(new TypeError("Failed to fetch"));
     await expect(uploadImage(imageFile)).resolves.toEqual({ ok: false, errorCode: "networkFailed" });
+  });
+
+  it.each([
+    ["truncated JPEG", "photo.jpg", "image/jpeg"],
+    ["damaged PNG", "photo.png", "image/png"],
+  ])("reports %s as unreadable image data", async (_description, name, type) => {
+    stubImageDecode(false);
+    vi.mocked(imageCompression).mockRejectedValue(new Error("Image load error"));
+
+    await expect(uploadImage(new File(["invalid data"], name, { type })))
+      .resolves.toEqual({ ok: false, errorCode: "invalidImage" });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:test-image");
   });
 
   it("rejects an empty file and a non-image before compression", async () => {
