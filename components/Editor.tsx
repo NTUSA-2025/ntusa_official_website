@@ -7,7 +7,7 @@ import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder"; // 引入 Placeholder
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { proxyR2Url } from "@/lib/r2-proxy";
+import { proxyR2Html, proxyR2Url, unproxyR2Html } from "@/lib/r2-proxy";
 import { uploadImage, type ImageUploadErrorCode } from "../lib/upload";
 
 interface EditorProps {
@@ -63,7 +63,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
       }),
     ],
     immediatelyRender: false,
-    content: initialData?.content || "", // 如果有初始資料則填入
+    content: proxyR2Html(initialData?.content || ""), // 既有內文圖片也使用本站代理顯示
     editorProps: {
       attributes: {
         // 加入 tiptap class 以配合 globals.css 中的樣式
@@ -105,7 +105,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     const file = input.files?.[0];
     if (!file || !editor) return;
     const url = await uploadSelectedImage(file);
-    if (url) editor.chain().focus().setImage({ src: url }).run();
+    if (url) editor.chain().focus().setImage({ src: proxyR2Url(url) || url }).run();
     input.value = "";
   };
 
@@ -137,7 +137,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          content: editor.getHTML(),
+          content: unproxyR2Html(editor.getHTML()),
           coverImage,
           authorEmail,
           status: targetStatus,
