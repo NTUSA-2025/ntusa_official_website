@@ -366,6 +366,17 @@
       "insertImage": "插入圖片",
       "uploadingImage": "圖片上傳中..."
     },
+    "uploadErrors": {
+      "emptyFile": "圖片檔案是空的，請重新選擇。",
+      "invalidFormat": "無法辨識圖片格式，請改用 JPG、PNG、WebP 或 BMP。",
+      "processingFailed": "瀏覽器無法處理這張圖片，請改用 JPG、PNG、WebP 或 BMP，或嘗試較小的圖片。",
+      "tooLarge": "圖片壓縮後仍超過上傳限制，請使用較小或較低解析度的圖片。",
+      "sessionExpired": "登入已失效，請重新登入後再上傳圖片。",
+      "permissionDenied": "目前的帳號沒有上傳圖片的權限，請確認登入帳號。",
+      "networkFailed": "無法連線，請檢查網路後重試。",
+      "serverFailed": "圖片上傳服務暫時無法使用，請稍後再試。",
+      "uploadFailed": "圖片上傳失敗，請稍後再試。"
+    },
     "missingFields": "請填寫標題與內容！",
     "submitSuccess": "文章發布成功！",
     "updateSuccess": "文章更新成功，已重新送交審核！",
