@@ -26,6 +26,7 @@ describe("uploadImage feedback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("document", { createElement: () => ({ toDataURL: () => "data:image/webp;base64," }) });
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.mocked(imageCompression).mockResolvedValue(webpFile);
   });
@@ -47,6 +48,29 @@ describe("uploadImage feedback", () => {
     });
     expect(fetchMock).toHaveBeenCalledWith("/api/upload", expect.objectContaining({ method: "POST" }));
     expect(heicTo).not.toHaveBeenCalled();
+  });
+
+  it.each(["", "application/octet-stream"])("recognizes a JPEG when Safari reports MIME type %s", async (type) => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ url: "https://example.com/photo.webp" }), { status: 200 }));
+    const file = new File(["image"], "photo.JPG", { type });
+
+    await expect(uploadImage(file)).resolves.toEqual({ ok: true, url: "https://example.com/photo.webp" });
+    const normalizedFile = vi.mocked(imageCompression).mock.calls[0][0];
+    expect(normalizedFile.type).toBe("image/jpeg");
+    expect(normalizedFile.name).toBe("photo.JPG");
+  });
+
+  it.each([
+    ["photo.jpg", "image/jpeg", "image/jpeg"],
+    ["photo.png", "image/png", "image/png"],
+  ])("uses a supported fallback for %s when canvas cannot encode WebP", async (name, type, outputType) => {
+    vi.stubGlobal("document", { createElement: () => ({ toDataURL: () => "data:image/png;base64," }) });
+    vi.mocked(imageCompression).mockResolvedValue(new File(["fallback"], name, { type: outputType }));
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ url: "https://example.com/photo.webp" }), { status: 200 }));
+
+    await expect(uploadImage(new File(["image"], name, { type }))).resolves.toEqual({ ok: true, url: "https://example.com/photo.webp" });
+    expect(imageCompression).toHaveBeenCalledWith(expect.any(File), expect.objectContaining({ fileType: outputType }));
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 
   it.each([
