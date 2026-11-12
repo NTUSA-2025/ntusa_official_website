@@ -191,7 +191,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
         )}
         <input 
           type="file" 
-          accept="image/*" 
+          accept="image/*,.heic,.heif"
           onChange={onCoverImageChange} 
           disabled={isUploadingImage}
           className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -231,7 +231,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
            <div className="flex-grow"></div> {/* 將插入圖片推到最右邊 */}
 
            {/* 插入圖片 */}
-           <input type="file" accept="image/*" ref={fileInputRef} onChange={onEditorImageChange} className="hidden" />
+           <input type="file" accept="image/*,.heic,.heif" ref={fileInputRef} onChange={onEditorImageChange} className="hidden" />
            <button
              onClick={() => fileInputRef.current?.click()}
              className="px-3 py-1.5 rounded text-sm font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors disabled:opacity-50 border border-blue-200"

@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import imageCompression from "browser-image-compression";
+import { heicTo } from "heic-to/csp";
 import { uploadImage } from "./upload";
 
 vi.mock("browser-image-compression", () => ({ default: vi.fn() }));
+vi.mock("heic-to/csp", () => ({ heicTo: vi.fn() }));
 
 const fetchMock = vi.fn();
 const imageFile = new File(["image"], "photo.jpg", { type: "image/jpeg" });
@@ -32,6 +34,35 @@ describe("uploadImage feedback", () => {
       fileType: "image/webp",
     });
     expect(fetchMock).toHaveBeenCalledWith("/api/upload", expect.objectContaining({ method: "POST" }));
+    expect(heicTo).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["photo.heic", "image/heic"],
+    ["photo.HEIF", ""],
+  ])("converts %s to JPEG before WebP compression", async (name, type) => {
+    const heicFile = new File(["heic data"], name, { type });
+    vi.mocked(heicTo).mockResolvedValue(new Blob(["jpeg data"], { type: "image/jpeg" }));
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ url: "https://example.com/photo.webp" }), { status: 200 }));
+
+    await expect(uploadImage(heicFile)).resolves.toEqual({ ok: true, url: "https://example.com/photo.webp" });
+
+    expect(heicTo).toHaveBeenCalledWith({ blob: heicFile, type: "image/jpeg", quality: 0.9 });
+    const jpegFile = vi.mocked(imageCompression).mock.calls[0][0];
+    expect(jpegFile).toBeInstanceOf(File);
+    expect(jpegFile.name).toBe("photo.jpg");
+    expect(jpegFile.type).toBe("image/jpeg");
+    expect(await jpegFile.text()).toBe("jpeg data");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports HEIC decoding failures without sending an upload request", async () => {
+    vi.mocked(heicTo).mockRejectedValue(new Error("Cannot decode HEIC"));
+
+    await expect(uploadImage(new File(["broken"], "photo.heic", { type: "image/heic" })))
+      .resolves.toEqual({ ok: false, errorCode: "processingFailed" });
+    expect(imageCompression).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it.each([

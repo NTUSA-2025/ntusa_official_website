@@ -15,6 +15,10 @@ export type ImageUploadResult =
   | { ok: true; url: string }
   | { ok: false; errorCode: ImageUploadErrorCode };
 
+function isHeicFile(file: File): boolean {
+  return /^image\/hei[cf](?:-sequence)?$/i.test(file.type) || /\.(?:heic|heif)$/i.test(file.name);
+}
+
 function errorFromResponse(status: number, errorCode: unknown): ImageUploadErrorCode {
   if (status === 413 || errorCode === "FILE_TOO_LARGE") return "tooLarge";
   if (status === 401 || errorCode === "UNAUTHORIZED") return "sessionExpired";
@@ -28,11 +32,23 @@ function errorFromResponse(status: number, errorCode: unknown): ImageUploadError
 
 export async function uploadImage(file: File): Promise<ImageUploadResult> {
   if (file.size === 0) return { ok: false, errorCode: "emptyFile" };
-  if (!file.type.startsWith("image/")) return { ok: false, errorCode: "invalidFormat" };
+  const heic = isHeicFile(file);
+  if (!heic && !file.type.startsWith("image/")) return { ok: false, errorCode: "invalidFormat" };
 
   let compressedFile: File;
   try {
-    compressedFile = await imageCompression(file, {
+    let imageFile = file;
+    if (heic) {
+      const { heicTo } = await import("heic-to/csp");
+      const jpeg = await heicTo({ blob: file, type: "image/jpeg", quality: 0.9 });
+      if (jpeg.size === 0 || jpeg.type !== "image/jpeg") throw new Error("HEIC conversion produced an invalid JPEG");
+      const jpegName = /\.(?:heic|heif)$/i.test(file.name)
+        ? file.name.replace(/\.(?:heic|heif)$/i, ".jpg")
+        : `${file.name}.jpg`;
+      imageFile = new File([jpeg], jpegName, { type: "image/jpeg", lastModified: file.lastModified });
+    }
+
+    compressedFile = await imageCompression(imageFile, {
       maxSizeMB: 0.8,
       maxWidthOrHeight: 1920,
       useWebWorker: true,

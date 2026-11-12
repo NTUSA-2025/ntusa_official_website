@@ -29,6 +29,7 @@ vi.mock("@/lib/upload", () => ({ uploadImage: mocks.uploadImage }));
 type FileInputProps = {
   children?: ReactNode;
   type?: string;
+  accept?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void | Promise<void>;
 };
 
@@ -99,6 +100,15 @@ describe("Editor image upload alerts", () => {
     await inputs[source === "cover" ? 0 : 1].props.onChange?.({ currentTarget: input } as ChangeEvent<HTMLInputElement>);
     return input;
   }
+
+  it("allows HEIC selection for cover and body images", () => {
+    const inputs = findFileInputs(Editor({ authorEmail: "editor@example.com" }));
+    expect(inputs).toHaveLength(2);
+    for (const input of inputs) {
+      expect(input.props.accept).toContain(".heic");
+      expect(input.props.accept).toContain(".heif");
+    }
+  });
 
   it.each(uploadErrors)("shows the correct Chinese $code alert for a cover image", async ({ code, zh: message }) => {
     mocks.uploadImage.mockResolvedValue({ ok: false, errorCode: code });
