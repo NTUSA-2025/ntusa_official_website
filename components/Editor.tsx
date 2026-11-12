@@ -8,7 +8,7 @@ import Placeholder from "@tiptap/extension-placeholder"; // 引入 Placeholder
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { proxyR2Url } from "@/lib/r2-proxy";
-import { uploadImage } from "../lib/upload";
+import { uploadImage, type ImageUploadErrorCode } from "../lib/upload";
 
 interface EditorProps {
   authorEmail: string;
@@ -32,6 +32,19 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   const [coverImage, setCoverImage] = useState<string | null>(initialData?.coverImage || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const uploadErrorMessages: Record<ImageUploadErrorCode, string> = {
+    emptyFile: t("uploadErrors.emptyFile"),
+    invalidFormat: t("uploadErrors.invalidFormat"),
+    invalidImage: t("uploadErrors.invalidImage"),
+    processingFailed: t("uploadErrors.processingFailed"),
+    tooLarge: t("uploadErrors.tooLarge"),
+    sessionExpired: t("uploadErrors.sessionExpired"),
+    permissionDenied: t("uploadErrors.permissionDenied"),
+    networkFailed: t("uploadErrors.networkFailed"),
+    serverFailed: t("uploadErrors.serverFailed"),
+    uploadFailed: t("uploadErrors.uploadFailed"),
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -60,28 +73,40 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     },
   });
 
-  // 處理封面圖片上傳
-  const onCoverImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setIsUploadingImage(true);
-      const url = await uploadImage(e.target.files[0]);
-      if (url) setCoverImage(url);
+  const uploadSelectedImage = async (file: File): Promise<string | null> => {
+    setIsUploadingImage(true);
+    try {
+      const result = await uploadImage(file);
+      if (result.ok) return result.url;
+      alert(uploadErrorMessages[result.errorCode]);
+      return null;
+    } catch (error) {
+      console.error("圖片上傳發生未預期錯誤:", error);
+      alert(uploadErrorMessages.uploadFailed);
+      return null;
+    } finally {
       setIsUploadingImage(false);
     }
   };
 
+  // 處理封面圖片上傳
+  const onCoverImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    if (!file) return;
+    const url = await uploadSelectedImage(file);
+    if (url) setCoverImage(url);
+    input.value = "";
+  };
+
   // 處理內文圖片上傳
   const onEditorImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0] && editor) {
-      setIsUploadingImage(true);
-      const url = await uploadImage(e.target.files[0]);
-      if (url) {
-        editor.chain().focus().setImage({ src: url }).run();
-      }
-      setIsUploadingImage(false);
-      
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+    const input = e.currentTarget;
+    const file = input.files?.[0];
+    if (!file || !editor) return;
+    const url = await uploadSelectedImage(file);
+    if (url) editor.chain().focus().setImage({ src: url }).run();
+    input.value = "";
   };
 
   const handleSubmit = async () => {
@@ -167,7 +192,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
         )}
         <input 
           type="file" 
-          accept="image/*" 
+          accept="image/*,.heic,.heif"
           onChange={onCoverImageChange} 
           disabled={isUploadingImage}
           className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -207,7 +232,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
            <div className="flex-grow"></div> {/* 將插入圖片推到最右邊 */}
 
            {/* 插入圖片 */}
-           <input type="file" accept="image/*" ref={fileInputRef} onChange={onEditorImageChange} className="hidden" />
+           <input type="file" accept="image/*,.heic,.heif" ref={fileInputRef} onChange={onEditorImageChange} className="hidden" />
            <button
              onClick={() => fileInputRef.current?.click()}
              className="px-3 py-1.5 rounded text-sm font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors disabled:opacity-50 border border-blue-200"

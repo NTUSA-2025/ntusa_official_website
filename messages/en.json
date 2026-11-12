@@ -366,6 +366,18 @@
       "insertImage": "Insert image",
       "uploadingImage": "Uploading…"
     },
+    "uploadErrors": {
+      "emptyFile": "This image file is empty. Please choose another file.",
+      "invalidFormat": "This image format could not be read. Please use JPG, PNG, WebP, or BMP.",
+      "invalidImage": "The image contents could not be read. The file may be damaged or incomplete. Please export it again as JPG or PNG.",
+      "processingFailed": "Your browser could not process this image. Try JPG, PNG, WebP, or BMP, or use a smaller image.",
+      "tooLarge": "The image is still too large after compression. Please use a smaller or lower-resolution image.",
+      "sessionExpired": "Your session has expired. Please sign in again before uploading an image.",
+      "permissionDenied": "This account cannot upload images. Please check which account you signed in with.",
+      "networkFailed": "Could not connect. Check your network connection and try again.",
+      "serverFailed": "The image upload service is temporarily unavailable. Please try again later.",
+      "uploadFailed": "Image upload failed. Please try again later."
+    },
     "missingFields": "Please fill in both title and content.",
     "submitSuccess": "Article published successfully.",
     "updateSuccess": "Article updated successfully and resubmitted for review.",
