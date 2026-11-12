@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getServerSession } from "next-auth/next";
+import sharp from "sharp";
 import { POST } from "./route";
 
 const { send } = vi.hoisted(() => ({ send: vi.fn() }));
@@ -68,5 +69,28 @@ describe("image upload API", () => {
     const command = send.mock.calls[0][0] as { input: { Key: string; ContentType: string } };
     expect(command.input.Key).toMatch(/^[0-9a-f-]+\.webp$/);
     expect(command.input.ContentType).toBe("image/webp");
+  });
+
+  it.each(["jpeg", "png"] as const)("converts a Safari %s fallback to WebP", async (format) => {
+    const input = await sharp({ create: { width: 2, height: 2, channels: 4, background: "#ff0000" } })
+      .toFormat(format)
+      .toBuffer();
+    const file = new File([new Uint8Array(input)], `photo.${format}`, { type: `image/${format}` });
+
+    const response = await POST(uploadRequest(file));
+
+    expect(response.status).toBe(200);
+    const command = send.mock.calls[0][0] as { input: { Key: string; ContentType: string; Body: Buffer } };
+    expect(command.input.Key).toMatch(/\.webp$/);
+    expect(command.input.ContentType).toBe("image/webp");
+    expect(command.input.Body.toString("ascii", 0, 4)).toBe("RIFF");
+    expect(command.input.Body.toString("ascii", 8, 12)).toBe("WEBP");
+  });
+
+  it("rejects a damaged Safari fallback with a valid JPEG header", async () => {
+    const file = new File([new Uint8Array([0xff, 0xd8, 0xff, 0x00])], "broken.jpg", { type: "image/jpeg" });
+    const response = await POST(uploadRequest(file));
+    expect(response.status).toBe(400);
+    expect(send).not.toHaveBeenCalled();
   });
 });
