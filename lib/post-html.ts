@@ -62,7 +62,7 @@ export function getPostLinkDestinations(html: string): PostLinkDestination[] {
         seen.add(href);
         destinations.push({ href, hostname });
       } catch {
-        // A malformed legacy URL should not break the review dashboard.
+        // A malformed legacy URL should not break the post page.
       }
     },
   });

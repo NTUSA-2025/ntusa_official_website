@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { proxyR2Url, proxyR2Html } from "@/lib/r2-proxy";
-import { sanitizePostHtml } from "@/lib/post-html";
+import { getPostLinkDestinations, sanitizePostHtml } from "@/lib/post-html";
 import DeleteButton from "../../../components/DeleteButton"; // 引入刪除按鈕元件
 
 export default async function PostPage({ 
@@ -51,6 +51,8 @@ export default async function PostPage({
       notFound();
     }
   }
+
+  const linkDestinations = getPostLinkDestinations(post.content);
 
   // 4. 渲染文章頁面
   return (
@@ -98,6 +100,22 @@ export default async function PostPage({
         className="tiptap prose prose-lg max-w-none prose-blue"
         dangerouslySetInnerHTML={{ __html: sanitizePostHtml(proxyR2Html(post.content)) }}
       />
+
+      {linkDestinations.length > 0 && (
+        <details className="mt-8 rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+          <summary className="cursor-pointer font-medium">
+            {t("linkDestinationsLabel", { count: linkDestinations.length })}
+          </summary>
+          <ul className="mt-3 space-y-3 border-t border-slate-200 pt-3">
+            {linkDestinations.map(({ href, hostname }) => (
+              <li key={href}>
+                <strong className="block text-slate-800">{hostname || t("internalLinkLabel")}</strong>
+                <span className="block break-all text-slate-600">{href}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
 
       {/* 底部操作區塊：包含「返回首頁」、「修改文章」與「刪除文章」 */}
       <div className="mt-12 pt-8 border-t flex flex-wrap justify-between items-center gap-4">
