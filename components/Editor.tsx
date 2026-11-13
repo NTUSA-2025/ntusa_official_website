@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { proxyR2Html, proxyR2Url, unproxyR2Html } from "@/lib/r2-proxy";
 import { uploadImage, type ImageUploadErrorCode } from "../lib/upload";
-import { hasLinkCredentials } from "@/lib/post-link-url";
+import { hasLinkCredentials, parsePostLinkInput } from "@/lib/post-link-url";
 
 interface EditorProps {
   authorEmail: string;
@@ -60,14 +60,14 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const linkTextInputRef = useRef<HTMLInputElement>(null);
   const linkUrlInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!linkSelection) return;
-    const input = linkSelection.from === linkSelection.to ? linkTextInputRef : linkUrlInputRef;
-    input.current?.focus();
+    linkUrlInputRef.current?.focus();
   }, [linkSelection]);
+
+  const parsedLink = linkUrl.trim() ? parsePostLinkInput(linkUrl) : null;
 
   // 初始化 Tiptap 編輯器
   const editor = useEditor({
@@ -78,6 +78,8 @@ export default function Editor({ authorEmail, department, userRole, initialData 
         },
         link: {
           openOnClick: false,
+          defaultProtocol: "https",
+          isAllowedUri: (url, { defaultValidate }) => defaultValidate(url) && !hasLinkCredentials(url),
         },
       }),
       Image,
@@ -153,34 +155,17 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     event.preventDefault();
     if (!editor || !linkSelection) return;
 
-    if (linkSelection.from === linkSelection.to && !linkText.trim()) {
-      setLinkError(tToolbar("linkTextRequired"));
-      return;
-    }
-
-    const input = linkUrl.trim();
-    const hasScheme = /^[a-z][a-z\d+.-]*:/i.test(input);
-    const hasHostPort = /^[^/:\s]+:\d+(?:[/?#]|$)/.test(input);
-    const candidate = hasScheme && !hasHostPort ? input : `https://${input}`;
-    let href: string;
-    try {
-      const url = new URL(candidate);
-      if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("Invalid protocol");
-      if (hasLinkCredentials(candidate)) {
-        setLinkError(tToolbar("credentialedLink"));
-        return;
-      }
-      href = url.href;
-    } catch {
-      setLinkError(tToolbar("invalidLink"));
+    const result = parsePostLinkInput(linkUrl);
+    if (result.error) {
+      setLinkError(tToolbar(result.error === "credentials" ? "credentialedLink" : "invalidLink"));
       return;
     }
 
     const chain = editor.chain().focus().setTextSelection({ from: linkSelection.from, to: linkSelection.to });
     if (linkSelection.from === linkSelection.to) {
-      chain.insertContent({ type: "text", text: linkText.trim(), marks: [{ type: "link", attrs: { href } }] }).run();
+      chain.insertContent({ type: "text", text: linkText.trim() || result.href, marks: [{ type: "link", attrs: { href: result.href } }] }).run();
     } else {
-      chain.setLink({ href }).run();
+      chain.setLink({ href: result.href }).run();
     }
     setLinkSelection(null);
   };
@@ -350,19 +335,20 @@ export default function Editor({ authorEmail, department, userRole, initialData 
           >
             <div className="flex flex-col gap-3 max-w-xl">
               <p className="font-semibold text-sm text-blue-900">{linkSelection.isExistingLink ? tToolbar("editLink") : tToolbar("insertLink")}</p>
-              {linkSelection.from === linkSelection.to ? (
-                <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
-                  {tToolbar("linkText")}
-                  <input ref={linkTextInputRef} type="text" value={linkText} onChange={(event) => { setLinkText(event.target.value); setLinkError(""); }} placeholder={tToolbar("linkTextPlaceholder")} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                </label>
-              ) : (
-                <p className="text-sm text-gray-700">{tToolbar("selectedText")}: <span className="font-medium break-words">{linkSelection.text}</span></p>
-              )}
               <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
                 {tToolbar("linkUrl")}
                 <input ref={linkUrlInputRef} type="text" inputMode="url" autoComplete="url" value={linkUrl} onChange={(event) => { setLinkUrl(event.target.value); setLinkError(""); }} placeholder="https://example.com" aria-invalid={!!linkError} aria-describedby={linkError ? "editor-link-hint editor-link-error" : "editor-link-hint"} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
               </label>
               <p id="editor-link-hint" className="text-xs text-gray-600">{tToolbar("linkHint")}</p>
+              {parsedLink?.href && <p className="text-xs font-medium text-blue-800">{tToolbar("linkDestination", { domain: new URL(parsedLink.href).hostname })}</p>}
+              {linkSelection.from === linkSelection.to ? (
+                <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+                  {tToolbar("linkText")}
+                  <input type="text" value={linkText} onChange={(event) => setLinkText(event.target.value)} placeholder={tToolbar("linkTextPlaceholder")} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                </label>
+              ) : (
+                <p className="text-sm text-gray-700">{tToolbar("selectedText")}: <span className="font-medium break-words">{linkSelection.text}</span></p>
+              )}
               {linkError && <p id="editor-link-error" role="alert" className="text-sm text-red-700">{linkError}</p>}
               <div className="flex flex-wrap items-center justify-end gap-2">
                 {linkSelection.isExistingLink && <button type="button" onClick={onRemoveLink} className="mr-auto rounded-md px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50">{tToolbar("removeLink")}</button>}

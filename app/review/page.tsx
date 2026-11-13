@@ -29,12 +29,12 @@ function PostLinkDestinations({ content, label, internalLabel }: { content: stri
   if (destinations.length === 0) return null;
 
   return (
-    <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3">
-      <p className="text-xs font-semibold text-amber-900">{label}</p>
+    <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p className="text-xs font-semibold text-slate-700">{label}</p>
       <ul className="mt-2 space-y-2">
         {destinations.map(({ href, hostname }) => (
           <li key={href} className="text-xs text-gray-700">
-            <strong className="block text-amber-900">{hostname || internalLabel}</strong>
+            <strong className="block text-slate-800">{hostname || internalLabel}</strong>
             <span className="block break-all">{href}</span>
           </li>
         ))}

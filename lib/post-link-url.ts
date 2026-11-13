@@ -18,3 +18,23 @@ export function isSafePostLinkHref(href: string): boolean {
     return false;
   }
 }
+
+export function parsePostLinkInput(input: string):
+  | { href: string; error?: never }
+  | { href?: never; error: "invalid" | "credentials" } {
+  const value = input.trim();
+  if (!value || /^(?:\/\/|\\\\)/.test(value)) return { error: "invalid" };
+
+  const hasScheme = /^[a-z][a-z\d+.-]*:/i.test(value);
+  const hasHostPort = /^[^/:\s]+:\d+(?:[/?#]|$)/.test(value);
+  const candidate = hasScheme && !hasHostPort ? value : `https://${value}`;
+
+  try {
+    const url = new URL(candidate);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return { error: "invalid" };
+    if (hasLinkCredentials(candidate)) return { error: "credentials" };
+    return { href: url.href };
+  } catch {
+    return { error: "invalid" };
+  }
+}

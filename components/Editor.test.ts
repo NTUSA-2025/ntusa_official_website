@@ -21,6 +21,7 @@ vi.mock("react", async (importOriginal) => ({
   ...await importOriginal<typeof import("react")>(),
   useState: mocks.useState,
   useRef: () => ({ current: null }),
+  useEffect: () => undefined,
 }));
 vi.mock("@tiptap/react", () => ({ useEditor: mocks.useEditor, EditorContent: () => null }));
 vi.mock("@tiptap/starter-kit", () => ({ default: { configure: () => ({}) } }));
