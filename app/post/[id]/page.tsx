@@ -44,7 +44,7 @@ export default async function PostPage({
 
     const isAuthor = post.authorEmail === userEmail;
     const isDeptMember = post.department === userDepartment;
-    const isReviewer = userRole === "admin" || userDepartment === "公關部";
+    const isReviewer = userRole === "admin" || userRole === "reviewer" || userDepartment === "公關部";
 
     // 如果既不是作者，也不是同部門成員，也不是審核者，就回傳 404
     if (!isAuthor && !isDeptMember && !isReviewer) {

@@ -146,13 +146,14 @@ export default async function ReviewDashboard() {
                   />
 
                   <div className="mt-4 text-right">
-                    <Link
+                    <a
                       href={`/post/${post.id}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm text-gray-500 hover:text-gray-700 underline"
                     >
                       {t("previewInNewTab")}
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </details>
