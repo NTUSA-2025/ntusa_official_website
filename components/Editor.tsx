@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder"; // 引入 Placeholder
@@ -29,6 +29,12 @@ interface LinkSelection {
   to: number;
   text: string;
   isExistingLink: boolean;
+}
+
+function isLinkAtSelection(editor: NonNullable<ReturnType<typeof useEditor>>): boolean {
+  const { selection } = editor.state;
+  if (!selection.empty) return editor.isActive("link");
+  return selection.$from.nodeAfter?.marks.some((mark) => mark.type.name === "link") ?? false;
 }
 
 export default function Editor({ authorEmail, department, userRole, initialData }: EditorProps) {
@@ -99,6 +105,11 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     },
   });
 
+  const isLinkActive = useEditorState({
+    editor,
+    selector: ({ editor: currentEditor }) => currentEditor ? isLinkAtSelection(currentEditor) : false,
+  }) ?? false;
+
   const uploadSelectedImage = async (file: File): Promise<string | null> => {
     setIsUploadingImage(true);
     try {
@@ -142,7 +153,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
       return;
     }
 
-    const isExistingLink = editor.isActive("link");
+    const isExistingLink = isLinkAtSelection(editor);
     if (isExistingLink && editor.state.selection.empty) editor.commands.extendMarkRange("link");
     const { from, to } = editor.state.selection;
     setLinkSelection({ from, to, text: editor.state.doc.textBetween(from, to, " "), isExistingLink });
@@ -165,7 +176,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     if (linkSelection.from === linkSelection.to) {
       chain.insertContent({ type: "text", text: linkText.trim() || result.href, marks: [{ type: "link", attrs: { href: result.href } }] }).run();
     } else {
-      chain.setLink({ href: result.href }).run();
+      chain.setLink({ href: result.href }).setTextSelection(linkSelection.to).run();
     }
     setLinkSelection(null);
   };
@@ -305,7 +316,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
            <div className="w-px bg-gray-300 mx-1 my-1"></div>
 
            {/* 連結 */}
-           <button type="button" onClick={onOpenLinkPanel} aria-expanded={!!linkSelection} aria-controls="editor-link-panel" className={getButtonClass(!!linkSelection || editor?.isActive('link'))}>{editor?.isActive('link') ? tToolbar("editLink") : tToolbar("insertLink")}</button>
+           <button type="button" onClick={onOpenLinkPanel} aria-expanded={!!linkSelection} aria-controls="editor-link-panel" className={getButtonClass(!!linkSelection || isLinkActive)}>{isLinkActive ? tToolbar("editLink") : tToolbar("insertLink")}</button>
 
            <div className="flex-grow"></div> {/* 將插入圖片推到最右邊 */}
 
