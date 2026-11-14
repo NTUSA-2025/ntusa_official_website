@@ -49,6 +49,7 @@ export default function Editor({ authorEmail, department, userRole, initialData 
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [linkSelection, setLinkSelection] = useState<LinkSelection | null>(null);
   const [linkText, setLinkText] = useState("");
+  const [linkTextError, setLinkTextError] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
   const [linkError, setLinkError] = useState("");
 
@@ -156,8 +157,10 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     const isExistingLink = isLinkAtSelection(editor);
     if (isExistingLink && editor.state.selection.empty) editor.commands.extendMarkRange("link");
     const { from, to } = editor.state.selection;
-    setLinkSelection({ from, to, text: editor.state.doc.textBetween(from, to, " "), isExistingLink });
-    setLinkText("");
+    const text = editor.state.doc.textBetween(from, to, " ");
+    setLinkSelection({ from, to, text, isExistingLink });
+    setLinkText(text);
+    setLinkTextError("");
     setLinkUrl(isExistingLink ? editor.getAttributes("link").href || "" : "");
     setLinkError("");
   };
@@ -166,17 +169,33 @@ export default function Editor({ authorEmail, department, userRole, initialData 
     event.preventDefault();
     if (!editor || !linkSelection) return;
 
+    const { from, to, text } = linkSelection;
+    if (from !== to && !linkText.trim()) {
+      setLinkTextError(tToolbar("linkTextRequired"));
+      return;
+    }
+
     const result = parsePostLinkInput(linkUrl);
     if (result.error) {
       setLinkError(tToolbar(result.error === "credentials" ? "credentialedLink" : "invalidLink"));
       return;
     }
 
-    const chain = editor.chain().focus().setTextSelection({ from: linkSelection.from, to: linkSelection.to });
-    if (linkSelection.from === linkSelection.to) {
-      chain.insertContent({ type: "text", text: linkText.trim() || result.href, marks: [{ type: "link", attrs: { href: result.href } }] }).run();
+    if (from === to) {
+      editor.chain().focus().setTextSelection(from)
+        .insertContent({ type: "text", text: linkText.trim() || result.href, marks: [{ type: "link", attrs: { href: result.href } }] }).run();
+    } else if (linkText !== text) {
+      const originalMarks = editor.state.doc.resolve(from).nodeAfter?.marks
+        .filter((mark) => mark.type.name !== "link")
+        .map((mark) => mark.toJSON()) ?? [];
+      editor.chain().focus().insertContentAt({ from, to }, {
+        type: "text",
+        text: linkText,
+        marks: [...originalMarks, { type: "link", attrs: { href: result.href } }],
+      }).setTextSelection(from + linkText.length).run();
     } else {
-      chain.setLink({ href: result.href }).setTextSelection(linkSelection.to).run();
+      editor.chain().focus().setTextSelection({ from, to })
+        .setLink({ href: result.href }).setTextSelection(to).run();
     }
     setLinkSelection(null);
   };
@@ -352,14 +371,11 @@ export default function Editor({ authorEmail, department, userRole, initialData 
               </label>
               <p id="editor-link-hint" className="text-xs text-gray-600">{tToolbar("linkHint")}</p>
               {parsedLink?.href && <p className="text-xs font-medium text-blue-800">{tToolbar("linkDestination", { domain: new URL(parsedLink.href).hostname })}</p>}
-              {linkSelection.from === linkSelection.to ? (
-                <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
-                  {tToolbar("linkText")}
-                  <input type="text" value={linkText} onChange={(event) => setLinkText(event.target.value)} placeholder={tToolbar("linkTextPlaceholder")} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                </label>
-              ) : (
-                <p className="text-sm text-gray-700">{tToolbar("selectedText")}: <span className="font-medium break-words">{linkSelection.text}</span></p>
-              )}
+              <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+                {tToolbar(linkSelection.from === linkSelection.to ? "linkTextOptional" : "linkText")}
+                <input type="text" value={linkText} onChange={(event) => { setLinkText(event.target.value); setLinkTextError(""); }} placeholder={linkSelection.from === linkSelection.to ? tToolbar("linkTextPlaceholder") : undefined} aria-invalid={!!linkTextError} aria-describedby={linkTextError ? "editor-link-text-error" : undefined} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+              </label>
+              {linkTextError && <p id="editor-link-text-error" role="alert" className="text-sm text-red-700">{linkTextError}</p>}
               {linkError && <p id="editor-link-error" role="alert" className="text-sm text-red-700">{linkError}</p>}
               <div className="flex flex-wrap items-center justify-end gap-2">
                 {linkSelection.isExistingLink && <button type="button" onClick={onRemoveLink} className="mr-auto rounded-md px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50">{tToolbar("removeLink")}</button>}
