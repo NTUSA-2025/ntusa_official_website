@@ -40,6 +40,9 @@ export default function Footer() {
           <Link href="/announcements" className={isActive("/announcements") ? "active" : undefined}>
             {tNav("rights")}
           </Link>
+          <Link href="/cases" className={isActive("/cases") ? "active" : undefined}>
+            {tNav("caseProgress")}
+          </Link>
          <Link href="/forms" className={isActive("/forms") ? "active" : undefined}>
             {tNav("forms")}
           </Link>
