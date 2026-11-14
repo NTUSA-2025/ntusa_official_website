@@ -40,6 +40,25 @@ describe("post API HTML cleaning", () => {
     expect(vi.mocked(prisma.post.create).mock.calls[0][0].data.content).toBe("<p>Hello</p><img />");
   });
 
+  it("keeps a safe link when creating an announcement", async () => {
+    const response = await POST(new Request("http://localhost/api/posts", {
+      method: "POST",
+      body: JSON.stringify({ title: "New", content: '<p>Read <a href="https://example.com/info" target="_blank">details</a></p>' }),
+    }));
+    expect(response.status).toBe(201);
+    expect(vi.mocked(prisma.post.create).mock.calls[0][0].data.content).toBe('<p>Read <a href="https://example.com/info">details</a></p>');
+  });
+
+  it("rejects a credentialed link when creating an announcement", async () => {
+    const response = await POST(new Request("http://localhost/api/posts", {
+      method: "POST",
+      body: JSON.stringify({ title: "New", content: '<p><a href="https://ntusa.ntu.edu.tw@evil.example/login">Sign in</a></p>' }),
+    }));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ errorCode: "UNSAFE_LINK_URL" });
+    expect(prisma.post.create).not.toHaveBeenCalled();
+  });
+
   it("rejects a create request whose only content is a script", async () => {
     const response = await POST(new Request("http://localhost/api/posts", {
       method: "POST",
@@ -58,6 +77,16 @@ describe("post API HTML cleaning", () => {
     expect(vi.mocked(prisma.post.update).mock.calls[0][0].data.content).toBe("<h2>Updated</h2><img />");
   });
 
+  it("rejects a credentialed link when editing an announcement", async () => {
+    const response = await PATCH(new Request("http://localhost/api/posts/post-1", {
+      method: "PATCH",
+      body: JSON.stringify({ content: '<p><a href="https://user:password@evil.example/">Sign in</a></p>' }),
+    }), { params: Promise.resolve({ id: "post-1" }) });
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ errorCode: "UNSAFE_LINK_URL" });
+    expect(prisma.post.update).not.toHaveBeenCalled();
+  });
+
   it("cleans legacy content when a reviewer approves it", async () => {
     const response = await PATCH(new Request("http://localhost/api/posts/post-1", {
       method: "PATCH",
@@ -65,6 +94,19 @@ describe("post API HTML cleaning", () => {
     }), { params: Promise.resolve({ id: "post-1" }) });
     expect(response.status).toBe(200);
     expect(vi.mocked(prisma.post.update).mock.calls[0][0].data.content).toBe("<p>Old</p>");
+  });
+
+  it("removes credentialed links from legacy content during approval", async () => {
+    vi.mocked(prisma.post.findUnique).mockResolvedValue({
+      ...existingPost,
+      content: '<p><a href="https://ntusa.ntu.edu.tw@evil.example/login">Sign in</a></p>',
+    } as never);
+    const response = await PATCH(new Request("http://localhost/api/posts/post-1", {
+      method: "PATCH",
+      body: JSON.stringify({ status: "APPROVED" }),
+    }), { params: Promise.resolve({ id: "post-1" }) });
+    expect(response.status).toBe(200);
+    expect(vi.mocked(prisma.post.update).mock.calls[0][0].data.content).toBe("<p><a>Sign in</a></p>");
   });
 
   it("returns cleaned content from the public API for existing rows", async () => {

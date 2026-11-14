@@ -21,8 +21,9 @@ vi.mock("react", async (importOriginal) => ({
   ...await importOriginal<typeof import("react")>(),
   useState: mocks.useState,
   useRef: () => ({ current: null }),
+  useEffect: () => undefined,
 }));
-vi.mock("@tiptap/react", () => ({ useEditor: mocks.useEditor, EditorContent: () => null }));
+vi.mock("@tiptap/react", () => ({ useEditor: mocks.useEditor, useEditorState: () => false, EditorContent: () => null }));
 vi.mock("@tiptap/starter-kit", () => ({ default: { configure: () => ({}) } }));
 vi.mock("@tiptap/extension-image", () => ({ default: {} }));
 vi.mock("@tiptap/extension-placeholder", () => ({ default: { configure: () => ({}) } }));

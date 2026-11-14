@@ -4,7 +4,7 @@ import { authOptions } from "../../../lib/auth";
 import prisma from "../../../lib/prisma";
 import { Resend } from "resend";
 import ReviewRequestEmail from "../../../components/emails/ReviewRequestEmail";
-import { sanitizePostHtml } from "@/lib/post-html";
+import { hasCredentialedPostLink, sanitizePostHtml } from "@/lib/post-html";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -29,6 +29,9 @@ export async function POST(request: Request) {
 
     if (typeof title !== "string" || !title.trim() || typeof content !== "string") {
       return NextResponse.json({ errorCode: "TITLE_CONTENT_REQUIRED" }, { status: 400 });
+    }
+    if (hasCredentialedPostLink(content)) {
+      return NextResponse.json({ errorCode: "UNSAFE_LINK_URL" }, { status: 400 });
     }
     const cleanContent = sanitizePostHtml(content);
     if (!cleanContent.trim()) {
