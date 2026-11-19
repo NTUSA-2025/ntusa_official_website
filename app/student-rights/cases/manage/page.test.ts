@@ -1,7 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { createTranslator } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import { getServerSession } from "next-auth/next";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import prisma from "@/lib/prisma";
 import en from "@/messages/en.json";
@@ -10,9 +9,7 @@ import PublicCaseManagePage from "./page";
 import PublicCaseNotFound from "./[id]/not-found";
 
 vi.mock("next-intl/server", () => ({ getLocale: vi.fn(), getTranslations: vi.fn() }));
-vi.mock("next-auth/next", () => ({ getServerSession: vi.fn() }));
 vi.mock("@/lib/prisma", () => ({ default: { publicCase: { findMany: vi.fn() }, caseTag: { findMany: vi.fn() } } }));
-vi.mock("@/components/student-rights/CaseTagManager", () => ({ default: () => "Manage tags UI" }));
 
 describe("case management server pages", () => {
   for (const [locale, messages] of [["en", en], ["zh-TW", zh]] as const) {
@@ -23,7 +20,6 @@ describe("case management server pages", () => {
         vi.mocked(getTranslations).mockResolvedValue(t as Awaited<ReturnType<typeof getTranslations>>);
         vi.mocked(prisma.publicCase.findMany).mockResolvedValue([]);
         vi.mocked(prisma.caseTag.findMany).mockResolvedValue([]);
-        vi.mocked(getServerSession).mockResolvedValue(null);
       });
 
       it("translates the empty list", async () => {
@@ -70,11 +66,6 @@ describe("case management server pages", () => {
         }));
       });
 
-      it("shows tag management for admins", async () => {
-        vi.mocked(getServerSession).mockResolvedValue({ expires: "2099-01-01", user: { email: "admin@ntusa.ntu.edu.tw", role: "admin", department: "資訊部" } });
-        const markup = renderToStaticMarkup(await PublicCaseManagePage({ searchParams: Promise.resolve({}) }));
-        expect(markup).toContain("Manage tags UI");
-      });
     });
   }
 });

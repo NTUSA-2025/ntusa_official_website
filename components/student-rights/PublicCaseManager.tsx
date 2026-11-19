@@ -105,16 +105,21 @@ export default function PublicCaseManager({ caseRecord, tagOptions, canCreateTag
     isPublic: caseRecord.isPublic,
   } : blankCase);
   const [editingEvent, setEditingEvent] = useState<EventForm | null>(null);
+  const [renamedTags, setRenamedTags] = useState<Record<string, string>>({});
+  const availableTags = tagOptions.map((tag) => ({ ...tag, name: renamedTags[tag.id] ?? tag.name }));
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(() => caseRecord?.tags.map(({ id }) => id) ?? []);
   const [newTagNames, setNewTagNames] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const [editingTagId, setEditingTagId] = useState<string | null>(null);
+  const [tagRenameInput, setTagRenameInput] = useState("");
+  const [savingTag, setSavingTag] = useState(false);
   const editingEventId = editingEvent?.id;
   const editDateRef = useRef<HTMLInputElement>(null);
   const historyListRef = useRef<HTMLOListElement>(null);
   const historyDragOffsetRef = useRef<number | null>(null);
   const [historyScrollbar, setHistoryScrollbar] = useState({ visible: false, thumbHeight: 0, thumbTop: 0 });
   const [message, setMessage] = useState<{
-    key: "caseSaved" | "progressAdded" | "progressPublished" | "progressHidden" | "progressSaved" | "progressDeleted" | "saveFailed" | "addFailed" | "visibilityFailed" | "updateFailed" | "deleteFailed";
+    key: "caseSaved" | "tagUpdated" | "tagSaveFailed" | "progressAdded" | "progressPublished" | "progressHidden" | "progressSaved" | "progressDeleted" | "saveFailed" | "addFailed" | "visibilityFailed" | "updateFailed" | "deleteFailed";
     errorCode?: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -173,13 +178,41 @@ export default function PublicCaseManager({ caseRecord, tagOptions, canCreateTag
   function addTag() {
     const name = tagInput.trim();
     if (!name || selectedTagIds.length + newTagNames.length >= 10) return;
-    const existing = tagOptions.find((tag) => tag.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+    const existing = availableTags.find((tag) => tag.name.toLocaleLowerCase() === name.toLocaleLowerCase());
     if (existing) {
       setSelectedTagIds((current) => current.includes(existing.id) ? current : [...current, existing.id]);
     } else if (!newTagNames.some((tag) => tag.toLocaleLowerCase() === name.toLocaleLowerCase())) {
       setNewTagNames((current) => [...current, name]);
     }
     setTagInput("");
+  }
+
+  async function renameTag() {
+    const name = tagRenameInput.trim();
+    if (!editingTagId || !name || savingTag) return;
+    setSavingTag(true);
+    setMessage(null);
+    try {
+      const response = await fetch(`/api/admin/student-rights/tags/${editingTagId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) {
+        setMessage({ key: "tagSaveFailed", errorCode: await errorMessage(response) });
+        return;
+      }
+      const updated = await response.json() as { id: string; name: string };
+      setRenamedTags((current) => ({ ...current, [updated.id]: updated.name }));
+      setEditingTagId(null);
+      setTagRenameInput("");
+      setMessage({ key: "tagUpdated" });
+      router.refresh();
+    } catch {
+      setMessage({ key: "tagSaveFailed", errorCode: "REQUEST_FAILED" });
+    } finally {
+      setSavingTag(false);
+    }
   }
 
   async function submitCase(event: FormEvent<HTMLFormElement>) {
@@ -504,21 +537,39 @@ export default function PublicCaseManager({ caseRecord, tagOptions, canCreateTag
           <fieldset className="case-tag-picker">
             <legend>{t("tags")}</legend>
             <p className="case-tag-hint">{t("tagHint")}</p>
-            {tagOptions.length > 0 ? (
+            {availableTags.length > 0 ? (
               <div className="case-tag-options">
-                {tagOptions.map((tag) => (
-                  <label className="case-tag-option" key={tag.id}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTagIds.includes(tag.id)}
-                      disabled={submitting || (!selectedTagIds.includes(tag.id) && selectedTagIds.length + newTagNames.length >= 10)}
-                      onChange={(event) => setSelectedTagIds((current) => event.target.checked ? [...current, tag.id] : current.filter((id) => id !== tag.id))}
-                    />
-                    <span>{tag.name}</span>
-                  </label>
+                {availableTags.map((tag) => (
+                  <div className="case-tag-option-row" key={tag.id}>
+                    <label className="case-tag-option">
+                      <input
+                        type="checkbox"
+                        checked={selectedTagIds.includes(tag.id)}
+                        disabled={submitting || savingTag || (!selectedTagIds.includes(tag.id) && selectedTagIds.length + newTagNames.length >= 10)}
+                        onChange={(event) => setSelectedTagIds((current) => event.target.checked ? [...current, tag.id] : current.filter((id) => id !== tag.id))}
+                      />
+                      <span>{tag.name}</span>
+                    </label>
+                    {caseRecord && canCreateTags && selectedTagIds.includes(tag.id) ? (
+                      <button className="case-tag-rename-action" type="button" disabled={submitting || savingTag} onClick={() => { setEditingTagId(tag.id); setTagRenameInput(tag.name); }}>
+                        {t("editTag")}
+                      </button>
+                    ) : null}
+                  </div>
                 ))}
               </div>
             ) : <p className="case-tag-hint">{t("noTagsYet")}</p>}
+            {caseRecord && editingTagId ? (
+              <div className="case-tag-rename">
+                <label htmlFor="rename-case-tag">{t("editTagName")}</label>
+                <div>
+                  <input id="rename-case-tag" type="text" maxLength={40} value={tagRenameInput} disabled={submitting || savingTag} onChange={(event) => setTagRenameInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void renameTag(); } }} />
+                  <button className="btn btn-outline btn-sm" type="button" disabled={submitting || savingTag || !tagRenameInput.trim()} onClick={() => void renameTag()}>{t("saveTag")}</button>
+                  <button className="btn btn-outline btn-sm" type="button" disabled={savingTag} onClick={() => setEditingTagId(null)}>{t("cancel")}</button>
+                </div>
+                <p className="case-tag-hint">{t("tagRenameHint")}</p>
+              </div>
+            ) : null}
             {newTagNames.length > 0 ? (
               <div className="case-tags case-pending-tags">
                 {newTagNames.map((name) => (

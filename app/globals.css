@@ -273,23 +273,22 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-tag-picker legend { margin-bottom: 4px; color: var(--color-secondary); font-size: 14px; font-weight: 700; }
 .case-tag-hint { margin: 0 0 12px; color: var(--color-text-secondary); font-size: 14px; font-weight: 400; }
 .case-tag-options { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.case-tag-option-row { display: inline-flex; align-items: center; gap: 5px; }
 .case-manager-panel .case-tag-option { display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 7px 10px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); cursor: pointer; font-weight: 500; }
 .case-tag-option:has(input:checked) { border-color: var(--color-brand); background: var(--color-brand-light); }
 .case-tag-option input { width: 16px; height: 16px; accent-color: var(--color-brand-dark); }
+.case-tag-rename-action { padding: 5px 7px; color: var(--color-brand-dark); font-size: 13px; text-decoration: underline; text-underline-offset: 2px; }
+.case-tag-rename-action:focus-visible { outline: 2px solid var(--color-brand-dark); outline-offset: 2px; }
+.case-tag-rename { margin: 0 0 12px; }
+.case-tag-rename > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.case-manager-panel .case-tag-rename input { width: min(280px, 100%); }
+.case-tag-rename .case-tag-hint { margin: 8px 0 0; }
 .case-pending-tags { margin-bottom: 12px; }
 .case-tag-create { margin-top: 12px; }
 .case-manager-panel .case-tag-create label { margin-bottom: 6px; }
 .case-manager-panel .case-tag-filter label { display: inline; margin: 0; }
 .case-tag-create > div { display: flex; flex-wrap: wrap; gap: 8px; }
 .case-manager-panel .case-tag-create input { width: min(280px, 100%); }
-.case-tag-manager { margin-bottom: 20px; }
-.case-tag-manager > .case-tag-hint { margin: 8px 0 18px; }
-.case-tag-create-form > div, .case-tag-manager-list form > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.case-tag-manager .case-tag-create-form input, .case-tag-manager-list input { width: min(320px, 100%); }
-.case-tag-manager-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none; }
-.case-tag-manager-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--color-border); }
-.case-tag-manager-list li form { width: 100%; }
-.case-tag-manager-list li form label { margin-bottom: 6px; }
 .case-checkbox { display: flex !important; align-items: center; gap: 8px; font-weight: 500 !important; }
 .case-checkbox input { width: 16px; height: 16px; }
 .case-manager-panel .case-switch { display: flex; align-items: center; gap: 10px; margin: 16px 0; }

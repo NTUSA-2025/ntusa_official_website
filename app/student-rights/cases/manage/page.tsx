@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
-import { canManageStudentRightsCaseTags, isPublicCaseTableMissing } from "@/lib/student-rights-cases";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import CaseTagManager from "@/components/student-rights/CaseTagManager";
+import { isPublicCaseTableMissing } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +15,7 @@ function displayDate(value: Date, locale: string) {
 }
 
 export default async function PublicCaseManagePage({ searchParams }: { searchParams: Promise<{ tag?: string | string[] }> }) {
-  const [t, locale, query, session] = await Promise.all([getTranslations("caseManagement"), getLocale(), searchParams, getServerSession(authOptions)]);
+  const [t, locale, query] = await Promise.all([getTranslations("caseManagement"), getLocale(), searchParams]);
   let migrationPending = false;
   let cases: Awaited<ReturnType<typeof getCases>> = [];
   let tags: { id: string; name: string }[] = [];
@@ -51,8 +48,6 @@ export default async function PublicCaseManagePage({ searchParams }: { searchPar
           {t("migrationPending")}
         </p>
       ) : null}
-
-      {canManageStudentRightsCaseTags(session) ? <CaseTagManager tags={tags} disabled={migrationPending} /> : null}
 
       <section className="case-manager-panel case-manager-list-panel">
         <div className="case-manager-section-heading">

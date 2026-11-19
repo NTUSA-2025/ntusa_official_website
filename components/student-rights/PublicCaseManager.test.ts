@@ -25,9 +25,9 @@ const caseRecord: ManagedPublicCase = {
 describe("case management translations", () => {
   for (const [locale, messages] of [["en", en], ["zh-TW", zh]] as const) {
     const t = createTranslator({ locale, messages, namespace: "caseManagement" });
-    const render = (record?: ManagedPublicCase) => renderToStaticMarkup(createElement(Provider, {
+    const render = (record?: ManagedPublicCase, canCreateTags = true, tagOptions: { id: string; name: string }[] = []) => renderToStaticMarkup(createElement(Provider, {
       locale, messages, timeZone: "Asia/Taipei", onError: (error) => { throw error; },
-    }, createElement(PublicCaseManager, { caseRecord: record, tagOptions: [], canCreateTags: true })));
+    }, createElement(PublicCaseManager, { caseRecord: record, tagOptions, canCreateTags })));
 
     it(`renders the new case form in ${locale}`, () => {
       const markup = render();
@@ -61,6 +61,16 @@ describe("case management translations", () => {
       expect(markup).toContain(locale === "en" ? ">09/18/26</time>" : ">26/09/18</time>");
       expect(markup).toContain(locale === "en" ? "October 2, 2026" : "2026年10月2日");
       expect(markup).not.toContain(t("caseDateHelp"));
+    });
+
+    it(`shows inline tag creation and rename only to tag managers in ${locale}`, () => {
+      const selectedCase = { ...caseRecord, tags: [{ id: "tag-1", name: "交通" }] };
+      const tags = [{ id: "tag-1", name: "交通" }];
+      expect(render(selectedCase, true, tags)).toContain(t("editTag"));
+      expect(render(selectedCase, true, tags)).toContain(t("newTag"));
+      expect(render(selectedCase, false, tags)).not.toContain(t("editTag"));
+      expect(render(selectedCase, false, tags)).not.toContain(t("newTag"));
+      expect(render(undefined, true, tags)).not.toContain(t("editTag"));
     });
 
     it(`prefills the new progress date with today in Taipei in ${locale}`, () => {
