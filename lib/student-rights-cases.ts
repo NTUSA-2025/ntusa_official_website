@@ -105,6 +105,13 @@ export function isCaseTagNameConflict(error: unknown): boolean {
   return typeof error === "object" && error !== null && "code" in error && error.code === "P2002";
 }
 
+export function isCaseDatabaseUnavailable(error: unknown): boolean {
+  if (typeof error !== "object" || error === null || !("code" in error)) return false;
+  if (error.code === "P1001" || error.code === "P2024") return true;
+  return error.code === "P2028" && "message" in error && typeof error.message === "string"
+    && error.message.includes("Unable to start a transaction in the given time");
+}
+
 export async function resolveCaseTagIds(
   tx: Prisma.TransactionClient,
   tagIds: string[] | undefined,

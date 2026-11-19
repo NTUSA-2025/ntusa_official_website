@@ -48,4 +48,16 @@ describe("student rights tag API", () => {
     expect(response.status).toBe(403);
     expect(prisma.$transaction).not.toHaveBeenCalled();
   });
+
+  it("reports a transaction acquisition timeout as temporary unavailability", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      vi.mocked(prisma.$transaction).mockRejectedValue({ code: "P2028", message: "Unable to start a transaction in the given time." });
+      const response = await POST(new Request("http://localhost/api/admin/student-rights/tags", { method: "POST", body: JSON.stringify({ name: "交通" }) }));
+      expect(response.status).toBe(503);
+      expect(await response.json()).toEqual({ errorCode: "DATABASE_UNAVAILABLE" });
+    } finally {
+      log.mockRestore();
+    }
+  });
 });

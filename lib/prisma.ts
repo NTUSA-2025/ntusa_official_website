@@ -12,7 +12,14 @@ const adapter = new PrismaPg(pool);
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 // 3. ⚠️ 最關鍵的一行：把 adapter 傳入 PrismaClient！
-export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+export const prisma = globalForPrisma.prisma || new PrismaClient({
+  adapter,
+  transactionOptions: {
+    // Neon may need more than Prisma's 2-second default to wake and acquire a connection.
+    maxWait: 15_000,
+    timeout: 10_000,
+  },
+});
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 

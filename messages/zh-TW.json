@@ -133,6 +133,7 @@
       "TAG_NAME_TOO_LONG": "標籤名稱不可超過 40 字。",
       "TAG_ALREADY_EXISTS": "這個標籤已存在。",
       "TAG_NOT_FOUND": "找不到這個標籤，請重新整理頁面。",
+      "DATABASE_UNAVAILABLE": "資料庫連線逾時，請稍後再試。",
       "OPENED_AT_REQUIRED": "請填寫案件日期。",
       "OPENED_AT_INVALID": "請填寫有效的案件日期。",
       "OPENED_AT_TOO_LONG": "請填寫有效的案件日期。",

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Session } from "next-auth";
 import type { Prisma } from "@prisma/client";
-import { assertProgressVisibilityAllowed, canManageStudentRightsCaseTags, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseTagName, parseCaseUpdateInput, parseEventInput, publicCaseSort, resolveCaseTagIds } from "./student-rights-cases";
+import { assertProgressVisibilityAllowed, canManageStudentRightsCaseTags, canViewStudentRightsCaseAudit, CaseValidationError, isCaseDatabaseUnavailable, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseTagName, parseCaseUpdateInput, parseEventInput, publicCaseSort, resolveCaseTagIds } from "./student-rights-cases";
 
 function sessionFor(role: Session["user"]["role"], department: string): Session {
   return {
@@ -87,6 +87,14 @@ describe("student-rights public case input", () => {
     expect(parseCaseTagName({ name: " 交通 " })).toEqual({ name: "交通", nameKey: "交通" });
     expect(() => parseCaseTagName({ name: " " })).toThrow("TAG_NAME_REQUIRED");
     expect(() => parseCaseTagName({ name: "a".repeat(41) })).toThrow("TAG_NAME_TOO_LONG");
+  });
+
+  it("recognizes connection and transaction acquisition failures", () => {
+    expect(isCaseDatabaseUnavailable({ code: "P2028", message: "Unable to start a transaction in the given time." })).toBe(true);
+    expect(isCaseDatabaseUnavailable({ code: "P2028", message: "Transaction already closed" })).toBe(false);
+    expect(isCaseDatabaseUnavailable({ code: "P1001" })).toBe(true);
+    expect(isCaseDatabaseUnavailable({ code: "P2024" })).toBe(true);
+    expect(isCaseDatabaseUnavailable({ code: "P2002" })).toBe(false);
   });
 
   it("blocks new tag creation in the write path for other departments", async () => {

@@ -133,6 +133,7 @@
       "TAG_NAME_TOO_LONG": "Tag names must be 40 characters or fewer.",
       "TAG_ALREADY_EXISTS": "This tag already exists.",
       "TAG_NOT_FOUND": "This tag no longer exists. Refresh the page.",
+      "DATABASE_UNAVAILABLE": "The database connection timed out. Please try again shortly.",
       "OPENED_AT_REQUIRED": "Enter a case date.",
       "OPENED_AT_INVALID": "Enter a valid case date.",
       "OPENED_AT_TOO_LONG": "Enter a valid case date.",

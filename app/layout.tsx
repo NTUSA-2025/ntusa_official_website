@@ -14,6 +14,7 @@ const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
   return {
+    metadataBase: new URL(process.env.NEXTAUTH_URL || "https://ntusa.ntu.edu.tw"),
     title: t("siteTitle"),
     description: t("siteDescription"),
     icons: {

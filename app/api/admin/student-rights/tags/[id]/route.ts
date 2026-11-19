@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { canManageStudentRightsCaseTags, CaseValidationError, isCaseTagNameConflict, parseCaseTagName, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { canManageStudentRightsCaseTags, CaseValidationError, isCaseDatabaseUnavailable, isCaseTagNameConflict, parseCaseTagName, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +33,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (error instanceof CaseValidationError) return NextResponse.json({ errorCode: error.message }, { status: 400 });
     if (isCaseTagNameConflict(error)) return NextResponse.json({ errorCode: "TAG_ALREADY_EXISTS" }, { status: 409 });
     console.error("更新學權案件標籤失敗:", error);
+    if (isCaseDatabaseUnavailable(error)) return NextResponse.json({ errorCode: "DATABASE_UNAVAILABLE" }, { status: 503 });
     return NextResponse.json({ errorCode: "INTERNAL_ERROR" }, { status: 500 });
   }
 }
