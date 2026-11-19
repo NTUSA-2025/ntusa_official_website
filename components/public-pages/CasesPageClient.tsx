@@ -37,7 +37,7 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
   const visibleCases = selectedTagId
     ? publicCases.filter((caseRecord) => caseRecord.tags.some((tag) => tag.id === selectedTagId))
     : publicCases;
-  useFadeUp([locale]);
+  useFadeUp([locale, selectedTagId]);
 
   const toggleCaseTimeline = (id: string) => {
     setExpandedCases((current) => {
@@ -58,16 +58,14 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
         </div>
       </div>
       <div className="section-wrap">
-        {tags.length > 0 ? (
-          <div className="case-tag-filter">
-            <label htmlFor="public-case-tag">{tCases("filterByTag")}</label>
-            <select id="public-case-tag" value={selectedTagId} onChange={(event) => setSelectedTagId(event.target.value)}>
-              <option value="">{tCases("allTags")}</option>
-              {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
-            </select>
-            <span role="status">{tCases("resultCount", { count: visibleCases.length })}</span>
-          </div>
-        ) : null}
+        <div className="case-tag-filter">
+          <label htmlFor="public-case-tag">{tCases("filterByTag")}</label>
+          <select id="public-case-tag" value={selectedTagId} disabled={tags.length === 0} onChange={(event) => setSelectedTagId(event.target.value)}>
+            <option value="">{tCases("allTags")}</option>
+            {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+          </select>
+          <span role="status">{tags.length ? tCases("resultCount", { count: visibleCases.length }) : tCases("filterUnavailable")}</span>
+        </div>
         {publicCases.length === 0 ? (
           <div className="case-empty fade-up-target">{tCases("empty")}</div>
         ) : visibleCases.length === 0 ? (

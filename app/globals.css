@@ -213,6 +213,7 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-tag-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 20px; color: var(--color-secondary); font-size: 14px; font-weight: 700; }
 .case-tag-filter select { appearance: none; min-width: 180px; max-width: 100%; padding: 10px 36px 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23445766' stroke-width='1.8'/%3E%3C/svg%3E") no-repeat right 12px center; color: var(--color-secondary); font: inherit; font-weight: 500; }
 .case-tag-filter select:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 2px; }
+.case-tag-filter select:disabled { color: var(--color-text-secondary); cursor: not-allowed; }
 .case-tag-filter > span { color: var(--color-text-secondary); font-weight: 500; }
 .case-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .case-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--color-brand-light); color: var(--color-brand-dark); font-size: 14px; font-weight: 700; }
@@ -279,6 +280,14 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-panel .case-tag-filter label { display: inline; margin: 0; }
 .case-tag-create > div { display: flex; flex-wrap: wrap; gap: 8px; }
 .case-manager-panel .case-tag-create input { width: min(280px, 100%); }
+.case-tag-manager { margin-bottom: 20px; }
+.case-tag-manager > .case-tag-hint { margin: 8px 0 18px; }
+.case-tag-create-form > div, .case-tag-manager-list form > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.case-tag-manager .case-tag-create-form input, .case-tag-manager-list input { width: min(320px, 100%); }
+.case-tag-manager-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none; }
+.case-tag-manager-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--color-border); }
+.case-tag-manager-list li form { width: 100%; }
+.case-tag-manager-list li form label { margin-bottom: 6px; }
 .case-checkbox { display: flex !important; align-items: center; gap: 8px; font-weight: 500 !important; }
 .case-checkbox input { width: 16px; height: 16px; }
 .case-manager-panel .case-switch { display: flex; align-items: center; gap: 10px; margin: 16px 0; }

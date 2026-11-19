@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
-import { isPublicCaseTableMissing } from "@/lib/student-rights-cases";
+import { canManageStudentRightsCaseTags, isPublicCaseTableMissing } from "@/lib/student-rights-cases";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import CaseTagManager from "@/components/student-rights/CaseTagManager";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +18,7 @@ function displayDate(value: Date, locale: string) {
 }
 
 export default async function PublicCaseManagePage({ searchParams }: { searchParams: Promise<{ tag?: string | string[] }> }) {
-  const [t, locale, query] = await Promise.all([getTranslations("caseManagement"), getLocale(), searchParams]);
+  const [t, locale, query, session] = await Promise.all([getTranslations("caseManagement"), getLocale(), searchParams, getServerSession(authOptions)]);
   let migrationPending = false;
   let cases: Awaited<ReturnType<typeof getCases>> = [];
   let tags: { id: string; name: string }[] = [];
@@ -49,24 +52,27 @@ export default async function PublicCaseManagePage({ searchParams }: { searchPar
         </p>
       ) : null}
 
+      {canManageStudentRightsCaseTags(session) ? <CaseTagManager tags={tags} disabled={migrationPending} /> : null}
+
       <section className="case-manager-panel case-manager-list-panel">
         <div className="case-manager-section-heading">
           <h2>{t("allCases")}</h2>
-          <span>{t("caseCount", { count: cases.length })}</span>
+          <span>{migrationPending ? t("casesUnavailable") : t("caseCount", { count: cases.length })}</span>
         </div>
 
-        {tags.length > 0 ? (
-          <form className="case-tag-filter" action="/student-rights/cases/manage" method="get">
-            <label htmlFor="manage-case-tag">{t("filterByTag")}</label>
-            <select id="manage-case-tag" name="tag" defaultValue={selectedTag}>
-              <option value="">{t("allTags")}</option>
-              {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
-            </select>
-            <button className="btn btn-outline" type="submit">{t("applyFilter")}</button>
-          </form>
-        ) : null}
+        <form className="case-tag-filter" action="/student-rights/cases/manage" method="get">
+          <label htmlFor="manage-case-tag">{t("filterByTag")}</label>
+          <select id="manage-case-tag" name="tag" defaultValue={selectedTag} disabled={migrationPending || tags.length === 0}>
+            <option value="">{t("allTags")}</option>
+            {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+          </select>
+          <button className="btn btn-outline" type="submit" disabled={migrationPending || tags.length === 0}>{t("applyFilter")}</button>
+          {!migrationPending && tags.length === 0 ? <span>{t("filterUnavailable")}</span> : null}
+        </form>
 
-        {cases.length ? (
+        {migrationPending ? (
+          <p className="case-tag-hint">{t("casesUnavailable")}</p>
+        ) : cases.length ? (
           <div className="case-manager-case-list">
             {cases.map((caseRecord) => {
               const latestProgress = caseRecord.timelineEvents[0]?.publicNote || caseRecord.currentSituation;

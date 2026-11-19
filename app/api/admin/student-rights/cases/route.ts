@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { canCreateStudentRightsCaseTags, CaseValidationError, isPublicCaseTableMissing, isStudentRightsCaseManager, parseCaseInput, resolveCaseTagIds, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { canManageStudentRightsCaseTags, CaseValidationError, isPublicCaseTableMissing, isStudentRightsCaseManager, parseCaseInput, resolveCaseTagIds, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const input = parseCaseInput(await request.json());
     const actor = session.user.email.toLowerCase();
     const created = await prisma.$transaction(async (tx) => {
-      const tagIds = await resolveCaseTagIds(tx, input.tagIds, input.newTagNames, canCreateStudentRightsCaseTags(session));
+      const tagIds = await resolveCaseTagIds(tx, input.tagIds, input.newTagNames, canManageStudentRightsCaseTags(session));
       const caseRecord = await tx.publicCase.create({
         data: {
           openedAt: input.openedAt,

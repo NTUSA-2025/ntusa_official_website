@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import PublicCaseManager from "@/components/student-rights/PublicCaseManager";
 import prisma from "@/lib/prisma";
-import { canCreateStudentRightsCaseTags, isPublicCaseTableMissing } from "@/lib/student-rights-cases";
+import { canManageStudentRightsCaseTags, isPublicCaseTableMissing } from "@/lib/student-rights-cases";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
@@ -44,5 +44,5 @@ export default async function EditPublicCasePage({ params }: { params: Promise<{
     })),
   };
 
-  return <PublicCaseManager caseRecord={serializedCase} tagOptions={tags} canCreateTags={canCreateStudentRightsCaseTags(session)} />;
+  return <PublicCaseManager caseRecord={serializedCase} tagOptions={tags} canCreateTags={canManageStudentRightsCaseTags(session)} />;
 }

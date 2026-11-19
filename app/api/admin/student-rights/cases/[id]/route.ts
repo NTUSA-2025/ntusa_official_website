@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { canCreateStudentRightsCaseTags, CaseValidationError, isStudentRightsCaseManager, parseCaseUpdateInput, resolveCaseTagIds, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { canManageStudentRightsCaseTags, CaseValidationError, isStudentRightsCaseManager, parseCaseUpdateInput, resolveCaseTagIds, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +24,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const updated = await prisma.$transaction(async (tx) => {
       const before = await tx.publicCase.findUnique({ where: { id }, include: { tags: true } });
       if (!before) return null;
-      const tagIds = await resolveCaseTagIds(tx, input.tagIds, input.newTagNames, canCreateStudentRightsCaseTags(session));
+      const tagIds = await resolveCaseTagIds(tx, input.tagIds, input.newTagNames, canManageStudentRightsCaseTags(session));
       const publishEvent = input.isPublic && !before.isPublic
         ? await tx.caseTimelineEvent.findFirst({
             where: { caseId: id, isPublic: true },

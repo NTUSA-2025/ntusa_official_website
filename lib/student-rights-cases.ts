@@ -91,8 +91,18 @@ export function isStudentRightsCaseManager(session: Session | null): boolean {
   return isStudentRightsOrInformationDepartment(session);
 }
 
-export function canCreateStudentRightsCaseTags(session: Session | null): boolean {
-  return Boolean(session?.user?.email && session.user.department === "學權部");
+export function canManageStudentRightsCaseTags(session: Session | null): boolean {
+  return Boolean(session?.user?.email && (session.user.department === "學權部" || session.user.role === "admin"));
+}
+
+export function parseCaseTagName(body: unknown): { name: string; nameKey: string } {
+  if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
+  const name = requiredText((body as Record<string, unknown>).name, "TAG_NAME", 40);
+  return { name, nameKey: name.toLocaleLowerCase() };
+}
+
+export function isCaseTagNameConflict(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "P2002";
 }
 
 export async function resolveCaseTagIds(

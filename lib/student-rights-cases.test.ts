@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Session } from "next-auth";
 import type { Prisma } from "@prisma/client";
-import { assertProgressVisibilityAllowed, canCreateStudentRightsCaseTags, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseUpdateInput, parseEventInput, publicCaseSort, resolveCaseTagIds } from "./student-rights-cases";
+import { assertProgressVisibilityAllowed, canManageStudentRightsCaseTags, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseTagName, parseCaseUpdateInput, parseEventInput, publicCaseSort, resolveCaseTagIds } from "./student-rights-cases";
 
 function sessionFor(role: Session["user"]["role"], department: string): Session {
   return {
@@ -76,10 +76,17 @@ describe("student-rights public case input", () => {
     expect(isStudentRightsCaseManager(null)).toBe(false);
   });
 
-  it("only lets the student rights department create tags", () => {
-    expect(canCreateStudentRightsCaseTags(sessionFor("editor", "學權部"))).toBe(true);
-    expect(canCreateStudentRightsCaseTags(sessionFor("admin", "資訊部"))).toBe(false);
-    expect(canCreateStudentRightsCaseTags(null)).toBe(false);
+  it("lets the student rights department and admins manage tags", () => {
+    expect(canManageStudentRightsCaseTags(sessionFor("editor", "學權部"))).toBe(true);
+    expect(canManageStudentRightsCaseTags(sessionFor("admin", "資訊部"))).toBe(true);
+    expect(canManageStudentRightsCaseTags(sessionFor("editor", "資訊部"))).toBe(false);
+    expect(canManageStudentRightsCaseTags(null)).toBe(false);
+  });
+
+  it("validates tag names before creating or renaming them", () => {
+    expect(parseCaseTagName({ name: " 交通 " })).toEqual({ name: "交通", nameKey: "交通" });
+    expect(() => parseCaseTagName({ name: " " })).toThrow("TAG_NAME_REQUIRED");
+    expect(() => parseCaseTagName({ name: "a".repeat(41) })).toThrow("TAG_NAME_TOO_LONG");
   });
 
   it("blocks new tag creation in the write path for other departments", async () => {
