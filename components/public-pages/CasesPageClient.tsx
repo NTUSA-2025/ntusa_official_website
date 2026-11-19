@@ -80,13 +80,13 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
               return (
                 <article className="case-card fade-up-target" key={caseRecord.id}>
                   <div className="case-card-meta">
-                    <span>#{caseRecord.number}</span>
+                    <span className="case-number">#{caseRecord.number}</span>
+                    {caseRecord.tags.length > 0 ? (
+                      <div className="case-card-tags" aria-label={tCases("tags")}>
+                        {caseRecord.tags.map((tag) => <span className="case-tag" key={tag.id}>{tag.name}</span>)}
+                      </div>
+                    ) : null}
                   </div>
-                  {caseRecord.tags.length > 0 ? (
-                    <div className="case-tags" aria-label={tCases("tags")}>
-                      {caseRecord.tags.map((tag) => <span className="case-tag" key={tag.id}>{tag.name}</span>)}
-                    </div>
-                  ) : null}
                   <h2>{caseRecord.publicSummary}</h2>
                   {latestEvent ? (
                     <div className={`case-timeline-layout ${expanded ? "expanded" : ""}`}>
