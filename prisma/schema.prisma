@@ -53,9 +53,18 @@ model PublicCase {
   createdBy        String
   updatedBy        String
   timelineEvents   CaseTimelineEvent[]
+  tags             CaseTag[]
 
   @@index([isPublic])
   @@index([updatedAt])
+}
+
+model CaseTag {
+  id        String       @id @default(cuid())
+  name      String
+  nameKey   String       @unique
+  createdAt DateTime     @default(now())
+  cases     PublicCase[]
 }
 
 // 每次處理進度建立一筆新事件，避免以目前狀態覆寫歷史。

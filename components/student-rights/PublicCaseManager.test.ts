@@ -15,6 +15,7 @@ const caseRecord: ManagedPublicCase = {
   id: "case-1", number: 5, openedAt: "2026-09-05T12:00:00.000Z",
   createdAt: "2026-10-02T02:05:00.000Z", updatedAt: "2026-10-02T02:05:00.000Z",
   currentSituation: "已聯絡校方", publicSummary: "校園空間改善", isPublic: true,
+  tags: [],
   timelineEvents: [{
     id: "event-1", occurredAt: "2026-09-18T12:00:00.000Z", publicNote: "已聯絡校方", isPublic: true,
     createdAt: "2026-10-02T02:05:00.000Z", updatedAt: "2026-10-02T02:05:00.000Z",
@@ -26,7 +27,7 @@ describe("case management translations", () => {
     const t = createTranslator({ locale, messages, namespace: "caseManagement" });
     const render = (record?: ManagedPublicCase) => renderToStaticMarkup(createElement(Provider, {
       locale, messages, timeZone: "Asia/Taipei", onError: (error) => { throw error; },
-    }, createElement(PublicCaseManager, { caseRecord: record })));
+    }, createElement(PublicCaseManager, { caseRecord: record, tagOptions: [], canCreateTags: true })));
 
     it(`renders the new case form in ${locale}`, () => {
       const markup = render();

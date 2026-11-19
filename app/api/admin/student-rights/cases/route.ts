@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CaseValidationError, isPublicCaseTableMissing, isStudentRightsCaseManager, parseCaseInput, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { canCreateStudentRightsCaseTags, CaseValidationError, isPublicCaseTableMissing, isStudentRightsCaseManager, parseCaseInput, resolveCaseTagIds, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +19,7 @@ export async function GET() {
 
   try {
     const cases = await prisma.publicCase.findMany({
-      include: { timelineEvents: { orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }] } },
+      include: { tags: { orderBy: { name: "asc" } }, timelineEvents: { orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }] } },
       orderBy: { number: "desc" },
     });
     return NextResponse.json(cases);
@@ -39,13 +39,18 @@ export async function POST(request: Request) {
     const input = parseCaseInput(await request.json());
     const actor = session.user.email.toLowerCase();
     const created = await prisma.$transaction(async (tx) => {
+      const tagIds = await resolveCaseTagIds(tx, input.tagIds, input.newTagNames, canCreateStudentRightsCaseTags(session));
       const caseRecord = await tx.publicCase.create({
         data: {
-          ...input,
+          openedAt: input.openedAt,
+          currentSituation: input.currentSituation,
+          publicSummary: input.publicSummary,
           isPublic: input.isPublic ?? false,
           createdBy: actor,
           updatedBy: actor,
+          tags: tagIds ? { connect: tagIds.map((id) => ({ id })) } : undefined,
         },
+        include: { tags: true },
       });
       const initialEvent = await tx.caseTimelineEvent.create({
         data: {

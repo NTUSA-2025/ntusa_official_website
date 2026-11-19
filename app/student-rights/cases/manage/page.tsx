@@ -14,13 +14,17 @@ function displayDate(value: Date, locale: string) {
   });
 }
 
-export default async function PublicCaseManagePage() {
-  const [t, locale] = await Promise.all([getTranslations("caseManagement"), getLocale()]);
+export default async function PublicCaseManagePage({ searchParams }: { searchParams: Promise<{ tag?: string | string[] }> }) {
+  const [t, locale, query] = await Promise.all([getTranslations("caseManagement"), getLocale(), searchParams]);
   let migrationPending = false;
   let cases: Awaited<ReturnType<typeof getCases>> = [];
+  let tags: { id: string; name: string }[] = [];
+  let selectedTag = "";
 
   try {
-    cases = await getCases();
+    tags = await prisma.caseTag.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } });
+    selectedTag = typeof query.tag === "string" && tags.some(({ id }) => id === query.tag) ? query.tag : "";
+    cases = await getCases(selectedTag);
   } catch (error) {
     if (!isPublicCaseTableMissing(error)) throw error;
     migrationPending = true;
@@ -51,6 +55,17 @@ export default async function PublicCaseManagePage() {
           <span>{t("caseCount", { count: cases.length })}</span>
         </div>
 
+        {tags.length > 0 ? (
+          <form className="case-tag-filter" action="/student-rights/cases/manage" method="get">
+            <label htmlFor="manage-case-tag">{t("filterByTag")}</label>
+            <select id="manage-case-tag" name="tag" defaultValue={selectedTag}>
+              <option value="">{t("allTags")}</option>
+              {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+            </select>
+            <button className="btn btn-outline" type="submit">{t("applyFilter")}</button>
+          </form>
+        ) : null}
+
         {cases.length ? (
           <div className="case-manager-case-list">
             {cases.map((caseRecord) => {
@@ -69,6 +84,11 @@ export default async function PublicCaseManagePage() {
                     </span>
                   </div>
                   <h3>{caseRecord.publicSummary}</h3>
+                  {caseRecord.tags.length > 0 ? (
+                    <div className="case-tags" aria-label={t("tags")}>
+                      {caseRecord.tags.map((tag) => <span className="case-tag" key={tag.id}>{tag.name}</span>)}
+                    </div>
+                  ) : null}
                   <p className="case-manager-case-progress">{latestProgress}</p>
                   <div className="case-manager-case-dates">
                     <span>{t("caseDate")}: {displayDate(caseRecord.openedAt, locale)}</span>
@@ -80,8 +100,10 @@ export default async function PublicCaseManagePage() {
           </div>
         ) : (
           <div className="case-manager-empty">
-            <p>{t("emptyCases")}</p>
-            <Link className="btn btn-outline" href="/student-rights/cases/manage/new">{t("createFirst")}</Link>
+            <p>{selectedTag ? t("noMatchingCases") : t("emptyCases")}</p>
+            {selectedTag
+              ? <Link className="btn btn-outline" href="/student-rights/cases/manage">{t("allTags")}</Link>
+              : <Link className="btn btn-outline" href="/student-rights/cases/manage/new">{t("createFirst")}</Link>}
           </div>
         )}
       </section>
@@ -89,14 +111,16 @@ export default async function PublicCaseManagePage() {
   );
 }
 
-function getCases() {
+function getCases(tagId: string) {
   return prisma.publicCase.findMany({
     include: {
+      tags: { orderBy: { name: "asc" as const } },
       timelineEvents: {
         orderBy: [{ occurredAt: "desc" as const }, { createdAt: "desc" as const }],
         take: 1,
       },
     },
+    where: tagId ? { tags: { some: { id: tagId } } } : undefined,
     orderBy: { number: "desc" },
   });
 }

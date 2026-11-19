@@ -31,6 +31,12 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
   const locale = useLocale();
   const tCases = useTranslations("home.cases");
   const [expandedCases, setExpandedCases] = useState<Set<string>>(() => new Set());
+  const [selectedTagId, setSelectedTagId] = useState("");
+  const tags = [...new Map(publicCases.flatMap((caseRecord) => caseRecord.tags).map((tag) => [tag.id, tag])).values()]
+    .sort((a, b) => a.name.localeCompare(b.name, "zh-TW"));
+  const visibleCases = selectedTagId
+    ? publicCases.filter((caseRecord) => caseRecord.tags.some((tag) => tag.id === selectedTagId))
+    : publicCases;
   useFadeUp([locale]);
 
   const toggleCaseTimeline = (id: string) => {
@@ -52,11 +58,23 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
         </div>
       </div>
       <div className="section-wrap">
+        {tags.length > 0 ? (
+          <div className="case-tag-filter">
+            <label htmlFor="public-case-tag">{tCases("filterByTag")}</label>
+            <select id="public-case-tag" value={selectedTagId} onChange={(event) => setSelectedTagId(event.target.value)}>
+              <option value="">{tCases("allTags")}</option>
+              {tags.map((tag) => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
+            </select>
+            <span role="status">{tCases("resultCount", { count: visibleCases.length })}</span>
+          </div>
+        ) : null}
         {publicCases.length === 0 ? (
           <div className="case-empty fade-up-target">{tCases("empty")}</div>
+        ) : visibleCases.length === 0 ? (
+          <div className="case-empty fade-up-target">{tCases("noMatchingCases")}</div>
         ) : (
           <div className="case-list">
-            {publicCases.map((caseRecord) => {
+            {visibleCases.map((caseRecord) => {
               const expanded = expandedCases.has(caseRecord.id);
               const latestEvent = caseRecord.timelineEvents[0];
               const earlierEvents = caseRecord.timelineEvents.slice(1);
@@ -66,6 +84,11 @@ export default function CasesPageClient({ publicCases }: { publicCases: HomePubl
                   <div className="case-card-meta">
                     <span>#{caseRecord.number}</span>
                   </div>
+                  {caseRecord.tags.length > 0 ? (
+                    <div className="case-tags" aria-label={tCases("tags")}>
+                      {caseRecord.tags.map((tag) => <span className="case-tag" key={tag.id}>{tag.name}</span>)}
+                    </div>
+                  ) : null}
                   <h2>{caseRecord.publicSummary}</h2>
                   {latestEvent ? (
                     <div className={`case-timeline-layout ${expanded ? "expanded" : ""}`}>

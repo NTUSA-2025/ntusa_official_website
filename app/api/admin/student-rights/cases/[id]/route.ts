@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CaseValidationError, isStudentRightsCaseManager, parseCaseUpdateInput, toAuditSnapshot } from "@/lib/student-rights-cases";
+import { canCreateStudentRightsCaseTags, CaseValidationError, isStudentRightsCaseManager, parseCaseUpdateInput, resolveCaseTagIds, toAuditSnapshot } from "@/lib/student-rights-cases";
 
 export const dynamic = "force-dynamic";
 
@@ -22,8 +22,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const input = parseCaseUpdateInput(await request.json());
     const actor = session.user.email.toLowerCase();
     const updated = await prisma.$transaction(async (tx) => {
-      const before = await tx.publicCase.findUnique({ where: { id } });
+      const before = await tx.publicCase.findUnique({ where: { id }, include: { tags: true } });
       if (!before) return null;
+      const tagIds = await resolveCaseTagIds(tx, input.tagIds, input.newTagNames, canCreateStudentRightsCaseTags(session));
       const publishEvent = input.isPublic && !before.isPublic
         ? await tx.caseTimelineEvent.findFirst({
             where: { caseId: id, isPublic: true },
@@ -38,7 +39,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           currentSituation: publishEvent?.publicNote ?? before.currentSituation,
           isPublic: input.isPublic ?? before.isPublic,
           updatedBy: actor,
+          tags: tagIds ? { set: tagIds.map((tagId) => ({ id: tagId })) } : undefined,
         },
+        include: { tags: true },
       });
       const action = !before.isPublic && after.isPublic ? "PUBLISH" : before.isPublic && !after.isPublic ? "HIDE" : "UPDATE";
       await tx.caseAuditLog.create({

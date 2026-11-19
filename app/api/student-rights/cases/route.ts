@@ -15,6 +15,7 @@ export async function GET() {
         publicSummary: true,
         createdAt: true,
         updatedAt: true,
+        tags: { select: { name: true }, orderBy: { name: "asc" } },
         timelineEvents: {
           where: { isPublic: true },
           select: { occurredAt: true, publicNote: true, createdAt: true, updatedAt: true },

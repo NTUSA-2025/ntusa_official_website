@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { Session } from "next-auth";
-import { assertProgressVisibilityAllowed, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseUpdateInput, parseEventInput, publicCaseSort } from "./student-rights-cases";
+import type { Prisma } from "@prisma/client";
+import { assertProgressVisibilityAllowed, canCreateStudentRightsCaseTags, canViewStudentRightsCaseAudit, CaseValidationError, isStudentRightsCaseManager, latestPublicProgress, parseCaseInput, parseCaseUpdateInput, parseEventInput, publicCaseSort, resolveCaseTagIds } from "./student-rights-cases";
 
 function sessionFor(role: Session["user"]["role"], department: string): Session {
   return {
@@ -17,8 +18,16 @@ describe("student-rights public case input", () => {
 
   it("edits only the visible case fields without requiring the initial progress", () => {
     expect(parseCaseUpdateInput({ publicSummary: " 更新後主旨 ", isPublic: false }))
-      .toEqual({ publicSummary: "更新後主旨", isPublic: false });
+      .toMatchObject({ publicSummary: "更新後主旨", isPublic: false });
     expect(() => parseCaseUpdateInput({ publicSummary: "  " })).toThrow("PUBLIC_SUMMARY_REQUIRED");
+  });
+
+  it("normalizes new tags and rejects invalid tag selections", () => {
+    expect(parseCaseUpdateInput({ publicSummary: "案件", tagIds: ["tag-1"], newTagNames: [" 交通 ", "交通"] }))
+      .toMatchObject({ tagIds: ["tag-1"], newTagNames: ["交通"] });
+    expect(() => parseCaseUpdateInput({ publicSummary: "案件", newTagNames: [" "] })).toThrow("TAGS_INVALID");
+    expect(() => parseCaseUpdateInput({ publicSummary: "案件", newTagNames: ["交通"] })).toThrow("TAGS_INVALID");
+    expect(() => parseCaseUpdateInput({ publicSummary: "案件", tagIds: Array.from({ length: 11 }, (_, index) => String(index)) })).toThrow("TAGS_TOO_MANY");
   });
 
   it("rejects invalid dates and timestamps with a time component", () => {
@@ -65,5 +74,17 @@ describe("student-rights public case input", () => {
     expect(isStudentRightsCaseManager(sessionFor("editor", "學術部"))).toBe(false);
     expect(isStudentRightsCaseManager(sessionFor("admin", "學術部"))).toBe(false);
     expect(isStudentRightsCaseManager(null)).toBe(false);
+  });
+
+  it("only lets the student rights department create tags", () => {
+    expect(canCreateStudentRightsCaseTags(sessionFor("editor", "學權部"))).toBe(true);
+    expect(canCreateStudentRightsCaseTags(sessionFor("admin", "資訊部"))).toBe(false);
+    expect(canCreateStudentRightsCaseTags(null)).toBe(false);
+  });
+
+  it("blocks new tag creation in the write path for other departments", async () => {
+    const tx = { caseTag: { findMany: vi.fn(), upsert: vi.fn() } } as unknown as Prisma.TransactionClient;
+    await expect(resolveCaseTagIds(tx, [], ["交通"], false)).rejects.toThrow("TAG_CREATE_FORBIDDEN");
+    expect(tx.caseTag.upsert).not.toHaveBeenCalled();
   });
 });

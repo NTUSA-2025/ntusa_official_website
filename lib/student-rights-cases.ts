@@ -27,6 +27,24 @@ function requiredDate(value: unknown, field: string): Date {
   return date;
 }
 
+function parseTagSelection(input: Record<string, unknown>) {
+  const tagIds = input.tagIds;
+  const newTagNames = input.newTagNames;
+  if (tagIds !== undefined && (!Array.isArray(tagIds) || tagIds.some((id) => typeof id !== "string" || !id.trim()))) {
+    throw new CaseValidationError("TAGS_INVALID");
+  }
+  if (newTagNames !== undefined && (!Array.isArray(newTagNames) || newTagNames.some((name) => typeof name !== "string" || !name.trim() || name.trim().length > 40))) {
+    throw new CaseValidationError("TAGS_INVALID");
+  }
+  if (Array.isArray(newTagNames) && newTagNames.length > 0 && tagIds === undefined) {
+    throw new CaseValidationError("TAGS_INVALID");
+  }
+  const ids = tagIds === undefined ? undefined : [...new Set(tagIds as string[])];
+  const names = newTagNames === undefined ? [] : [...new Map((newTagNames as string[]).map((name) => [name.trim().toLocaleLowerCase(), name.trim()])).values()];
+  if ((ids?.length ?? 0) + names.length > 10) throw new CaseValidationError("TAGS_TOO_MANY");
+  return { tagIds: ids, newTagNames: names };
+}
+
 export function parseCaseInput(body: unknown) {
   if (!body || typeof body !== "object") throw new CaseValidationError("INVALID_BODY");
   const input = body as Record<string, unknown>;
@@ -35,6 +53,7 @@ export function parseCaseInput(body: unknown) {
     currentSituation: requiredText(input.currentSituation, "CURRENT_SITUATION", 4000),
     publicSummary: requiredText(input.publicSummary, "PUBLIC_SUMMARY", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
+    ...parseTagSelection(input),
   };
 }
 
@@ -44,6 +63,7 @@ export function parseCaseUpdateInput(body: unknown) {
   return {
     publicSummary: requiredText(input.publicSummary, "PUBLIC_SUMMARY", 4000),
     isPublic: optionalBoolean(input.isPublic, "IS_PUBLIC"),
+    ...parseTagSelection(input),
   };
 }
 
@@ -69,6 +89,31 @@ export function latestPublicProgress(events: { publicNote: string }[]): string {
 
 export function isStudentRightsCaseManager(session: Session | null): boolean {
   return isStudentRightsOrInformationDepartment(session);
+}
+
+export function canCreateStudentRightsCaseTags(session: Session | null): boolean {
+  return Boolean(session?.user?.email && session.user.department === "學權部");
+}
+
+export async function resolveCaseTagIds(
+  tx: Prisma.TransactionClient,
+  tagIds: string[] | undefined,
+  newTagNames: string[],
+  canCreateTags: boolean,
+): Promise<string[] | undefined> {
+  if (tagIds === undefined && newTagNames.length === 0) return undefined;
+  if (newTagNames.length > 0 && !canCreateTags) throw new CaseValidationError("TAG_CREATE_FORBIDDEN");
+
+  const existing = tagIds?.length ? await tx.caseTag.findMany({ where: { id: { in: tagIds } }, select: { id: true } }) : [];
+  if (existing.length !== (tagIds?.length ?? 0)) throw new CaseValidationError("TAGS_INVALID");
+
+  const createdOrFound = await Promise.all(newTagNames.map((name) => tx.caseTag.upsert({
+    where: { nameKey: name.toLocaleLowerCase() },
+    update: {},
+    create: { name, nameKey: name.toLocaleLowerCase() },
+    select: { id: true },
+  })));
+  return [...new Set([...existing.map(({ id }) => id), ...createdOrFound.map(({ id }) => id)])];
 }
 
 export function canViewStudentRightsCaseAudit(session: Session | null): boolean {

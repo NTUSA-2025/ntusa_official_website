@@ -24,6 +24,7 @@ export type ManagedPublicCase = {
   createdAt: string;
   updatedAt: string;
   timelineEvents: TimelineEvent[];
+  tags: { id: string; name: string }[];
 };
 
 type CaseForm = {
@@ -88,7 +89,11 @@ function todayInTaipei() {
   return `${date.year}-${date.month}-${date.day}`;
 }
 
-export default function PublicCaseManager({ caseRecord }: { caseRecord?: ManagedPublicCase }) {
+export default function PublicCaseManager({ caseRecord, tagOptions, canCreateTags }: {
+  caseRecord?: ManagedPublicCase;
+  tagOptions: { id: string; name: string }[];
+  canCreateTags: boolean;
+}) {
   const router = useRouter();
   const t = useTranslations("caseManagement");
   const locale = useLocale();
@@ -100,6 +105,9 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     isPublic: caseRecord.isPublic,
   } : blankCase);
   const [editingEvent, setEditingEvent] = useState<EventForm | null>(null);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(() => caseRecord?.tags.map(({ id }) => id) ?? []);
+  const [newTagNames, setNewTagNames] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const editingEventId = editingEvent?.id;
   const editDateRef = useRef<HTMLInputElement>(null);
   const historyListRef = useRef<HTMLOListElement>(null);
@@ -162,6 +170,18 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
     setMessage((previous) => previous?.key === "caseSaved" || previous?.key === "saveFailed" ? null : previous);
   };
 
+  function addTag() {
+    const name = tagInput.trim();
+    if (!name || selectedTagIds.length + newTagNames.length >= 10) return;
+    const existing = tagOptions.find((tag) => tag.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+    if (existing) {
+      setSelectedTagIds((current) => current.includes(existing.id) ? current : [...current, existing.id]);
+    } else if (!newTagNames.some((tag) => tag.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+      setNewTagNames((current) => [...current, name]);
+    }
+    setTagInput("");
+  }
+
   async function submitCase(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const publishOnCreate = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "public";
@@ -176,8 +196,8 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
           method: caseRecord ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(caseRecord
-            ? { publicSummary: form.publicSummary, isPublic: form.isPublic }
-            : { ...form, isPublic: publishOnCreate }),
+            ? { publicSummary: form.publicSummary, isPublic: form.isPublic, tagIds: selectedTagIds, newTagNames }
+            : { ...form, isPublic: publishOnCreate, tagIds: selectedTagIds, newTagNames }),
         },
       );
       if (!response.ok) {
@@ -191,6 +211,8 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
         return;
       }
 
+      setSelectedTagIds(saved.tags.map(({ id }) => id));
+      setNewTagNames([]);
       setMessage({ key: "caseSaved" });
       router.refresh();
     } catch {
@@ -479,6 +501,45 @@ export default function PublicCaseManager({ caseRecord }: { caseRecord?: Managed
               onChange={(event) => setField("publicSummary", event.target.value)}
             />
           </label>
+          <fieldset className="case-tag-picker">
+            <legend>{t("tags")}</legend>
+            <p className="case-tag-hint">{t("tagHint")}</p>
+            {tagOptions.length > 0 ? (
+              <div className="case-tag-options">
+                {tagOptions.map((tag) => (
+                  <label className="case-tag-option" key={tag.id}>
+                    <input
+                      type="checkbox"
+                      checked={selectedTagIds.includes(tag.id)}
+                      disabled={submitting || (!selectedTagIds.includes(tag.id) && selectedTagIds.length + newTagNames.length >= 10)}
+                      onChange={(event) => setSelectedTagIds((current) => event.target.checked ? [...current, tag.id] : current.filter((id) => id !== tag.id))}
+                    />
+                    <span>{tag.name}</span>
+                  </label>
+                ))}
+              </div>
+            ) : <p className="case-tag-hint">{t("noTagsYet")}</p>}
+            {newTagNames.length > 0 ? (
+              <div className="case-tags case-pending-tags">
+                {newTagNames.map((name) => (
+                  <span className="case-tag" key={name}>
+                    {name}
+                    <button type="button" aria-label={t("removeTag", { name })} disabled={submitting} onClick={() => setNewTagNames((current) => current.filter((tag) => tag !== name))}>×</button>
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            {canCreateTags ? (
+              <div className="case-tag-create">
+                <label htmlFor="new-case-tag">{t("newTag")}</label>
+                <div>
+                  <input id="new-case-tag" type="text" maxLength={40} value={tagInput} disabled={submitting} onChange={(event) => setTagInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addTag(); } }} />
+                  <button className="btn btn-outline" type="button" disabled={submitting || !tagInput.trim() || selectedTagIds.length + newTagNames.length >= 10} onClick={addTag}>{t("addTag")}</button>
+                </div>
+              </div>
+            ) : null}
+            {selectedTagIds.length + newTagNames.length >= 10 ? <p className="case-tag-hint">{t("tagLimit")}</p> : null}
+          </fieldset>
           {!caseRecord ? (
             <label>
               {t("initialProgress")}

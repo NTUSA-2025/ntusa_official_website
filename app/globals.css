@@ -210,6 +210,14 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-contact-cta .case-contact { margin-top: 10px; }
 .case-contact-cta .case-contact a { color: var(--color-text-secondary); }
 .case-list { display: grid; gap: 16px; }
+.case-tag-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 20px; color: var(--color-secondary); font-size: 14px; font-weight: 700; }
+.case-tag-filter select { appearance: none; min-width: 180px; max-width: 100%; padding: 10px 36px 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23445766' stroke-width='1.8'/%3E%3C/svg%3E") no-repeat right 12px center; color: var(--color-secondary); font: inherit; font-weight: 500; }
+.case-tag-filter select:focus-visible { outline: 3px solid var(--color-brand); outline-offset: 2px; }
+.case-tag-filter > span { color: var(--color-text-secondary); font-weight: 500; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.case-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--color-brand-light); color: var(--color-brand-dark); font-size: 14px; font-weight: 700; }
+.case-tag button { color: inherit; font-size: 18px; line-height: 1; }
+.case-tag button:focus-visible { outline: 2px solid var(--color-brand-dark); outline-offset: 2px; }
 .case-card, .case-empty { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 24px; }
 .case-card h2 { color: var(--color-secondary); margin: 10px 0 0; padding-bottom: 16px; border-bottom: 1px solid var(--color-border); }
 .case-card-meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--color-brand-dark); font-size: 13px; font-weight: 700; }
@@ -258,6 +266,19 @@ p, .body { font-size: 16px; font-weight: 400; }
 .case-manager-panel label { display: grid; gap: 6px; margin-bottom: 15px; font-size: 14px; font-weight: 700; color: var(--color-secondary); }
 .case-manager-panel input:not([type="checkbox"]), .case-manager-panel textarea { width: 100%; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 10px 12px; font: inherit; font-size: 16px; font-weight: 400; background: #fff; }
 .case-manager-panel textarea { resize: vertical; }
+.case-tag-picker { margin: 18px 0 0; padding: 0; border: 0; }
+.case-tag-picker legend { margin-bottom: 4px; color: var(--color-secondary); font-size: 14px; font-weight: 700; }
+.case-tag-hint { margin: 0 0 12px; color: var(--color-text-secondary); font-size: 14px; font-weight: 400; }
+.case-tag-options { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.case-manager-panel .case-tag-option { display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 7px 10px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); cursor: pointer; font-weight: 500; }
+.case-tag-option:has(input:checked) { border-color: var(--color-brand); background: var(--color-brand-light); }
+.case-tag-option input { width: 16px; height: 16px; accent-color: var(--color-brand-dark); }
+.case-pending-tags { margin-bottom: 12px; }
+.case-tag-create { margin-top: 12px; }
+.case-manager-panel .case-tag-create label { margin-bottom: 6px; }
+.case-manager-panel .case-tag-filter label { display: inline; margin: 0; }
+.case-tag-create > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.case-manager-panel .case-tag-create input { width: min(280px, 100%); }
 .case-checkbox { display: flex !important; align-items: center; gap: 8px; font-weight: 500 !important; }
 .case-checkbox input { width: 16px; height: 16px; }
 .case-manager-panel .case-switch { display: flex; align-items: center; gap: 10px; margin: 16px 0; }

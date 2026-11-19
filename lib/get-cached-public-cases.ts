@@ -9,6 +9,7 @@ export interface HomePublicCase {
   currentSituation: string;
   publicSummary: string;
   updatedAt: string;
+  tags: { id: string; name: string }[];
   timelineEvents: {
     id: string;
     occurredAt: string;
@@ -22,6 +23,7 @@ const getPublicCases = unstable_cache(
       const rows = await prisma.publicCase.findMany({
         where: { isPublic: true },
         include: {
+          tags: { orderBy: { name: "asc" } },
           timelineEvents: {
             where: { isPublic: true },
             orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
@@ -36,6 +38,7 @@ const getPublicCases = unstable_cache(
         currentSituation: latestPublicProgress(caseRecord.timelineEvents),
         publicSummary: caseRecord.publicSummary,
         updatedAt: caseRecord.updatedAt.toISOString(),
+        tags: caseRecord.tags.map(({ id, name }) => ({ id, name })),
         timelineEvents: caseRecord.timelineEvents.map((event) => ({
           id: event.id,
           occurredAt: event.occurredAt.toISOString(),
