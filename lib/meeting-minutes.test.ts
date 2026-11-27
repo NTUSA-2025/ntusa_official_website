@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { POST as createMinute } from "../app/api/minutes/route";
+import { GET as listMinutes, POST as createMinute } from "../app/api/minutes/route";
 import { DELETE as deleteMinute, PATCH as updateMinute } from "../app/api/minutes/[id]/route";
 import { getServerSession } from "next-auth/next";
 import { revalidatePath } from "next/cache";
@@ -305,6 +305,46 @@ describe("Meeting Minutes API", () => {
 
       expect(res.status).toBe(400);
       expect(mockedPrisma.meetingMinute.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 401 when unauthenticated and 404 when minute does not exist", async () => {
+      mockedGetServerSession.mockResolvedValueOnce(null);
+      const unauthRes = await updateMinute(new Request("http://localhost/api/minutes/m-1", {
+        method: "PATCH",
+        body: JSON.stringify({ title: "Updated", date: "2026-09-17", url: "https://example.com" }),
+      }), { params: Promise.resolve({ id: "m-1" }) });
+      expect(unauthRes.status).toBe(401);
+
+      mockedGetServerSession.mockResolvedValueOnce(createMockSession());
+      vi.mocked(mockedPrisma.meetingMinute.findUnique).mockResolvedValueOnce(null);
+      const notFoundRes = await updateMinute(new Request("http://localhost/api/minutes/m-1", {
+        method: "PATCH",
+        body: JSON.stringify({ title: "Updated", date: "2026-09-17", url: "https://example.com" }),
+      }), { params: Promise.resolve({ id: "m-1" }) });
+      expect(notFoundRes.status).toBe(404);
+    });
+  });
+
+  describe("GET /api/minutes", () => {
+    it("returns minutes sorted by date descending", async () => {
+      const minutes = [{ id: "m-1", title: "Minute 1", date: "2026-09-10", url: "https://example.com" }];
+      vi.mocked(mockedPrisma.meetingMinute.findMany).mockResolvedValueOnce(minutes as never);
+
+      const res = await listMinutes();
+
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual(minutes);
+      expect(mockedPrisma.meetingMinute.findMany).toHaveBeenCalledWith({ orderBy: { date: "desc" } });
+    });
+
+    it("returns 500 INTERNAL_ERROR when database query fails", async () => {
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      vi.mocked(mockedPrisma.meetingMinute.findMany).mockRejectedValueOnce(new Error("db error"));
+
+      const res = await listMinutes();
+
+      expect(res.status).toBe(500);
+      expect(await res.json()).toEqual({ errorCode: "INTERNAL_ERROR" });
     });
   });
 });

@@ -114,4 +114,25 @@ describe("post API HTML cleaning", () => {
     const response = await GET();
     expect((await response.json())[0].content).toBe("<p>Old</p>");
   });
+
+  it("returns 401 when creating a post without a session", async () => {
+    vi.mocked(getServerSession).mockResolvedValueOnce(null);
+    const response = await POST(new Request("http://localhost/api/posts", {
+      method: "POST",
+      body: JSON.stringify({ title: "New", content: "<p>Hello</p>" }),
+    }));
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({ errorCode: "UNAUTHORIZED" });
+    expect(prisma.post.create).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when title is blank", async () => {
+    const response = await POST(new Request("http://localhost/api/posts", {
+      method: "POST",
+      body: JSON.stringify({ title: "   ", content: "<p>Hello</p>" }),
+    }));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ errorCode: "TITLE_CONTENT_REQUIRED" });
+    expect(prisma.post.create).not.toHaveBeenCalled();
+  });
 });
