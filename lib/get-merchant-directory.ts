@@ -13,8 +13,8 @@ const RANGES = [
 
 const getCachedRows = unstable_cache(
   async (spreadsheetId: string): Promise<MerchantSheetRows> => {
-    const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-    const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+    const email = process.env.MERCHANTS_SERVICE_ACCOUNT_EMAIL;
+    const key = process.env.MERCHANTS_PRIVATE_KEY?.replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
     if (!email || !key) throw new Error("特約商家讀取憑證尚未設定");
     const auth = new google.auth.JWT({
       email,
@@ -42,8 +42,8 @@ const getCachedRows = unstable_cache(
 
 export async function getMerchantDirectory(): Promise<MerchantListing[]> {
   const spreadsheetId = process.env.MERCHANTS_SHEET_ID;
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+  const email = process.env.MERCHANTS_SERVICE_ACCOUNT_EMAIL;
+  const key = process.env.MERCHANTS_PRIVATE_KEY?.replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
   if (!spreadsheetId || !email || !key) throw new Error("特約商家資料來源尚未設定");
   const rows = await getCachedRows(spreadsheetId);
   // Apply expiry at request time, so midnight in Taipei does not depend on cache refresh.

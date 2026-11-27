@@ -100,6 +100,9 @@ npm run dev
   - Google Workspace 群組查詢與角色判斷使用
 - `MERCHANTS_SHEET_ID`
   - 特約商家資料表 ID；啟用特約商家頁面時必填，缺少時頁面顯示載入失敗狀態
+- `MERCHANTS_SERVICE_ACCOUNT_EMAIL`
+- `MERCHANTS_PRIVATE_KEY`
+  - 特約商家專用服務帳號憑證；僅需取得網站專用試算表的檢視權限
 - `R2_ACCOUNT_ID`
 - `R2_ACCESS_KEY_ID`
 - `R2_SECRET_ACCESS_KEY`
@@ -122,7 +125,7 @@ npm run dev
 
 資料來源是公關部「特約商店資料庫（官網公告版）」Google Sheet 的四個分頁：`分類`、`適用對象`、`優惠店家`、`優惠內容`。每頁第一列是程式欄名、第二列是中文說明，資料從第三列開始。伺服器讀取時只使用這些公開欄位；商家與優惠的 `publish_status` 都必須為 `TRUE`，且優惠未過期才顯示。沒有有效優惠的商家不顯示，英文欄位未填時暫以中文顯示。資料表更新後，網站會在六小時快取到期後的下次造訪重新讀取；期限依台北日期判斷。搜尋及分類篩選在瀏覽器處理，詳情頁可直接開啟 `/merchants/{mer_id}`。
 
-在 Google Cloud 啟用 Sheets API，將**不含內部聯絡與合約資料**的網站專用試算表以「檢視者」分享給 `GOOGLE_SERVICE_ACCOUNT_EMAIL`，並在網站執行環境設定 `MERCHANTS_SHEET_ID`。讀取使用服務帳號本身的唯讀身分，不透過管理員代理。Sheet 無需發佈至網路；金鑰只放伺服器環境變數，不能放進 `NEXT_PUBLIC_` 變數或 Git。staging 與正式環境都需設定；沒有設定時網站顯示錯誤與重試，不會使用示範資料。CI 建置不會請求 Google Sheet。
+在 Google Cloud 啟用 Sheets API，建立不具網域全面委派權限的特約商家專用服務帳號，將**不含內部聯絡與合約資料**的網站專用試算表以「檢視者」分享給 `MERCHANTS_SERVICE_ACCOUNT_EMAIL`，並在網站執行環境設定 `MERCHANTS_SHEET_ID`、`MERCHANTS_SERVICE_ACCOUNT_EMAIL` 與 `MERCHANTS_PRIVATE_KEY`。讀取使用此服務帳號本身的唯讀身分，不透過管理員代理，也不共用 Admin SDK 的憑證。Sheet 無需發佈至網路；金鑰只放伺服器環境變數，不能放進 `NEXT_PUBLIC_` 變數或 Git。staging 與正式環境都需設定；沒有設定時網站顯示錯誤與重試，不會使用示範資料。CI 建置不會請求 Google Sheet。
 
 目前匯出範本有兩處要在 Google Sheet 修正：`優惠店家` 的 Google Maps 網址驗證誤套到 B～D 欄，應只套 B 欄；`優惠內容` 的店家流水號公式固定指向第一家店，新增其他店家優惠時應改用可選店家 ID。建議後續增加獨立 `offer_id` 方便穩定維護。第一版沒有地區、優惠類型與互動地圖，這些資料欄位及功能可在後續加入。
 
