@@ -37,7 +37,7 @@ const getCachedRows = unstable_cache(
     return { categories, eligibilities, merchants, offers };
   },
   ["merchant-directory-rows"],
-  { revalidate: 300 },
+  { revalidate: 21_600 },
 );
 
 export async function getMerchantDirectory(): Promise<MerchantListing[]> {
