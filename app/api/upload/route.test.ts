@@ -93,4 +93,32 @@ describe("image upload API", () => {
     expect(response.status).toBe(400);
     expect(send).not.toHaveBeenCalled();
   });
+
+  it("rejects unauthenticated upload requests with 401", async () => {
+    vi.mocked(getServerSession).mockResolvedValueOnce(null);
+    const file = new File([new Uint8Array([
+      82, 73, 70, 70, 4, 0, 0, 0, 87, 69, 66, 80, 86, 80, 56, 32,
+    ])], "photo.webp", { type: "image/webp" });
+
+    const response = await POST(uploadRequest(file));
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({ errorCode: "UNAUTHORIZED" });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 NO_FILE when the image field is missing", async () => {
+    const formData = new FormData();
+    const response = await POST(new Request("http://localhost/api/upload", { method: "POST", body: formData }));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ errorCode: "NO_FILE" });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("rejects empty files with 413 FILE_TOO_LARGE", async () => {
+    const file = new File([], "empty.webp", { type: "image/webp" });
+    const response = await POST(uploadRequest(file));
+    expect(response.status).toBe(413);
+    expect(await response.json()).toEqual({ errorCode: "FILE_TOO_LARGE" });
+    expect(send).not.toHaveBeenCalled();
+  });
 });
