@@ -46,6 +46,9 @@ export default function Footer() {
          <Link href="/forms" className={isActive("/forms") ? "active" : undefined}>
             {tNav("forms")}
           </Link>
+          <Link href="/merchants" className={pathname.startsWith("/merchants") ? "active" : undefined}>
+            {tNav("merchants")}
+          </Link>
           <Link
             href="/data"
             className={isActive("/data") || isActive("/university-meeting-representatives") ? "active" : undefined}

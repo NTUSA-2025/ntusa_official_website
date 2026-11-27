@@ -71,11 +71,13 @@ export default function Navbar() {
     { href: "/announcements", label: t("rights") },
     { href: "/cases", label: t("caseProgress") },
     { href: "/forms", label: t("forms") },
+    { href: "/merchants", label: t("merchants") },
     { href: "/data", label: t("data") },
   ];
 
   const isNavActive = (item: NavItem) => (
     pathname === item.href
+    || (item.href === "/merchants" && pathname.startsWith("/merchants/"))
     || (item.href === "/data" && pathname === "/university-meeting-representatives")
   );
   const isAdminRouteActive = [
