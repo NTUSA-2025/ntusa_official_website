@@ -1,11 +1,24 @@
 name: Deployment
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
 
 jobs:
+  validate:
+    uses: ./.github/workflows/reusable-ci.yml
+
   deploy:
+    needs: validate
     runs-on: self-hosted
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -13,54 +26,74 @@ jobs:
       - name: Build and Deploy
         run: |
           cd /home/flavian/ntusa_official_website_mvp
-          
+
           git fetch origin main
           git reset --hard origin/main
-          
-        
-          npm install
 
+          npm install
           npm run build
           # Keep the running version on the old schema if the build fails.
           npm run db:migrate
           pm2 restart ntusa-website
 
+  notify:
+    needs: [validate, deploy]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
       - name: Notify Discord on Success
-        if: success() # 只有前面的步驟都成功才會執行這個通知
+        if: ${{ needs.validate.result == 'success' && needs.deploy.result == 'success' }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d '{"content": "台大學生會官網部署成功！"}' \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+          if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
+            curl -fsS -H "Content-Type: application/json" \
+                 -X POST \
+                 -d '{"content": "台大學生會官網部署成功！"}' \
+                 "${DISCORD_WEBHOOK_URL}"
+          fi
 
       - name: Notify Slack on Success
-        if: success()
+        if: ${{ needs.validate.result == 'success' && needs.deploy.result == 'success' }}
+        env:
+          SLACK_WORKFLOW_URL: ${{ secrets.SLACK_WORKFLOW_URL }}
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data "{
-            \"status\": \"部署成功\",
-            \"repo\": \"${{ github.repository }}\",
-            \"actor\": \"${{ github.actor }}\",
-            \"log_url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
-          }" \
-          ${{ secrets.SLACK_WORKFLOW_URL }}
+          if [ -n "${SLACK_WORKFLOW_URL}" ]; then
+            curl -fsS -X POST -H 'Content-type: application/json' \
+            --data "{
+              \"status\": \"部署成功\",
+              \"repo\": \"${{ github.repository }}\",
+              \"actor\": \"${{ github.actor }}\",
+              \"log_url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+            }" \
+            "${SLACK_WORKFLOW_URL}"
+          fi
 
       - name: Notify Discord on Failure
-        if: failure() # 如果前面的部署步驟失敗，就會觸發這個通知
+        if: ${{ needs.validate.result == 'failure' || needs.deploy.result == 'failure' }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d '{"content": "警告：台大學生會官網部署失敗，請檢查 GitHub Actions Log。"}' \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+          if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
+            curl -fsS -H "Content-Type: application/json" \
+                 -X POST \
+                 -d '{"content": "警告：台大學生會官網部署失敗，請檢查 GitHub Actions Log。"}' \
+                 "${DISCORD_WEBHOOK_URL}"
+          fi
 
       - name: Notify Slack on Failure
-        if: failure()
+        if: ${{ needs.validate.result == 'failure' || needs.deploy.result == 'failure' }}
+        env:
+          SLACK_WORKFLOW_URL: ${{ secrets.SLACK_WORKFLOW_URL }}
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data "{
-            \"status\": \"部署失敗\",
-            \"repo\": \"${{ github.repository }}\",
-            \"actor\": \"${{ github.actor }}\",
-            \"log_url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
-          }" \
-          ${{ secrets.SLACK_WORKFLOW_URL }}
+          if [ -n "${SLACK_WORKFLOW_URL}" ]; then
+            curl -fsS -X POST -H 'Content-type: application/json' \
+            --data "{
+              \"status\": \"部署失敗\",
+              \"repo\": \"${{ github.repository }}\",
+              \"actor\": \"${{ github.actor }}\",
+              \"log_url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+            }" \
+            "${SLACK_WORKFLOW_URL}"
+          fi
